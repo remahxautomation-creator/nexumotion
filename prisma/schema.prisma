@@ -26,9 +26,10 @@ model User {
   country     String   @default("Egypt")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  orders      Order[]
-  projects    Project[]
-  reviews     Review[]
+  orders        Order[]
+  projects      Project[]
+  reviews       Review[]
+  savedSearches SavedSearch[]
 }
 
 // ── Brands ───────────────────────────────────────────────────
@@ -205,6 +206,15 @@ model OrderItem {
   qty       Int
   price     Decimal
   total     Decimal
+}
+
+model SavedSearch {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  url       String   // relative URL with query params, e.g. /categories/drives-vfds?ip_rating=IP20
+  createdAt DateTime @default(now())
 }
 
 model Review {

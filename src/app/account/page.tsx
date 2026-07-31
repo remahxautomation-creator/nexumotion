@@ -14,8 +14,9 @@ export default async function AccountPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    include: { _count: { select: { orders: true, projects: true } } },
+    include: { _count: { select: { orders: true, projects: true, savedSearches: true } } },
   });
+  const savedSearchCount = user?._count.savedSearches ?? 0;
   if (!user) redirect("/login");
 
   return (
@@ -57,16 +58,14 @@ export default async function AccountPage() {
           <div className="text-2xl font-bold text-slate-900">{user._count.projects}</div>
           <p className="text-xs text-slate-500 mt-1">Save BOMs, import CSVs, convert to orders.</p>
         </Link>
-        <div className="bg-white rounded-lg border border-slate-200 p-5">
+        <Link href="/account/searches" className="bg-white rounded-lg border border-slate-200 p-5 hover:border-[#0052CC] transition-colors">
           <div className="flex items-center gap-2 mb-2">
             <Bell className="w-5 h-5 text-[#0052CC]" />
             <h2 className="font-semibold text-slate-900 text-sm">Saved Searches</h2>
           </div>
-          <div className="text-2xl font-bold text-slate-900">—</div>
-          <p className="text-xs text-slate-500 mt-1">
-            Saved filters and back-in-stock alerts arrive with search upgrade (Phase 5).
-          </p>
-        </div>
+          <div className="text-2xl font-bold text-slate-900">{savedSearchCount}</div>
+          <p className="text-xs text-slate-500 mt-1">Rerun saved filter combinations.</p>
+        </Link>
       </div>
 
       <div className="mt-8 text-sm text-slate-500">

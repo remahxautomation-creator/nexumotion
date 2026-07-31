@@ -94,6 +94,35 @@ export default function FilterSidebar({
         ))}
 
       {filters
+        .filter((f) => f.dataType === "NUMBER")
+        .map((f) => (
+          <div key={f.key}>
+            <label className="text-xs font-semibold text-slate-600 block mb-1.5">
+              {f.name} {f.unit ? `(${f.unit})` : ""}
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                placeholder="Min"
+                defaultValue={sp.get(`${f.key}_min`) ?? ""}
+                onBlur={(e) => setParam(`${f.key}_min`, e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && setParam(`${f.key}_min`, (e.target as HTMLInputElement).value)}
+                className="w-full text-sm border border-slate-300 rounded-md px-2 py-1.5"
+              />
+              <span className="text-slate-400 text-xs">–</span>
+              <input
+                type="number"
+                placeholder="Max"
+                defaultValue={sp.get(`${f.key}_max`) ?? ""}
+                onBlur={(e) => setParam(`${f.key}_max`, e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && setParam(`${f.key}_max`, (e.target as HTMLInputElement).value)}
+                className="w-full text-sm border border-slate-300 rounded-md px-2 py-1.5"
+              />
+            </div>
+          </div>
+        ))}
+
+      {filters
         .filter((f) => f.dataType === "BOOLEAN")
         .map((f) => (
           <div key={f.key}>

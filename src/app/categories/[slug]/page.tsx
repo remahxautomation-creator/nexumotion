@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/product/ProductCard";
 import FilterSidebar from "@/components/search/FilterSidebar";
+import SaveSearchButton from "@/components/search/SaveSearchButton";
 import { parseJsonArray } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -21,11 +22,22 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   });
   if (!category) notFound();
 
-  // Build spec filters from query params: spec keys map directly to template keys
+  // Build spec filters from query params: spec keys map directly to template keys.
+  // ENUM/BOOLEAN → exact value match; NUMBER → key_min / key_max range on valueNum.
   const specFilters: { key: string; value: string }[] = [];
+  const rangeFilters: { key: string; min?: number; max?: number }[] = [];
   for (const t of category.specs) {
-    const v = sp[t.key];
-    if (typeof v === "string" && v) specFilters.push({ key: t.key, value: v });
+    if (t.dataType === "NUMBER") {
+      const min = Number(sp[`${t.key}_min`]);
+      const max = Number(sp[`${t.key}_max`]);
+      const range: { key: string; min?: number; max?: number } = { key: t.key };
+      if (typeof sp[`${t.key}_min`] === "string" && Number.isFinite(min)) range.min = min;
+      if (typeof sp[`${t.key}_max`] === "string" && Number.isFinite(max)) range.max = max;
+      if (range.min !== undefined || range.max !== undefined) rangeFilters.push(range);
+    } else {
+      const v = sp[t.key];
+      if (typeof v === "string" && v) specFilters.push({ key: t.key, value: v });
+    }
   }
   const brandFilter = typeof sp.brand === "string" ? sp.brand : undefined;
   const inStockOnly = sp.stock === "in";
@@ -36,8 +48,23 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       isActive: true,
       ...(brandFilter ? { brand: { slug: brandFilter } } : {}),
       ...(inStockOnly ? { stockStatus: { in: ["IN_STOCK", "LOW_STOCK"] } } : {}),
-      ...(specFilters.length
-        ? { AND: specFilters.map((f) => ({ specs: { some: { specKey: f.key, value: f.value } } })) }
+      ...(specFilters.length || rangeFilters.length
+        ? {
+            AND: [
+              ...specFilters.map((f) => ({ specs: { some: { specKey: f.key, value: f.value } } })),
+              ...rangeFilters.map((f) => ({
+                specs: {
+                  some: {
+                    specKey: f.key,
+                    valueNum: {
+                      ...(f.min !== undefined ? { gte: f.min } : {}),
+                      ...(f.max !== undefined ? { lte: f.max } : {}),
+                    },
+                  },
+                },
+              })),
+            ],
+          }
         : {}),
     },
     include: { brand: true },
@@ -69,7 +96,10 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           <FilterSidebar filters={filters} brands={brandsInCategory} />
         </aside>
         <div className="flex-1">
-          <div className="text-sm text-slate-500 mb-4">{products.length} products</div>
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-sm text-slate-500">{products.length} products</div>
+            <SaveSearchButton defaultName={category.name} />
+          </div>
           {products.length === 0 ? (
             <div className="bg-white rounded-lg border border-slate-200 p-12 text-center text-slate-500">
               No products match the selected filters.

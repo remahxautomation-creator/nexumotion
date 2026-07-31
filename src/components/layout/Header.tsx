@@ -2,22 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Search, ShoppingCart, Menu, ChevronDown, Cpu, User } from "lucide-react";
+import { ShoppingCart, Menu, ChevronDown, Cpu, User } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import SearchAutocomplete from "@/components/search/SearchAutocomplete";
 
 type Cat = { id: string; name: string; slug: string };
 
 export default function Header({ categories }: { categories: Cat[] }) {
   const [megaOpen, setMegaOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const router = useRouter();
   const count = useCart((s) => s.items.reduce((n, i) => n + i.qty, 0));
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.trim()) router.push(`/search?q=${encodeURIComponent(query.trim())}`);
-  };
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
@@ -30,17 +23,9 @@ export default function Header({ categories }: { categories: Cat[] }) {
             </span>
           </Link>
 
-          <form onSubmit={submit} className="flex-1 max-w-2xl hidden md:flex">
-            <div className="relative w-full">
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by part number, competitor SKU, or keyword…"
-                className="w-full rounded-lg border border-slate-300 pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40 focus:border-[#0052CC]"
-              />
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
-            </div>
-          </form>
+          <div className="flex-1 max-w-2xl hidden md:flex">
+            <SearchAutocomplete />
+          </div>
 
           <nav className="flex items-center gap-1 ml-auto">
             <Link href="/brands" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0052CC]">

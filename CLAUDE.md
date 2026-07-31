@@ -215,11 +215,18 @@ Remaining:
 - Add-to-project button on product cards; share via signed link; Excel export;
   convert to quote request (Phase 7)
 
-### Phase 5 — Search Upgrade
-- Meilisearch (Docker in prod; dev can keep Prisma fallback behind an interface in `lib/search.ts`)
-- Search-as-you-type autocomplete in header (<100ms)
-- Range sliders for NUMBER specs using `ProductSpec.valueNum`
-- Saved searches (per user) + back-in-stock alerts
+### Phase 5 — Search Upgrade 🟡 CORE DONE (Meilisearch deferred to deployment)
+Done:
+- Header autocomplete (`SearchAutocomplete`): 200ms debounce, AbortController,
+  `/api/search/suggest` returns top-8 products; on zero hits checks cross-references and
+  offers "N equivalents found for competitor part"
+- NUMBER spec range filters: min/max inputs in `FilterSidebar` → `{key}_min`/`{key}_max`
+  URL params → `ProductSpec.valueNum gte/lte` in category query
+- Saved searches: `SavedSearch` model (migration `saved_searches`), POST/DELETE
+  `/api/saved-searches` (relative catalog URLs only, max 50/user), "Save search" button
+  on category pages, `/account/searches` list with delete
+Remaining:
+- Meilisearch when deployed (Docker); back-in-stock alerts; save-search on /search page
 
 ### Phase 6 — Admin 🟡 CORE DONE (built before 4/5 — orders needed managing)
 Done:
