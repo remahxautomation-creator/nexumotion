@@ -34,16 +34,14 @@ export default async function AccountPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg border border-slate-200 p-5">
+        <Link href="/account/orders" className="bg-white rounded-lg border border-slate-200 p-5 hover:border-[#0052CC] transition-colors">
           <div className="flex items-center gap-2 mb-2">
             <PackageSearch className="w-5 h-5 text-[#0052CC]" />
             <h2 className="font-semibold text-slate-900 text-sm">Orders</h2>
           </div>
           <div className="text-2xl font-bold text-slate-900">{user._count.orders}</div>
-          <p className="text-xs text-slate-500 mt-1">
-            Order history and one-click reorder arrive with checkout (Phase 3).
-          </p>
-        </div>
+          <p className="text-xs text-slate-500 mt-1">View order history and status.</p>
+        </Link>
         <div className="bg-white rounded-lg border border-slate-200 p-5">
           <div className="flex items-center gap-2 mb-2">
             <FolderKanban className="w-5 h-5 text-[#0052CC]" />

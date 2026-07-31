@@ -79,9 +79,9 @@ export default function CartPage() {
             <span className="font-semibold">{formatPrice(subtotal)}</span>
           </div>
           <div className="text-xs text-slate-400 mb-4">Shipping & taxes calculated at checkout.</div>
-          <button className="w-full bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold py-2.5 rounded-lg text-sm">
+          <Link href="/checkout" className="block text-center w-full bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold py-2.5 rounded-lg text-sm">
             Proceed to Checkout
-          </button>
+          </Link>
           <div className="text-[11px] text-slate-400 text-center mt-2">Guest checkout available — no account required</div>
         </div>
       </div>

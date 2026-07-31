@@ -186,14 +186,21 @@ competitor-SKU fallback, cart, quick-order pad + lookup API.
 - Seed admin: `admin@autoparts-mena.com` / `ADMIN_PASSWORD` env (default `ChangeMe-Admin1`)
 - `.env` needs `AUTH_SECRET` + `AUTH_TRUST_HOST=true`
 
-### Phase 3 — Checkout & Orders
-- Guest + authenticated checkout: address form → shipping method → payment
-- Order creation API (transaction: create order + items, decrement `stockQty`, set stockStatus)
+### Phase 3 — Checkout & Orders 🟡 CORE DONE (payments pending API keys)
+Done:
+- `/checkout`: guest + authenticated; address form; totals = subtotal + flat $25 shipping
+  (free ≥ $1000) + 14% Egypt VAT — constants at top of `/api/orders` and `/checkout`
+- `/api/orders` POST: server-side prices, transactional order + items creation, stock
+  decrement with stockStatus recompute; session user wins over typed email; guests get a
+  `role=GUEST` user row by email
+- Payment method: "confirm order — pay on invoice" (manual follow-up)
+- `/orders/[orderNumber]` confirmation — owner session OR `?e=<email>` match required
+- `/account/orders` history with status badges
+Remaining (needs owner's API keys):
 - Stripe Payment Intents (USD) + webhook → `paymentStatus=PAID`
 - Paymob card + Fawry reference-code flows (EGP) + webhooks
-- Multi-currency display: USD base, EGP/AED/SAR via stored rate table
-- Order confirmation page + email (Resend)
-- Order tracking in account dashboard; reorder button
+- Multi-currency display (EGP/AED/SAR rate table); order-confirmation email (Resend)
+- Reorder button
 
 ### Phase 4 — Projects / BOMs
 - Project CRUD (`/projects`), add-to-project from any product card
