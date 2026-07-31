@@ -1,1 +1,250 @@
-@AGENTS.md
+# CLAUDE.md — AutoParts MENA: Full Technical Build Contract
+
+> **Brand:** AutoParts MENA
+> Industrial automation parts e-commerce · Egypt-first, then Middle East & Africa
+> 50+ brands · 5,000+ SKUs target · B2B/B2C hybrid · Engineer-first
+> **Framework note:** also read `AGENTS.md` (Next.js version warning from create-next-app).
+
+---
+
+## 0. What AutoParts MENA Is
+
+A production-grade e-commerce platform for industrial automation parts — PLCs, VFDs,
+HMIs, servo systems, sensors, safety, pneumatics, process instruments, and more.
+
+**The customer is an engineer, not a shopper.** Every design decision follows from that:
+
+- **Show SKU everywhere** — engineers think in part numbers, not product names
+- **No login walls** — pricing and full specs visible to everyone; guest checkout
+- **Spec tables over marketing copy** — parametric data is the product page
+- **Cross-referencing is a core feature** — "I have a Siemens part number, what's your equivalent?"
+- **BOM-first buying** — engineers buy lists, not single items (quick order pad, CSV upload, project lists)
+
+**Business model:** hybrid B2B/B2C. Retail card checkout for small buyers; quotes,
+volume tiers, invoice payment, and approval workflows for corporate accounts.
+
+**Key flows:**
+```
+DISCOVERY:  search (text / parametric / competitor SKU / BOM paste) → product page → cart
+B2C:        cart → guest or account checkout → card (Stripe) or Fawry/Paymob (Egypt) → order tracking
+B2B:        BOM/project list → quote request → admin quote → approval → invoice order
+ADMIN:      bulk product import → stock management → order fulfillment → analytics
+```
+
+---
+
+## 1. Technology Stack
+
+| Layer | Technology | Status |
+|---|---|---|
+| Framework | Next.js 16 App Router + TypeScript (Turbopack) | ✅ built |
+| Styling | Tailwind CSS v4 (CSS-first `@theme` in `globals.css`, no config file) | ✅ built |
+| UI kit | Custom components; shadcn/ui pieces added as needed | partial |
+| ORM | Prisma **6** (pinned — Prisma 7 broke the classic `url` datasource workflow) | ✅ built |
+| Database | **SQLite in local dev** → PostgreSQL in production (see §2) | ✅ dev |
+| Client state | Zustand (cart, persisted to localStorage) | ✅ built |
+| Server data | React Server Components + Prisma direct; React Query only where client fetching is needed | ✅ built |
+| Search | Prisma `contains` now → **Meilisearch** for sub-100ms parametric/typo-tolerant search | planned |
+| Auth | **NextAuth.js** — credentials + Google OAuth; roles GUEST/BUYER/ENGINEER/ADMIN | planned |
+| Payments | Stripe (international cards, USD) + Paymob (EGP cards) + Fawry (EGP cash) | planned |
+| File storage | Cloudflare R2 or S3 — datasheets, CAD files, product images | planned |
+| CSV/BOM parsing | papaparse | planned |
+| i18n | next-intl — English + Arabic (RTL) | planned |
+| Fonts | Inter (body) + JetBrains Mono (SKUs — `.sku` class) | ✅ built |
+| Icons | lucide-react | ✅ built |
+| Deployment | Vercel (app) + managed PostgreSQL (Railway/Neon/Supabase) — or the existing Ubuntu ARM server via Docker | decide at Phase 8 |
+
+---
+
+## 2. Database
+
+### Dev vs production
+- **Dev (current):** SQLite, `DATABASE_URL="file:./dev.db"` in `.env`. No Docker on this Windows machine.
+- **Production:** PostgreSQL. Switching = change provider in `schema.prisma`, then revert the SQLite adaptations below and re-create migrations.
+
+### SQLite adaptations (revert on PostgreSQL)
+1. `String[]` fields (`Product.images`, `Product.certifications`, `SpecTemplate.options`) are `Json` columns holding JSON-encoded arrays. Always read via `parseJsonArray()` in `src/lib/utils.ts`; always write via `JSON.stringify()`.
+2. Enums are `String` fields; allowed values documented in schema comments:
+   - `User.role`: GUEST | BUYER | ENGINEER | ADMIN
+   - `Product.stockStatus`: IN_STOCK | LOW_STOCK | OUT_OF_STOCK | BACKORDER
+   - `SpecTemplate.dataType`: TEXT | NUMBER | BOOLEAN | ENUM | RANGE
+   - `CrossReference.matchType`: DIRECT | FUNCTIONAL | UPGRADE | LEGACY
+   - `Order.status`: PENDING | CONFIRMED | PROCESSING | SHIPPED | DELIVERED | CANCELLED | RETURNED
+   - `Order.paymentStatus`: PENDING | PAID | FAILED | REFUNDED
+
+### Models (all in `prisma/schema.prisma`)
+`User`, `Brand`, `Category` (hierarchical via `parentId`), `Product`, `SpecTemplate`
+(per-category parametric spec definitions — the "parts genome"), `ProductSpec`
+(per-product values, with `valueNum` for numeric range filtering), `CrossReference`
+(competitor SKU → our product), `Project` + `ProjectItem` (BOMs), `Order` + `OrderItem`,
+`Review`.
+
+### Key schema rules
+- `Product.sku` and `Product.slug` are unique; slug = `slugify(brand + sku)`
+- Prices are `Decimal`; convert with `Number()` at the RSC boundary; format with `formatPrice()`
+- Numeric specs duplicate into `ProductSpec.valueNum` so range filters (`gte`/`lte`) work
+- `CrossReference.competitorSku` is indexed — it powers search fallback
+
+### Seed
+`npx tsx prisma/seed.ts` — deterministic (LCG PRNG, seed 42), safe to re-run (clears first).
+Seeds 50 brands, 20 categories with full spec templates, ~485 products with specs +
+cross-references, and an admin user (`admin@autoparts-mena.com`).
+
+---
+
+## 3. Repository Structure
+
+```
+autoparts-mena/
+├── CLAUDE.md                    ← this file (build contract)
+├── AGENTS.md                    ← Next.js version warning + build log
+├── .env                         ← DATABASE_URL (never commit; gitignored)
+├── prisma/
+│   ├── schema.prisma
+│   ├── seed.ts
+│   └── seed-data/{brands,categories}.ts
+└── src/
+    ├── app/
+    │   ├── layout.tsx               # fonts, header (mega-menu), footer
+    │   ├── page.tsx                 # ✅ homepage
+    │   ├── categories/[slug]/       # ✅ listing + parametric filter sidebar
+    │   ├── products/[slug]/         # ✅ PDP: spec matrix, cross-refs, buy box
+    │   ├── brands/                  # ✅ A–Z directory + brand pages
+    │   ├── search/                  # ✅ text search + competitor-SKU fallback
+    │   ├── cart/                    # ✅ zustand cart
+    │   ├── quick-order/             # ✅ "SKU QTY" paste pad
+    │   ├── account/                 # ⬜ stub → dashboard (orders, projects, quotes)
+    │   ├── checkout/                # ⬜ Phase 3
+    │   ├── projects/                # ⬜ Phase 4 (BOM manager)
+    │   ├── (admin)/dashboard/       # ⬜ Phase 6
+    │   └── api/
+    │       ├── products/lookup/     # ✅ SKU lookup for quick order
+    │       ├── auth/[...nextauth]/  # ⬜ Phase 2
+    │       ├── orders/              # ⬜ Phase 3
+    │       └── webhooks/{stripe,paymob,fawry}/  # ⬜ Phase 3
+    ├── components/
+    │   ├── layout/{Header,Footer}.tsx
+    │   ├── product/{ProductCard,AddToCartButton}.tsx
+    │   ├── search/FilterSidebar.tsx
+    │   ├── cart/                    # ⬜ CartDrawer, MiniCart
+    │   └── checkout/                # ⬜ CheckoutForm, AddressForm
+    ├── hooks/useCart.ts
+    └── lib/{prisma,utils}.ts
+```
+
+---
+
+## 4. Design System
+
+| Token | Value | Use |
+|---|---|---|
+| Primary | `#0052CC` | buttons, links, active states |
+| Primary dark | `#003D99` | hover |
+| Secondary | `#FF6B00` | CTAs (checkout, hero), cart badge |
+| Success | `#36B37E` | in-stock |
+| Warning | `#FFAB00` | low stock |
+| Danger | `#DE350B` | out of stock, destructive |
+| Canvas | `#F4F5F7` | page background |
+| Surface | white + `border-slate-200` | cards, tables |
+
+- SKUs always in JetBrains Mono via the `.sku` class
+- Stock badge on every product card (`STOCK_LABELS` in `lib/utils.ts`)
+- Sticky header: logo → search bar → brands/quick-order/account/cart; category row with mega-menu below
+- Mobile (later): bottom tab bar — Search, Categories, Cart, Account
+
+---
+
+## 5. Conventions
+
+- Server components by default; `"use client"` only for interactivity (cart, filters, header, quick-order)
+- Catalog pages are `force-dynamic` (DB reads at request time; revisit with caching at Phase 8)
+- **Filter state lives in URL search params** — spec template `key`s map 1:1 to query params. This makes searches shareable and is the foundation for saved searches.
+- API routes return plain JSON with `Number()`-converted prices
+- Currency: USD display for now; multi-currency (EGP/AED/SAR/EUR) is a Phase 3 concern — store order totals + currency on the order, never convert historical orders
+
+---
+
+## 6. Build Order — Phases
+
+Execute in order. Each phase ends with `npm run build` passing and a browser walkthrough.
+
+### Phase 0 — Foundation ✅ DONE
+Scaffold, Prisma schema + migration, seed (50 brands / 20 categories / ~485 products),
+design tokens, layout with mega-menu.
+
+### Phase 1 — Catalog ✅ DONE
+Homepage, category pages with parametric ENUM/BOOLEAN filters, product detail page
+(spec matrix, cross-references, buy box), brand directory + pages, text search with
+competitor-SKU fallback, cart, quick-order pad + lookup API.
+
+### Phase 2 — Auth & Accounts ⬜ NEXT
+- NextAuth.js: credentials (bcrypt) + Google OAuth; JWT sessions
+- Roles: GUEST/BUYER/ENGINEER/ADMIN; middleware guarding `/account`, `/(admin)`
+- Register/login pages; `password` field already in User model
+- Account dashboard shell: profile, company info, order history (empty until Phase 3)
+
+### Phase 3 — Checkout & Orders
+- Guest + authenticated checkout: address form → shipping method → payment
+- Order creation API (transaction: create order + items, decrement `stockQty`, set stockStatus)
+- Stripe Payment Intents (USD) + webhook → `paymentStatus=PAID`
+- Paymob card + Fawry reference-code flows (EGP) + webhooks
+- Multi-currency display: USD base, EGP/AED/SAR via stored rate table
+- Order confirmation page + email (Resend)
+- Order tracking in account dashboard; reorder button
+
+### Phase 4 — Projects / BOMs
+- Project CRUD (`/projects`), add-to-project from any product card
+- CSV/Excel BOM upload (papaparse): SKU→match, show availability/price/alternates per line
+- Convert project → cart / → quote request; share via signed link; Excel export
+
+### Phase 5 — Search Upgrade
+- Meilisearch (Docker in prod; dev can keep Prisma fallback behind an interface in `lib/search.ts`)
+- Search-as-you-type autocomplete in header (<100ms)
+- Range sliders for NUMBER specs using `ProductSpec.valueNum`
+- Saved searches (per user) + back-in-stock alerts
+
+### Phase 6 — Admin
+- `(admin)` route group, ADMIN-only
+- Product CRUD + bulk CSV import; stock management with low-stock alerts
+- Order management (status transitions, tracking numbers)
+- Cross-reference manager; user/role management
+- Analytics: top searches, best sellers, abandoned carts
+
+### Phase 7 — B2B & Quotes
+- Quote requests (from cart or project) → admin prices → customer accepts → order
+- Volume price tiers (1-9 / 10-49 / 50-99 / 100+) — new `PriceTier` model
+- Corporate accounts: multi-user companies, approval workflow, invoice payment terms
+
+### Phase 8 — i18n, SEO, Production
+- next-intl: English + Arabic with RTL (`dir="rtl"`, Cairo font for Arabic)
+- SEO: structured data (Product/BreadcrumbList/Organization), sitemap.xml, canonical URLs
+- PostgreSQL migration (revert §2 adaptations), file storage (R2) for datasheets/CAD/images
+- Deploy: Vercel + managed PG, or Docker on the existing Ubuntu ARM server
+- Lighthouse ≥ 90; WCAG 2.1 AA pass
+
+---
+
+## 7. Key Constraints & Decisions
+
+| Decision | Rationale |
+|---|---|
+| SQLite in dev | No Docker on the dev machine; Prisma abstracts the swap |
+| Prisma pinned to v6 | v7 removed `url` in datasource blocks; v6 keeps the classic workflow |
+| Next.js 16 (not 15) | Latest scaffold; read `node_modules/next/dist/docs/` before using unfamiliar APIs — params/searchParams are Promises |
+| Tailwind v4 CSS-first | No JS config; tokens live in `globals.css` `@theme` |
+| Filters in URL params | Shareable, bookmarkable, and saved-searches-ready |
+| No login walls | Core product principle — engineers must see specs and prices immediately |
+| Cross-ref fallback in search | Competitor part numbers are the #1 way buyers arrive |
+| Deterministic seed | Reproducible dev data; screenshots and tests stay stable |
+
+---
+
+## 8. Development Commands
+
+```bash
+npm run dev                  # dev server on :3000
+npm run build                # production build (must pass before every commit)
+npx prisma migrate dev       # create/apply migrations
+npx prisma studio            # inspect DB
+npx tsx prisma/seed.ts       # reseed
+```
