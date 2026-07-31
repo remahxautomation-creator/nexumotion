@@ -30,7 +30,14 @@ export default async function AccountPage() {
             </div>
           </div>
         </div>
-        <SignOutButton />
+        <div className="flex items-center gap-3">
+          {user.role === "ADMIN" && (
+            <Link href="/admin" className="text-sm font-semibold text-white bg-[#0052CC] px-4 py-2 rounded-lg">
+              Admin Panel
+            </Link>
+          )}
+          <SignOutButton />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

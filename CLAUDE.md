@@ -213,11 +213,17 @@ Remaining (needs owner's API keys):
 - Range sliders for NUMBER specs using `ProductSpec.valueNum`
 - Saved searches (per user) + back-in-stock alerts
 
-### Phase 6 — Admin
-- `(admin)` route group, ADMIN-only
-- Product CRUD + bulk CSV import; stock management with low-stock alerts
-- Order management (status transitions, tracking numbers)
-- Cross-reference manager; user/role management
+### Phase 6 — Admin 🟡 CORE DONE (built before 4/5 — orders needed managing)
+Done:
+- `/admin` (layout guards `role === "ADMIN"`; non-admins → `/account`): dashboard with
+  order/revenue/user counts, recent orders, low/out-of-stock list
+- `/admin/orders`: status-filter chips, inline order status + payment status dropdowns
+  → `PATCH /api/admin/orders/[id]` (also accepts `trackingNumber`)
+- `/admin/products`: search + low-stock filter, inline price/stock/active editing
+  → `PATCH /api/admin/products/[id]` (recomputes stockStatus from qty)
+- "Admin Panel" button on /account for admins
+Remaining:
+- Product create + bulk CSV import; cross-reference manager; user/role management
 - Analytics: top searches, best sellers, abandoned carts
 
 ### Phase 7 — B2B & Quotes
