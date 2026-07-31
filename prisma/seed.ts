@@ -114,6 +114,9 @@ function specValue(t: { key: string; dataType: string; unit?: string | null; opt
 
 async function main() {
   console.log("Clearing existing data...");
+  await prisma.quoteItem.deleteMany();
+  await prisma.quoteRequest.deleteMany();
+  await prisma.priceTier.deleteMany();
   await prisma.crossReference.deleteMany();
   await prisma.productSpec.deleteMany();
   await prisma.orderItem.deleteMany();
@@ -221,6 +224,14 @@ async function main() {
             matchType: pick(["DIRECT", "FUNCTIONAL", "UPGRADE", "LEGACY"]),
           },
         });
+      }
+      // Volume price tiers on ~30% of products: 10+ → -8%, 50+ → -15%, 100+ → -22%
+      if (rand() < 0.3) {
+        for (const [minQty, discount] of [[10, 0.08], [50, 0.15], [100, 0.22]] as const) {
+          await prisma.priceTier.create({
+            data: { productId: product.id, minQty, price: Math.round(price * (1 - discount)) },
+          });
+        }
       }
       total++;
     }

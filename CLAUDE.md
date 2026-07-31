@@ -246,10 +246,24 @@ Remaining:
 - Cross-reference manager; user/role management; top-searches analytics (needs search
   logging); abandoned carts (needs server-side carts)
 
-### Phase 7 — B2B & Quotes
-- Quote requests (from cart or project) → admin prices → customer accepts → order
-- Volume price tiers (1-9 / 10-49 / 50-99 / 100+) — new `PriceTier` model
+### Phase 7 — B2B & Quotes 🟡 CORE DONE
+Models (migration `quotes_and_price_tiers`): `PriceTier` (productId+minQty unique),
+`QuoteRequest` (REQUESTED | QUOTED | ACCEPTED | REJECTED | EXPIRED), `QuoteItem`
+(listPrice snapshot + admin `quotedPrice`).
+Done:
+- "Request a quote" button in cart → `POST /api/quotes` (snapshots list prices)
+- `/admin/quotes` + `/admin/quotes/[id]`: per-line price editing with stock visibility,
+  live discount %, note to customer, send/update/reject
+- `/account/quotes` + `/account/quotes/[id]`: list vs quoted prices, admin reply,
+  accept (address form) → transactional order at quoted prices (status CONFIRMED,
+  stock decremented, quote linked via `orderId`) or decline
+- `PATCH /api/quotes/[id]` handles quote/accept/reject with role + ownership checks
+- Volume tiers shown on product pages (1–9 / 10–49 / 50–99 / 100+);
+  `unitPriceFor()` helper in `lib/pricing.ts`; seed adds tiers to ~30% of products
+Remaining:
+- Apply tier pricing automatically in cart/checkout (helper exists, not wired)
 - Corporate accounts: multi-user companies, approval workflow, invoice payment terms
+- Quote expiry job; request-quote directly from a project
 
 ### Phase 8 — i18n, SEO, Production
 - next-intl: English + Arabic with RTL (`dir="rtl"`, Cairo font for Arabic)

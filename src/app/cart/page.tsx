@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Trash2, ShoppingCart } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import { formatPrice } from "@/lib/utils";
+import RequestQuoteButton from "@/components/quotes/RequestQuoteButton";
 
 export default function CartPage() {
   const { items, remove, setQty, clear } = useCart();
@@ -82,6 +83,7 @@ export default function CartPage() {
           <Link href="/checkout" className="block text-center w-full bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold py-2.5 rounded-lg text-sm">
             Proceed to Checkout
           </Link>
+          <RequestQuoteButton />
           <div className="text-[11px] text-slate-400 text-center mt-2">Guest checkout available — no account required</div>
         </div>
       </div>

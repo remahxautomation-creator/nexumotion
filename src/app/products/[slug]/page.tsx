@@ -17,6 +17,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       category: true,
       specs: true,
       crossReferences: true,
+      priceTiers: { orderBy: { minQty: "asc" } },
     },
   });
   if (!product) notFound();
@@ -85,6 +86,30 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               disabled={product.stockStatus === "OUT_OF_STOCK"}
             />
           </div>
+          {product.priceTiers.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-slate-100">
+              <div className="text-xs font-semibold text-slate-600 mb-2">Volume pricing</div>
+              <table className="w-full text-xs">
+                <tbody>
+                  <tr className="text-slate-500">
+                    <td className="py-0.5">1–{product.priceTiers[0].minQty - 1}</td>
+                    <td className="py-0.5 text-right font-medium text-slate-700">{formatPrice(Number(product.price))}</td>
+                  </tr>
+                  {product.priceTiers.map((t, i) => {
+                    const next = product.priceTiers[i + 1];
+                    return (
+                      <tr key={t.id} className="text-slate-500">
+                        <td className="py-0.5">{t.minQty}{next ? `–${next.minQty - 1}` : "+"}</td>
+                        <td className="py-0.5 text-right font-medium text-emerald-700">{formatPrice(Number(t.price))}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <div className="text-[10px] text-slate-400 mt-1.5">Need more? Request a quote from your cart.</div>
+            </div>
+          )}
+
           <div className="mt-4 pt-4 border-t border-slate-100 space-y-2 text-xs text-slate-500">
             <div className="flex items-center gap-2"><FileText className="w-3.5 h-3.5" /> Datasheet PDF {product.datasheetUrl ? "" : "(on request)"}</div>
             <div className="flex items-center gap-2"><Box className="w-3.5 h-3.5" /> CAD file (STEP/IGES) {product.cadUrl ? "" : "(on request)"}</div>

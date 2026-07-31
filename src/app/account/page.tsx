@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { UserCircle, PackageSearch, FolderKanban, Bell } from "lucide-react";
+import { UserCircle, PackageSearch, FolderKanban, Bell, FileText } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import SignOutButton from "@/components/auth/SignOutButton";
@@ -14,9 +14,10 @@ export default async function AccountPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    include: { _count: { select: { orders: true, projects: true, savedSearches: true } } },
+    include: { _count: { select: { orders: true, projects: true, savedSearches: true, quoteRequests: true } } },
   });
   const savedSearchCount = user?._count.savedSearches ?? 0;
+  const quoteCount = user?._count.quoteRequests ?? 0;
   if (!user) redirect("/login");
 
   return (
@@ -65,6 +66,17 @@ export default async function AccountPage() {
           </div>
           <div className="text-2xl font-bold text-slate-900">{savedSearchCount}</div>
           <p className="text-xs text-slate-500 mt-1">Rerun saved filter combinations.</p>
+        </Link>
+      </div>
+
+      <div className="mt-4">
+        <Link href="/account/quotes" className="block bg-white rounded-lg border border-slate-200 p-5 hover:border-[#0052CC] transition-colors">
+          <div className="flex items-center gap-2 mb-2">
+            <FileText className="w-5 h-5 text-[#0052CC]" />
+            <h2 className="font-semibold text-slate-900 text-sm">Quote Requests</h2>
+          </div>
+          <div className="text-2xl font-bold text-slate-900">{quoteCount}</div>
+          <p className="text-xs text-slate-500 mt-1">Volume pricing for large orders — request from your cart.</p>
         </Link>
       </div>
 

@@ -30,6 +30,7 @@ model User {
   projects      Project[]
   reviews       Review[]
   savedSearches SavedSearch[]
+  quoteRequests QuoteRequest[]
 }
 
 // ── Brands ───────────────────────────────────────────────────
@@ -98,6 +99,8 @@ model Product {
   orderItems      OrderItem[]
   reviews         Review[]
   projectItems    ProjectItem[]
+  priceTiers      PriceTier[]
+  quoteItems      QuoteItem[]
 
   @@index([brandId])
   @@index([categoryId])
@@ -206,6 +209,42 @@ model OrderItem {
   qty       Int
   price     Decimal
   total     Decimal
+}
+
+// Volume pricing: price applies when qty >= minQty (lowest matching tier wins)
+model PriceTier {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  minQty    Int
+  price     Decimal
+
+  @@unique([productId, minQty])
+}
+
+// status: REQUESTED | QUOTED | ACCEPTED | REJECTED | EXPIRED
+model QuoteRequest {
+  id         String      @id @default(cuid())
+  userId     String
+  user       User        @relation(fields: [userId], references: [id])
+  status     String      @default("REQUESTED")
+  notes      String?
+  adminNotes String?
+  items      QuoteItem[]
+  orderId    String?     // set when accepted and converted to an order
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model QuoteItem {
+  id          String       @id @default(cuid())
+  quoteId     String
+  quote       QuoteRequest @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product      @relation(fields: [productId], references: [id])
+  qty         Int
+  listPrice   Decimal      // list price at request time
+  quotedPrice Decimal?     // admin-set price
 }
 
 model SavedSearch {
