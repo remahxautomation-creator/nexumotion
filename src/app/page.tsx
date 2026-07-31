@@ -2,10 +2,12 @@ import Link from "next/link";
 import { ArrowRight, Cpu, Zap, Shield, Truck } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/product/ProductCard";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  const { t } = await getT();
   const [categories, brands, featured] = await Promise.all([
     prisma.category.findMany({ orderBy: { sortOrder: "asc" }, take: 8, include: { _count: { select: { products: true } } } }),
     prisma.brand.findMany({ orderBy: { name: "asc" }, take: 12, include: { _count: { select: { products: true } } } }),
@@ -22,18 +24,15 @@ export default async function HomePage() {
       <section className="bg-gradient-to-br from-[#0052CC] to-[#003D99] text-white">
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
           <h1 className="text-3xl md:text-5xl font-bold max-w-3xl leading-tight">
-            Industrial Automation Parts for the MENA Region
+            {t("home.hero.title")}
           </h1>
-          <p className="mt-4 text-lg text-blue-100 max-w-2xl">
-            50+ brands. 5,000+ SKUs. Parametric search, cross-referencing, and BOM ordering —
-            built for engineers, not marketers.
-          </p>
+          <p className="mt-4 text-lg text-blue-100 max-w-2xl">{t("home.hero.subtitle")}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/search" className="bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg">
-              Search Parts
+              {t("home.hero.searchCta")}
             </Link>
             <Link href="/brands" className="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/30">
-              Browse Brands
+              {t("home.hero.brandsCta")}
             </Link>
           </div>
         </div>
@@ -43,10 +42,10 @@ export default async function HomePage() {
       <section className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
           {[
-            { icon: Shield, label: "Authenticity guaranteed", sub: "Genuine parts only" },
-            { icon: Zap, label: "Cross-reference engine", sub: "Search competitor SKUs" },
-            { icon: Cpu, label: "Engineer-first specs", sub: "Full parametric data" },
-            { icon: Truck, label: "MENA-wide delivery", sub: "Egypt, GCC & Africa" },
+            { icon: Shield, label: t("home.trust.authentic"), sub: t("home.trust.authenticSub") },
+            { icon: Zap, label: t("home.trust.crossRef"), sub: t("home.trust.crossRefSub") },
+            { icon: Cpu, label: t("home.trust.specs"), sub: t("home.trust.specsSub") },
+            { icon: Truck, label: t("home.trust.delivery"), sub: t("home.trust.deliverySub") },
           ].map((f) => (
             <div key={f.label} className="flex items-center gap-3">
               <f.icon className="w-7 h-7 text-[#0052CC] shrink-0" />
@@ -62,7 +61,7 @@ export default async function HomePage() {
       {/* Categories */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-slate-900">Shop by Category</h2>
+          <h2 className="text-xl font-bold text-slate-900">{t("home.categories.title")}</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {categories.map((c) => (
@@ -72,7 +71,7 @@ export default async function HomePage() {
               className="bg-white rounded-lg border border-slate-200 p-5 hover:border-[#0052CC] hover:shadow-md transition-all"
             >
               <div className="font-semibold text-slate-900 text-sm">{c.name}</div>
-              <div className="text-xs text-slate-500 mt-1">{c._count.products} products</div>
+              <div className="text-xs text-slate-500 mt-1">{c._count.products} {t("home.products")}</div>
             </Link>
           ))}
         </div>
@@ -81,7 +80,7 @@ export default async function HomePage() {
       {/* Featured products */}
       {featured.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 pb-12">
-          <h2 className="text-xl font-bold text-slate-900 mb-6">Featured Products</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-6">{t("home.featured.title")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {featured.map((p) => (
               <ProductCard
@@ -100,9 +99,9 @@ export default async function HomePage() {
       {/* Brands */}
       <section className="max-w-7xl mx-auto px-4 pb-16">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-slate-900">Top Brands</h2>
+          <h2 className="text-xl font-bold text-slate-900">{t("home.brands.title")}</h2>
           <Link href="/brands" className="text-sm text-[#0052CC] font-medium flex items-center gap-1">
-            All 50 brands <ArrowRight className="w-4 h-4" />
+            {t("home.brands.all")} <ArrowRight className="w-4 h-4 rtl:rotate-180" />
           </Link>
         </div>
         <div className="grid grid-cols-3 md:grid-cols-6 gap-3">

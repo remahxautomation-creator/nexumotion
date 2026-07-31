@@ -34,7 +34,7 @@ export default async function AdminProductsPage({
       <div className="bg-white rounded-lg border border-slate-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs text-slate-500 border-b border-slate-200">
+            <tr className="text-start text-xs text-slate-500 border-b border-slate-200">
               <th className="px-4 py-3">SKU / Name</th>
               <th className="px-4 py-3">Brand</th>
               <th className="px-4 py-3">Price (USD)</th>

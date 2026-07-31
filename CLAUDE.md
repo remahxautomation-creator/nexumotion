@@ -274,8 +274,20 @@ Done:
   JSON-LD with schema.org availability mapping
 - Verified running as a real production build (`npm run build && npm start`)
 - `DEPLOYMENT.md`: blockers, Postgres migration steps, env vars, Vercel/Ubuntu runbooks
+- **Arabic + RTL** (no next-intl — cookie-based, keeps every existing route working):
+  - `src/i18n/dictionaries.ts` holds en/ar UI strings; `server.ts` exposes `getT()` for
+    server components, `client.tsx` exposes `useT()` + `I18nProvider` for client ones
+  - Locale lives in a `locale` cookie set by `POST /api/locale`; root layout reads it and
+    sets `<html lang dir>` + swaps body font to **Cairo** for Arabic
+  - Layout mirrors via CSS **logical properties** — `ms-/me-`, `ps-/pe-`, `start-/end-`,
+    `text-start/text-end`, `inset-x-0`. Do NOT reintroduce `ml-/mr-/left-/right-/text-left`
+  - `.sku` is forced `direction: ltr` — part numbers are codes and must never mirror;
+    same for prices via `.ltr-nums`
 Remaining:
-- next-intl: English + Arabic with RTL (`dir="rtl"`, Cairo font)
+- Translate remaining page bodies (checkout, account, projects, quotes, admin are still
+  English-only; chrome + catalog browsing are done)
+- Category/brand/spec **names come from the DB and stay English** — localizing them needs
+  `name_ar` columns (or a translations table), not more dictionary keys
 - BreadcrumbList/Organization JSON-LD; category/brand metadata
 - PostgreSQL migration (revert §2 adaptations); R2 storage for datasheets/CAD/images
 - Actual remote deploy (see `DEPLOYMENT.md` blockers first); Meilisearch

@@ -1,44 +1,44 @@
 import Link from "next/link";
+import { getT } from "@/i18n/server";
 
-export default function Footer() {
+export default async function Footer() {
+  const { t } = await getT();
+
   return (
     <footer className="bg-slate-900 text-slate-300 mt-16">
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
         <div>
-          <h3 className="font-bold text-white mb-3">AutoParts MENA</h3>
-          <p className="text-slate-400">
-            Genuine industrial automation parts for Egypt, the Middle East, and Africa.
-            50+ brands. 5,000+ SKUs. Engineer-first service.
-          </p>
+          <h3 className="font-bold text-white mb-3" dir="ltr">AutoParts MENA</h3>
+          <p className="text-slate-400">{t("footer.tagline")}</p>
         </div>
         <div>
-          <h4 className="font-semibold text-white mb-3">Shop</h4>
+          <h4 className="font-semibold text-white mb-3">{t("footer.shop")}</h4>
           <ul className="space-y-2">
-            <li><Link href="/brands" className="hover:text-white">All Brands</Link></li>
-            <li><Link href="/search" className="hover:text-white">Search Parts</Link></li>
-            <li><Link href="/quick-order" className="hover:text-white">Quick Order Pad</Link></li>
-            <li><Link href="/cart" className="hover:text-white">Cart</Link></li>
+            <li><Link href="/brands" className="hover:text-white">{t("footer.allBrands")}</Link></li>
+            <li><Link href="/search" className="hover:text-white">{t("footer.searchParts")}</Link></li>
+            <li><Link href="/quick-order" className="hover:text-white">{t("footer.quickOrderPad")}</Link></li>
+            <li><Link href="/cart" className="hover:text-white">{t("nav.cart")}</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold text-white mb-3">Resources</h4>
+          <h4 className="font-semibold text-white mb-3">{t("footer.resources")}</h4>
           <ul className="space-y-2">
-            <li><span className="text-slate-500">Datasheets Archive</span></li>
-            <li><span className="text-slate-500">Cross-Reference Tool</span></li>
-            <li><span className="text-slate-500">Shipping Info</span></li>
+            <li><span className="text-slate-500">{t("footer.datasheets")}</span></li>
+            <li><span className="text-slate-500">{t("footer.crossRefTool")}</span></li>
+            <li><span className="text-slate-500">{t("footer.shipping")}</span></li>
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold text-white mb-3">Support — MENA</h4>
+          <h4 className="font-semibold text-white mb-3">{t("footer.support")}</h4>
           <ul className="space-y-2 text-slate-400">
-            <li>Cairo, Egypt</li>
-            <li>support@autoparts-mena.com</li>
-            <li>Sun–Thu, 9:00–17:00 (Cairo)</li>
+            <li>{t("home.trust.deliverySub")}</li>
+            <li dir="ltr" className="text-start">support@autoparts-mena.com</li>
+            <li>{t("footer.hours")}</li>
           </ul>
         </div>
       </div>
       <div className="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} AutoParts MENA — Authenticity guaranteed. CE · UL · ISO 9001 certified suppliers.
+        © {new Date().getFullYear()} {t("footer.rights")}
       </div>
     </footer>
   );

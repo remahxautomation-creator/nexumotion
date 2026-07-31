@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import { useT } from "@/i18n/client";
 
 type Suggestion = {
   sku: string; name: string; slug: string; brand: string; price: number; stockStatus: string;
@@ -18,6 +19,7 @@ export default function SearchAutocomplete() {
   const router = useRouter();
   const boxRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const { t } = useT();
 
   useEffect(() => {
     const q = query.trim();
@@ -68,14 +70,14 @@ export default function SearchAutocomplete() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length > 0 && setOpen(true)}
-          placeholder="Search by part number, competitor SKU, or keyword…"
-          className="w-full rounded-lg border border-slate-300 pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40 focus:border-[#0052CC]"
+          placeholder={t("nav.search.placeholder")}
+          className="w-full rounded-lg border border-slate-300 ps-10 pe-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40 focus:border-[#0052CC]"
         />
-        <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+        <Search className="absolute start-3 top-2.5 w-4 h-4 text-slate-400" />
       </form>
 
       {open && (results.length > 0 || crossRef) && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 overflow-hidden">
+        <div className="absolute top-full inset-x-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 overflow-hidden">
           {results.map((r) => (
             <Link
               key={r.slug}
@@ -87,13 +89,13 @@ export default function SearchAutocomplete() {
                 <span className="sku text-slate-600">{r.sku}</span>
                 <div className="text-xs text-slate-500 truncate">{r.name} · {r.brand}</div>
               </div>
-              <span className="text-sm font-semibold shrink-0 ml-3">{formatPrice(r.price)}</span>
+              <span className="text-sm font-semibold shrink-0 ms-3 ltr-nums">{formatPrice(r.price)}</span>
             </Link>
           ))}
           {crossRef && (
             <button
               onClick={() => { setOpen(false); router.push(`/search?q=${encodeURIComponent(query.trim())}`); }}
-              className="w-full text-left px-4 py-2.5 text-sm text-blue-800 bg-blue-50 hover:bg-blue-100"
+              className="w-full text-start px-4 py-2.5 text-sm text-blue-800 bg-blue-50 hover:bg-blue-100"
             >
               {crossRef.count} equivalent{crossRef.count > 1 ? "s" : ""} found for competitor part{" "}
               <span className="sku">{crossRef.competitorSku}</span> →

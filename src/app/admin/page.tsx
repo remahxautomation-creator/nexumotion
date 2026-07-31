@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
                   <span className="sku">{o.orderNumber}</span>
                   <div className="text-xs text-slate-400">{o.user.email} · {o.items.length} lines</div>
                 </div>
-                <div className="text-right">
+                <div className="text-end">
                   <div className="font-semibold">{formatPrice(Number(o.total))}</div>
                   <div className="text-[10px] text-slate-500">{o.status}</div>
                 </div>

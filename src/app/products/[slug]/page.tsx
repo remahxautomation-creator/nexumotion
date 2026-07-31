@@ -139,14 +139,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 <tbody>
                   <tr className="text-slate-500">
                     <td className="py-0.5">1–{product.priceTiers[0].minQty - 1}</td>
-                    <td className="py-0.5 text-right font-medium text-slate-700">{formatPrice(Number(product.price))}</td>
+                    <td className="py-0.5 text-end font-medium text-slate-700">{formatPrice(Number(product.price))}</td>
                   </tr>
                   {product.priceTiers.map((t, i) => {
                     const next = product.priceTiers[i + 1];
                     return (
                       <tr key={t.id} className="text-slate-500">
                         <td className="py-0.5">{t.minQty}{next ? `–${next.minQty - 1}` : "+"}</td>
-                        <td className="py-0.5 text-right font-medium text-emerald-700">{formatPrice(Number(t.price))}</td>
+                        <td className="py-0.5 text-end font-medium text-emerald-700">{formatPrice(Number(t.price))}</td>
                       </tr>
                     );
                   })}
@@ -190,7 +190,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <div className="bg-white rounded-lg border border-slate-200 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-xs text-slate-500 border-b border-slate-200">
+                <tr className="text-start text-xs text-slate-500 border-b border-slate-200">
                   <th className="px-4 py-2.5">Competitor SKU</th>
                   <th className="px-4 py-2.5">Brand</th>
                   <th className="px-4 py-2.5">Description</th>

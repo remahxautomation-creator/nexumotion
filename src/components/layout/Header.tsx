@@ -5,12 +5,15 @@ import { useState } from "react";
 import { ShoppingCart, Menu, ChevronDown, Cpu, User } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import SearchAutocomplete from "@/components/search/SearchAutocomplete";
+import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
+import { useT } from "@/i18n/client";
 
 type Cat = { id: string; name: string; slug: string };
 
 export default function Header({ categories }: { categories: Cat[] }) {
   const [megaOpen, setMegaOpen] = useState(false);
   const count = useCart((s) => s.items.reduce((n, i) => n + i.qty, 0));
+  const { t } = useT();
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
@@ -18,7 +21,7 @@ export default function Header({ categories }: { categories: Cat[] }) {
         <div className="flex items-center gap-4 h-16">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <Cpu className="w-7 h-7 text-[#0052CC]" />
-            <span className="font-bold text-lg text-slate-900">
+            <span className="font-bold text-lg text-slate-900" dir="ltr">
               AutoParts <span className="text-[#FF6B00]">MENA</span>
             </span>
           </Link>
@@ -27,20 +30,21 @@ export default function Header({ categories }: { categories: Cat[] }) {
             <SearchAutocomplete />
           </div>
 
-          <nav className="flex items-center gap-1 ml-auto">
+          <nav className="flex items-center gap-1 ms-auto">
             <Link href="/brands" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0052CC]">
-              Brands
+              {t("nav.brands")}
             </Link>
             <Link href="/quick-order" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0052CC]">
-              Quick Order
+              {t("nav.quickOrder")}
             </Link>
-            <Link href="/account" className="p-2 text-slate-700 hover:text-[#0052CC]" aria-label="Account">
+            <LanguageSwitcher />
+            <Link href="/account" className="p-2 text-slate-700 hover:text-[#0052CC]" aria-label={t("nav.account")}>
               <User className="w-5 h-5" />
             </Link>
-            <Link href="/cart" className="relative p-2 text-slate-700 hover:text-[#0052CC]" aria-label="Cart">
+            <Link href="/cart" className="relative p-2 text-slate-700 hover:text-[#0052CC]" aria-label={t("nav.cart")}>
               <ShoppingCart className="w-5 h-5" />
               {count > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-[#FF6B00] text-white text-[10px] font-bold rounded-full min-w-4 h-4 px-1 flex items-center justify-center">
+                <span className="absolute -top-0.5 -end-0.5 bg-[#FF6B00] text-white text-[10px] font-bold rounded-full min-w-4 h-4 px-1 flex items-center justify-center">
                   {count}
                 </span>
               )}
@@ -54,7 +58,7 @@ export default function Header({ categories }: { categories: Cat[] }) {
             onClick={() => setMegaOpen((v) => !v)}
             className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-white bg-[#0052CC] rounded-md hover:bg-[#003D99]"
           >
-            <Menu className="w-4 h-4" /> All Categories <ChevronDown className="w-3.5 h-3.5" />
+            <Menu className="w-4 h-4" /> {t("nav.allCategories")} <ChevronDown className="w-3.5 h-3.5" />
           </button>
           <div className="hidden md:flex gap-1 overflow-x-auto">
             {categories.slice(0, 6).map((c) => (
@@ -73,7 +77,7 @@ export default function Header({ categories }: { categories: Cat[] }) {
       {megaOpen && (
         <div
           onMouseLeave={() => setMegaOpen(false)}
-          className="absolute left-0 right-0 bg-white border-b border-slate-200 shadow-lg"
+          className="absolute inset-x-0 bg-white border-b border-slate-200 shadow-lg"
         >
           <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
             {categories.map((c) => (

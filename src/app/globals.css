@@ -17,8 +17,24 @@ body {
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Arabic uses Cairo, which carries proper Arabic glyphs and metrics */
+body.font-arabic {
+  font-family: var(--font-cairo), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Part numbers stay monospace and always read left-to-right, even in RTL pages —
+   a SKU is a code, not prose, and mirroring it would make it wrong. */
 .sku {
   font-family: var(--font-jetbrains), ui-monospace, monospace;
   font-size: 0.8rem;
   letter-spacing: -0.01em;
+  direction: ltr;
+  unicode-bidi: embed;
+  display: inline-block;
+}
+
+/* Prices and spec values are also LTR-native */
+[dir="rtl"] .ltr-nums {
+  direction: ltr;
+  display: inline-block;
 }

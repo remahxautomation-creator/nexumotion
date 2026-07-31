@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { X } from "lucide-react";
+import { useT } from "@/i18n/client";
 
 type Filter = {
   key: string;
@@ -21,6 +22,7 @@ export default function FilterSidebar({
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
+  const { t } = useT();
 
   const setParam = (key: string, value: string) => {
     const params = new URLSearchParams(sp.toString());
@@ -34,38 +36,38 @@ export default function FilterSidebar({
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-4 space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="font-semibold text-slate-900 text-sm">Filters</h2>
+        <h2 className="font-semibold text-slate-900 text-sm">{t("filters.title")}</h2>
         {activeCount > 0 && (
           <button
             onClick={() => router.push(pathname)}
             className="text-xs text-[#0052CC] flex items-center gap-1"
           >
-            <X className="w-3 h-3" /> Clear all
+            <X className="w-3 h-3" /> {t("filters.clearAll")}
           </button>
         )}
       </div>
 
       <div>
-        <label className="text-xs font-semibold text-slate-600 block mb-1.5">Availability</label>
+        <label className="text-xs font-semibold text-slate-600 block mb-1.5">{t("filters.availability")}</label>
         <select
           value={sp.get("stock") ?? ""}
           onChange={(e) => setParam("stock", e.target.value)}
           className="w-full text-sm border border-slate-300 rounded-md px-2 py-1.5"
         >
-          <option value="">All</option>
-          <option value="in">In stock only</option>
+          <option value="">{t("filters.all")}</option>
+          <option value="in">{t("filters.inStockOnly")}</option>
         </select>
       </div>
 
       {brands.length > 1 && (
         <div>
-          <label className="text-xs font-semibold text-slate-600 block mb-1.5">Brand</label>
+          <label className="text-xs font-semibold text-slate-600 block mb-1.5">{t("filters.brand")}</label>
           <select
             value={sp.get("brand") ?? ""}
             onChange={(e) => setParam("brand", e.target.value)}
             className="w-full text-sm border border-slate-300 rounded-md px-2 py-1.5"
           >
-            <option value="">All brands</option>
+            <option value="">{t("filters.allBrands")}</option>
             {brands.map((b) => (
               <option key={b.slug} value={b.slug}>{b.name}</option>
             ))}
@@ -85,7 +87,7 @@ export default function FilterSidebar({
               onChange={(e) => setParam(f.key, e.target.value)}
               className="w-full text-sm border border-slate-300 rounded-md px-2 py-1.5"
             >
-              <option value="">Any</option>
+              <option value="">{t("filters.any")}</option>
               {f.options.map((o) => (
                 <option key={o} value={o}>{o}</option>
               ))}
@@ -103,7 +105,7 @@ export default function FilterSidebar({
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                placeholder="Min"
+                placeholder={t("filters.min")}
                 defaultValue={sp.get(`${f.key}_min`) ?? ""}
                 onBlur={(e) => setParam(`${f.key}_min`, e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && setParam(`${f.key}_min`, (e.target as HTMLInputElement).value)}
@@ -112,7 +114,7 @@ export default function FilterSidebar({
               <span className="text-slate-400 text-xs">–</span>
               <input
                 type="number"
-                placeholder="Max"
+                placeholder={t("filters.max")}
                 defaultValue={sp.get(`${f.key}_max`) ?? ""}
                 onBlur={(e) => setParam(`${f.key}_max`, e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && setParam(`${f.key}_max`, (e.target as HTMLInputElement).value)}
@@ -132,7 +134,7 @@ export default function FilterSidebar({
               onChange={(e) => setParam(f.key, e.target.value)}
               className="w-full text-sm border border-slate-300 rounded-md px-2 py-1.5"
             >
-              <option value="">Any</option>
+              <option value="">{t("filters.any")}</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
             </select>

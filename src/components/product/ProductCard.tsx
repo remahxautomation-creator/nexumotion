@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { Package } from "lucide-react";
 import { formatPrice, STOCK_LABELS } from "@/lib/utils";
+import { useT } from "@/i18n/client";
 import AddToCartButton from "./AddToCartButton";
 
 export type ProductCardData = {
@@ -17,6 +20,7 @@ export type ProductCardData = {
 
 export default function ProductCard({ p }: { p: ProductCardData }) {
   const stock = STOCK_LABELS[p.stockStatus] ?? STOCK_LABELS.IN_STOCK;
+  const { t } = useT();
   return (
     <div className="bg-white rounded-lg border border-slate-200 hover:border-[#0052CC] hover:shadow-md transition-all flex flex-col">
       <Link href={`/products/${p.slug}`} className="p-4 flex-1">
@@ -32,11 +36,11 @@ export default function ProductCard({ p }: { p: ProductCardData }) {
           <div>
             <span className="font-bold text-slate-900">{formatPrice(p.price)}</span>
             {p.comparePrice && (
-              <span className="ml-2 text-xs text-slate-400 line-through">{formatPrice(p.comparePrice)}</span>
+              <span className="ms-2 text-xs text-slate-400 line-through">{formatPrice(p.comparePrice)}</span>
             )}
           </div>
           <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${stock.className}`}>
-            {stock.label}
+            {t(stock.labelKey)}
           </span>
         </div>
         <AddToCartButton

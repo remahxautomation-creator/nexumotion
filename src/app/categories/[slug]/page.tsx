@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/product/ProductCard";
 import FilterSidebar from "@/components/search/FilterSidebar";
 import SaveSearchButton from "@/components/search/SaveSearchButton";
+import { getT } from "@/i18n/server";
 import { parseJsonArray } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,7 @@ type Props = {
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const sp = await searchParams;
+  const { t } = await getT();
 
   const category = await prisma.category.findUnique({
     where: { slug },
@@ -97,12 +99,12 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         </aside>
         <div className="flex-1">
           <div className="flex items-center justify-between mb-4">
-            <div className="text-sm text-slate-500">{products.length} products</div>
+            <div className="text-sm text-slate-500">{products.length} {t("home.products")}</div>
             <SaveSearchButton defaultName={category.name} />
           </div>
           {products.length === 0 ? (
             <div className="bg-white rounded-lg border border-slate-200 p-12 text-center text-slate-500">
-              No products match the selected filters.
+              {t("filters.noMatch")}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">

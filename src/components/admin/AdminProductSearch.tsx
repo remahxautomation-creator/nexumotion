@@ -31,9 +31,9 @@ export default function AdminProductSearch() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search SKU, name, brand…"
-          className="w-64 border border-slate-300 rounded-md pl-8 pr-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40"
+          className="w-64 border border-slate-300 rounded-md ps-8 pe-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40"
         />
-        <Search className="absolute left-2.5 top-2 w-4 h-4 text-slate-400" />
+        <Search className="absolute start-2.5 top-2 w-4 h-4 text-slate-400" />
       </form>
       <button
         onClick={toggleLow}

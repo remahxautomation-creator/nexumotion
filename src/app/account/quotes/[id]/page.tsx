@@ -38,7 +38,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
       <div className="bg-white rounded-lg border border-slate-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs text-slate-500 border-b border-slate-200">
+            <tr className="text-start text-xs text-slate-500 border-b border-slate-200">
               <th className="px-4 py-3">Part</th>
               <th className="px-4 py-3">Qty</th>
               <th className="px-4 py-3">List Price</th>

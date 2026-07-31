@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ShoppingCart, Check } from "lucide-react";
 import { useCart, type CartItem } from "@/hooks/useCart";
 import { cn } from "@/lib/utils";
+import { useT } from "@/i18n/client";
 
 export default function AddToCartButton({
   product,
@@ -16,6 +17,7 @@ export default function AddToCartButton({
 }) {
   const add = useCart((s) => s.add);
   const [added, setAdded] = useState(false);
+  const { t } = useT();
 
   return (
     <button
@@ -36,7 +38,7 @@ export default function AddToCartButton({
       )}
     >
       {added ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
-      {added ? "Added" : "Add to Cart"}
+      {added ? t("product.added") : t("product.addToCart")}
     </button>
   );
 }

@@ -10,7 +10,7 @@ export default function DeleteSavedSearch({ id }: { id: string }) {
     if (res.ok) router.refresh();
   };
   return (
-    <button onClick={remove} className="text-slate-400 hover:text-red-600 shrink-0 ml-3" aria-label="Delete saved search">
+    <button onClick={remove} className="text-slate-400 hover:text-red-600 shrink-0 ms-3" aria-label="Delete saved search">
       <Trash2 className="w-4 h-4" />
     </button>
   );

@@ -63,7 +63,7 @@ export default function QuoteEditor({
       <div className="bg-white rounded-lg border border-slate-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs text-slate-500 border-b border-slate-200">
+            <tr className="text-start text-xs text-slate-500 border-b border-slate-200">
               <th className="px-4 py-3">Part</th>
               <th className="px-4 py-3">Qty</th>
               <th className="px-4 py-3">Stock</th>
@@ -100,7 +100,7 @@ export default function QuoteEditor({
         </table>
       </div>
 
-      <div className="mt-3 text-sm text-slate-600 text-right">
+      <div className="mt-3 text-sm text-slate-600 text-end">
         List: <span className="line-through">{formatPrice(listTotal)}</span> · Quoted:{" "}
         <strong>{formatPrice(quotedTotal)}</strong>{" "}
         <span className="text-slate-400">
