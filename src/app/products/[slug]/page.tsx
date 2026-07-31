@@ -8,6 +8,27 @@ import ProductCard from "@/components/product/ProductCard";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const product = await prisma.product.findUnique({
+    where: { slug },
+    include: { brand: true, category: true },
+  });
+  if (!product) return { title: "Product not found" };
+
+  const title = `${product.sku} — ${product.name} | ${product.brand.name}`;
+  const description =
+    product.shortDesc ??
+    `${product.name} by ${product.brand.name}. Genuine ${product.category.name.toLowerCase()} in stock for Egypt, the Middle East and Africa.`;
+
+  return {
+    title,
+    description,
+    openGraph: { title, description, type: "website" },
+    alternates: { canonical: `/products/${product.slug}` },
+  };
+}
+
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const product = await prisma.product.findUnique({
@@ -31,8 +52,33 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const stock = STOCK_LABELS[product.stockStatus] ?? STOCK_LABELS.IN_STOCK;
   const certs = parseJsonArray(product.certifications);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    sku: product.sku,
+    name: product.name,
+    description: product.description ?? product.shortDesc ?? undefined,
+    brand: { "@type": "Brand", name: product.brand.name },
+    category: product.category.name,
+    offers: {
+      "@type": "Offer",
+      price: Number(product.price),
+      priceCurrency: "USD",
+      availability:
+        product.stockStatus === "OUT_OF_STOCK"
+          ? "https://schema.org/OutOfStock"
+          : product.stockStatus === "BACKORDER"
+          ? "https://schema.org/BackOrder"
+          : "https://schema.org/InStock",
+    },
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Breadcrumb */}
       <nav className="text-xs text-slate-500 mb-4 flex gap-1.5 flex-wrap">
         <Link href="/" className="hover:text-[#0052CC]">Home</Link> /

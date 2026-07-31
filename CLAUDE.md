@@ -265,11 +265,20 @@ Remaining:
 - Corporate accounts: multi-user companies, approval workflow, invoice payment terms
 - Quote expiry job; request-quote directly from a project
 
-### Phase 8 — i18n, SEO, Production
-- next-intl: English + Arabic with RTL (`dir="rtl"`, Cairo font for Arabic)
-- SEO: structured data (Product/BreadcrumbList/Organization), sitemap.xml, canonical URLs
-- PostgreSQL migration (revert §2 adaptations), file storage (R2) for datasheets/CAD/images
-- Deploy: Vercel + managed PG, or Docker on the existing Ubuntu ARM server
+### Phase 8 — i18n, SEO, Production 🟡 SEO + local prod done
+Done:
+- `sitemap.xml` (559 URLs: products + categories + brands + static) and `robots.txt`
+  disallowing `/admin`, `/account`, `/api`, `/checkout`, `/cart`, `/orders`, `/projects`
+  — both read `NEXT_PUBLIC_SITE_URL` (defaults to localhost, MUST be set before going live)
+- Product pages: `generateMetadata` (SKU-first title, OG tags, canonical) + Product
+  JSON-LD with schema.org availability mapping
+- Verified running as a real production build (`npm run build && npm start`)
+- `DEPLOYMENT.md`: blockers, Postgres migration steps, env vars, Vercel/Ubuntu runbooks
+Remaining:
+- next-intl: English + Arabic with RTL (`dir="rtl"`, Cairo font)
+- BreadcrumbList/Organization JSON-LD; category/brand metadata
+- PostgreSQL migration (revert §2 adaptations); R2 storage for datasheets/CAD/images
+- Actual remote deploy (see `DEPLOYMENT.md` blockers first); Meilisearch
 - Lighthouse ≥ 90; WCAG 2.1 AA pass
 
 ---
