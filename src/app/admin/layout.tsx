@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LayoutDashboard, PackageSearch, Boxes } from "lucide-react";
+import { LayoutDashboard, PackageSearch, Boxes, PlusCircle, Upload, BarChart3 } from "lucide-react";
 import { auth } from "@/lib/auth";
 
 export const metadata = { title: "Admin" };
@@ -24,6 +24,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
             <Link href="/admin/products" className="flex items-center gap-2 px-2 py-2 text-sm font-medium text-slate-700 rounded-md hover:bg-slate-50 hover:text-[#0052CC]">
               <Boxes className="w-4 h-4" /> Products
+            </Link>
+            <Link href="/admin/products/new" className="flex items-center gap-2 px-2 py-2 text-sm font-medium text-slate-700 rounded-md hover:bg-slate-50 hover:text-[#0052CC]">
+              <PlusCircle className="w-4 h-4" /> New Product
+            </Link>
+            <Link href="/admin/products/import" className="flex items-center gap-2 px-2 py-2 text-sm font-medium text-slate-700 rounded-md hover:bg-slate-50 hover:text-[#0052CC]">
+              <Upload className="w-4 h-4" /> Bulk Import
+            </Link>
+            <Link href="/admin/analytics" className="flex items-center gap-2 px-2 py-2 text-sm font-medium text-slate-700 rounded-md hover:bg-slate-50 hover:text-[#0052CC]">
+              <BarChart3 className="w-4 h-4" /> Analytics
             </Link>
           </div>
         </aside>

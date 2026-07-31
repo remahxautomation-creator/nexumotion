@@ -237,9 +237,14 @@ Done:
 - `/admin/products`: search + low-stock filter, inline price/stock/active editing
   → `PATCH /api/admin/products/[id]` (recomputes stockStatus from qty)
 - "Admin Panel" button on /account for admins
+- `/admin/products/new` create form; `/admin/products/import` bulk CSV
+  (`sku,name,brand,category,price,stockQty,shortDesc`; upsert by SKU; per-row
+  created/updated/error results; brand/category matched by name or slug; max 1000 rows)
+  — both backed by `POST /api/admin/products`
+- `/admin/analytics`: best sellers by revenue, orders by status, revenue by brand/category
 Remaining:
-- Product create + bulk CSV import; cross-reference manager; user/role management
-- Analytics: top searches, best sellers, abandoned carts
+- Cross-reference manager; user/role management; top-searches analytics (needs search
+  logging); abandoned carts (needs server-side carts)
 
 ### Phase 7 — B2B & Quotes
 - Quote requests (from cart or project) → admin prices → customer accepts → order
