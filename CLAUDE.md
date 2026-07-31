@@ -177,11 +177,14 @@ Homepage, category pages with parametric ENUM/BOOLEAN filters, product detail pa
 (spec matrix, cross-references, buy box), brand directory + pages, text search with
 competitor-SKU fallback, cart, quick-order pad + lookup API.
 
-### Phase 2 — Auth & Accounts ⬜ NEXT
-- NextAuth.js: credentials (bcrypt) + Google OAuth; JWT sessions
-- Roles: GUEST/BUYER/ENGINEER/ADMIN; middleware guarding `/account`, `/(admin)`
-- Register/login pages; `password` field already in User model
-- Account dashboard shell: profile, company info, order history (empty until Phase 3)
+### Phase 2 — Auth & Accounts ✅ DONE
+- NextAuth v5 (beta): credentials provider with bcrypt, JWT sessions, role in token/session
+  (`src/lib/auth.ts`); Google OAuth deferred — needs client ID/secret from the owner
+- `/login`, `/register` pages + `/api/auth/register`; auth guard via `auth()` + `redirect()`
+  inside server pages (not middleware — avoids Prisma-on-edge issues)
+- Account dashboard shell with orders/projects/saved-searches cards
+- Seed admin: `admin@autoparts-mena.com` / `ADMIN_PASSWORD` env (default `ChangeMe-Admin1`)
+- `.env` needs `AUTH_SECRET` + `AUTH_TRUST_HOST=true`
 
 ### Phase 3 — Checkout & Orders
 - Guest + authenticated checkout: address form → shipping method → payment

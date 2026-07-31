@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import { brands } from "./seed-data/brands";
 import { categories } from "./seed-data/categories";
 
@@ -227,10 +228,11 @@ async function main() {
   console.log(`Seeded ${total} products.`);
 
   console.log("Seeding admin user...");
+  const adminHash = await bcrypt.hash(process.env.ADMIN_PASSWORD ?? "ChangeMe-Admin1", 12);
   await prisma.user.upsert({
     where: { email: "admin@autoparts-mena.com" },
-    update: {},
-    create: { email: "admin@autoparts-mena.com", name: "Admin", role: "ADMIN", country: "Egypt" },
+    update: { password: adminHash },
+    create: { email: "admin@autoparts-mena.com", name: "Admin", role: "ADMIN", country: "Egypt", password: adminHash },
   });
 
   console.log("Done.");
