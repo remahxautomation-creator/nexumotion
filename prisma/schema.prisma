@@ -1,0 +1,221 @@
+// AutoParts MENA — Prisma schema
+// Local dev uses SQLite. For production PostgreSQL:
+//   1. change provider to "postgresql"
+//   2. convert Json list fields (images, certifications, options) to String[]
+//   3. convert the String "enum" fields to real Prisma enums if desired
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ── User & Auth ──────────────────────────────────────────────
+// role: GUEST | BUYER | ENGINEER | ADMIN
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  password    String?
+  name        String?
+  companyName String?
+  role        String   @default("BUYER")
+  phone       String?
+  country     String   @default("Egypt")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
+  projects    Project[]
+  reviews     Review[]
+}
+
+// ── Brands ───────────────────────────────────────────────────
+model Brand {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  country     String
+  description String?
+  logo        String?
+  website     String?
+  isActive    Boolean   @default(true)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+}
+
+// ── Categories (hierarchical) ────────────────────────────────
+model Category {
+  id          String         @id @default(cuid())
+  name        String
+  slug        String         @unique
+  description String?
+  image       String?
+  parentId    String?
+  parent      Category?      @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[]     @relation("CategoryHierarchy")
+  products    Product[]
+  specs       SpecTemplate[]
+  sortOrder   Int            @default(0)
+  isActive    Boolean        @default(true)
+}
+
+// ── Products ─────────────────────────────────────────────────
+// stockStatus: IN_STOCK | LOW_STOCK | OUT_OF_STOCK | BACKORDER
+model Product {
+  id             String   @id @default(cuid())
+  sku            String   @unique
+  name           String
+  slug           String   @unique
+  description    String?
+  shortDesc      String?
+  brandId        String
+  brand          Brand    @relation(fields: [brandId], references: [id])
+  categoryId     String
+  category       Category @relation(fields: [categoryId], references: [id])
+  price          Decimal
+  comparePrice   Decimal?
+  costPerUnit    String?
+  stockQty       Int      @default(0)
+  stockStatus    String   @default("IN_STOCK")
+  weightKg       Decimal?
+  images         Json     @default("[]")
+  datasheetUrl   String?
+  cadUrl         String?
+  manualUrl      String?
+  certifications Json     @default("[]")
+  isActive       Boolean  @default(true)
+  isFeatured     Boolean  @default(false)
+  isDiscontinued Boolean  @default(false)
+  replacementFor String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  specs           ProductSpec[]
+  crossReferences CrossReference[]
+  orderItems      OrderItem[]
+  reviews         Review[]
+  projectItems    ProjectItem[]
+
+  @@index([brandId])
+  @@index([categoryId])
+  @@index([slug])
+  @@index([sku])
+  @@index([isActive])
+  @@index([isDiscontinued])
+}
+
+// ── Parametric Specifications ────────────────────────────────
+// dataType: TEXT | NUMBER | BOOLEAN | ENUM | RANGE
+model SpecTemplate {
+  id           String   @id @default(cuid())
+  categoryId   String
+  category     Category @relation(fields: [categoryId], references: [id])
+  name         String
+  key          String
+  unit         String?
+  dataType     String   @default("TEXT")
+  sortOrder    Int      @default(0)
+  isFilterable Boolean  @default(true)
+  isVisible    Boolean  @default(true)
+  options      Json     @default("[]")
+}
+
+model ProductSpec {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  specKey   String
+  specName  String
+  value     String
+  valueNum  Decimal?
+  unit      String?
+
+  @@index([productId])
+  @@index([specKey])
+}
+
+// ── Cross-Reference Engine ───────────────────────────────────
+// matchType: DIRECT | FUNCTIONAL | UPGRADE | LEGACY
+model CrossReference {
+  id              String  @id @default(cuid())
+  productId       String
+  product         Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  competitorSku   String
+  competitorBrand String
+  competitorName  String
+  matchType       String  @default("DIRECT")
+
+  @@index([competitorSku])
+}
+
+// ── Projects / BOMs ──────────────────────────────────────────
+model Project {
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  name        String
+  description String?
+  items       ProjectItem[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model ProjectItem {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  qty       Int     @default(1)
+  notes     String?
+}
+
+// ── Orders ───────────────────────────────────────────────────
+// status: PENDING | CONFIRMED | PROCESSING | SHIPPED | DELIVERED | CANCELLED | RETURNED
+// paymentStatus: PENDING | PAID | FAILED | REFUNDED
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  status          String      @default("PENDING")
+  items           OrderItem[]
+  subtotal        Decimal
+  shipping        Decimal
+  tax             Decimal
+  total           Decimal
+  currency        String      @default("USD")
+  shippingAddress Json?
+  billingAddress  Json?
+  paymentStatus   String      @default("PENDING")
+  trackingNumber  String?
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  qty       Int
+  price     Decimal
+  total     Decimal
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  rating    Int      @default(5)
+  title     String?
+  body      String?
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
