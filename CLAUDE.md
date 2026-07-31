@@ -202,10 +202,18 @@ Remaining (needs owner's API keys):
 - Multi-currency display (EGP/AED/SAR rate table); order-confirmation email (Resend)
 - Reorder button
 
-### Phase 4 — Projects / BOMs
-- Project CRUD (`/projects`), add-to-project from any product card
-- CSV/Excel BOM upload (papaparse): SKU→match, show availability/price/alternates per line
-- Convert project → cart / → quote request; share via signed link; Excel export
+### Phase 4 — Projects / BOMs 🟡 CORE DONE
+Done:
+- `/projects` list + create; `/projects/[id]` detail (owner-only) with per-line stock
+  badges, qty editing (blur-to-save), line/project totals, delete project
+- BOM import: CSV/TXT file upload or paste; formats `SKU,QTY` / `SKU;QTY` / `SKU QTY` /
+  bare `SKU`; header row skipped; per-line added/not_found/invalid results; duplicate
+  SKU merges qty. No papaparse — regex parser in `BomImport.tsx` (revisit if Excel needed)
+- Bulk API `POST /api/projects/[id]/items` (max 500 lines, exact-then-contains SKU match)
+- "Add all to cart" → zustand cart with quantities
+Remaining:
+- Add-to-project button on product cards; share via signed link; Excel export;
+  convert to quote request (Phase 7)
 
 ### Phase 5 — Search Upgrade
 - Meilisearch (Docker in prod; dev can keep Prisma fallback behind an interface in `lib/search.ts`)

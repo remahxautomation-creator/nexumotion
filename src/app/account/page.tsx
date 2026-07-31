@@ -49,16 +49,14 @@ export default async function AccountPage() {
           <div className="text-2xl font-bold text-slate-900">{user._count.orders}</div>
           <p className="text-xs text-slate-500 mt-1">View order history and status.</p>
         </Link>
-        <div className="bg-white rounded-lg border border-slate-200 p-5">
+        <Link href="/projects" className="bg-white rounded-lg border border-slate-200 p-5 hover:border-[#0052CC] transition-colors">
           <div className="flex items-center gap-2 mb-2">
             <FolderKanban className="w-5 h-5 text-[#0052CC]" />
             <h2 className="font-semibold text-slate-900 text-sm">Projects / BOMs</h2>
           </div>
           <div className="text-2xl font-bold text-slate-900">{user._count.projects}</div>
-          <p className="text-xs text-slate-500 mt-1">
-            Save bills of materials and convert them to orders (Phase 4).
-          </p>
-        </div>
+          <p className="text-xs text-slate-500 mt-1">Save BOMs, import CSVs, convert to orders.</p>
+        </Link>
         <div className="bg-white rounded-lg border border-slate-200 p-5">
           <div className="flex items-center gap-2 mb-2">
             <Bell className="w-5 h-5 text-[#0052CC]" />
