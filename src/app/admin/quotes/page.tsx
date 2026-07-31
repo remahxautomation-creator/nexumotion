@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,7 @@ const BADGE: Record<string, string> = {
 };
 
 export default async function AdminQuotesPage() {
+  const { t, locale } = await getT();
   const quotes = await prisma.quoteRequest.findMany({
     orderBy: { createdAt: "desc" },
     include: { user: true, items: true },
@@ -19,21 +21,21 @@ export default async function AdminQuotesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Quote Requests</h1>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">{t("admin.quoteRequests")}</h1>
       <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
-        {quotes.length === 0 && <div className="p-8 text-center text-sm text-slate-500">No quote requests.</div>}
+        {quotes.length === 0 && <div className="p-8 text-center text-sm text-slate-500">{t("admin.noQuotes")}</div>}
         {quotes.map((q) => (
           <Link key={q.id} href={`/admin/quotes/${q.id}`}
             className="flex items-center justify-between px-5 py-4 hover:bg-slate-50">
             <div>
               <span className="sku text-slate-700">Q-{q.id.slice(-8).toUpperCase()}</span>
               <div className="text-xs text-slate-400 mt-0.5">
-                {q.user.email} · {q.items.length} lines ·{" "}
-                {q.createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                {q.user.email} · {q.items.length} {t("common.lines")} ·{" "}
+                {q.createdAt.toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", { day: "numeric", month: "short" })}
               </div>
             </div>
             <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${BADGE[q.status] ?? BADGE.REQUESTED}`}>
-              {q.status}
+              {t(`status.${q.status}` as never)}
             </span>
           </Link>
         ))}

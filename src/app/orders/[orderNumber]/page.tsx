@@ -4,6 +4,7 @@ import { CheckCircle2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { formatPrice } from "@/lib/utils";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Order Confirmation" };
@@ -16,6 +17,7 @@ export default async function OrderPage({
   searchParams: Promise<{ e?: string }>;
 }) {
   const { orderNumber } = await params;
+  const { t } = await getT();
   const { e } = await searchParams;
 
   const order = await prisma.order.findUnique({
@@ -40,18 +42,17 @@ export default async function OrderPage({
         <div className="flex items-center gap-3 mb-2">
           <CheckCircle2 className="w-8 h-8 text-emerald-600" />
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Order placed</h1>
+            <h1 className="text-xl font-bold text-slate-900">{t("orders.placed")}</h1>
             <div className="sku text-slate-500">{order.orderNumber}</div>
           </div>
         </div>
         <p className="text-sm text-slate-600 mt-3">
-          Thank you{addr?.name ? `, ${addr.name}` : ""}. A confirmation was recorded for{" "}
-          <strong>{order.user.email}</strong>. Our team will contact you within one business
-          day with payment instructions.
+          {addr?.name ? `${addr.name} — ` : ""}{t("orders.recorded")}{" "}
+          <strong dir="ltr">{order.user.email}</strong>. {t("orders.willContact")}
         </p>
 
         <div className="mt-6 border-t border-slate-100 pt-4">
-          <h2 className="font-semibold text-slate-900 text-sm mb-3">Items</h2>
+          <h2 className="font-semibold text-slate-900 text-sm mb-3">{t("orders.itemsHeading")}</h2>
           <div className="divide-y divide-slate-100">
             {order.items.map((it) => (
               <div key={it.id} className="py-2.5 flex justify-between text-sm gap-3">
@@ -67,17 +68,17 @@ export default async function OrderPage({
         </div>
 
         <div className="mt-4 border-t border-slate-100 pt-4 space-y-1.5 text-sm">
-          <div className="flex justify-between"><span className="text-slate-600">Subtotal</span><span>{formatPrice(Number(order.subtotal))}</span></div>
-          <div className="flex justify-between"><span className="text-slate-600">Shipping</span><span>{Number(order.shipping) === 0 ? "Free" : formatPrice(Number(order.shipping))}</span></div>
-          <div className="flex justify-between"><span className="text-slate-600">VAT</span><span>{formatPrice(Number(order.tax))}</span></div>
+          <div className="flex justify-between"><span className="text-slate-600">{t("cart.subtotal")}</span><span>{formatPrice(Number(order.subtotal))}</span></div>
+          <div className="flex justify-between"><span className="text-slate-600">{t("checkout.shipping")}</span><span>{Number(order.shipping) === 0 ? t("checkout.free") : formatPrice(Number(order.shipping))}</span></div>
+          <div className="flex justify-between"><span className="text-slate-600">{t("checkout.vat")}</span><span>{formatPrice(Number(order.tax))}</span></div>
           <div className="flex justify-between font-bold text-base pt-2 border-t border-slate-100">
-            <span>Total</span><span>{formatPrice(Number(order.total))}</span>
+            <span>{t("cart.total")}</span><span>{formatPrice(Number(order.total))}</span>
           </div>
         </div>
 
         {addr && (
           <div className="mt-4 border-t border-slate-100 pt-4 text-sm text-slate-600">
-            <h2 className="font-semibold text-slate-900 text-sm mb-1">Ships to</h2>
+            <h2 className="font-semibold text-slate-900 text-sm mb-1">{t("orders.shipsTo")}</h2>
             {addr.name} · {addr.phone}<br />
             {addr.address}, {addr.city}, {addr.country}
           </div>
@@ -85,11 +86,11 @@ export default async function OrderPage({
 
         <div className="mt-6 flex gap-3">
           <Link href="/search" className="bg-[#0052CC] text-white font-semibold px-5 py-2 rounded-lg text-sm">
-            Continue shopping
+            {t("orders.continueShopping")}
           </Link>
           {session?.user && (
             <Link href="/account/orders" className="border border-slate-300 bg-white font-semibold px-5 py-2 rounded-lg text-sm">
-              My orders
+              {t("orders.myOrders")}
             </Link>
           )}
         </div>

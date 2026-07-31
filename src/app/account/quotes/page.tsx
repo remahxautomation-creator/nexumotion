@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { FileText } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "My Quotes" };
@@ -18,6 +19,7 @@ const BADGE: Record<string, string> = {
 export default async function QuotesPage() {
   const session = await auth();
   if (!session?.user) redirect("/login?callbackUrl=/account/quotes");
+  const { t, locale } = await getT();
 
   const quotes = await prisma.quoteRequest.findMany({
     where: { userId: session.user.id },
@@ -30,14 +32,14 @@ export default async function QuotesPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <FileText className="w-6 h-6 text-[#0052CC]" />
-          <h1 className="text-2xl font-bold text-slate-900">My Quotes</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t("quotes.title")}</h1>
         </div>
-        <Link href="/account" className="text-sm text-[#0052CC] font-medium">← Account</Link>
+        <Link href="/account" className="text-sm text-[#0052CC] font-medium">{t("nav.account")}</Link>
       </div>
 
       {quotes.length === 0 ? (
         <div className="bg-white rounded-lg border border-slate-200 p-12 text-center text-sm text-slate-500">
-          No quote requests yet. Use “Request quote” from your cart for volume pricing.
+          {t("quotes.none")}
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
@@ -47,11 +49,11 @@ export default async function QuotesPage() {
               <div>
                 <div className="sku text-slate-700">Q-{q.id.slice(-8).toUpperCase()}</div>
                 <div className="text-xs text-slate-400 mt-0.5">
-                  {q.createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} · {q.items.length} line{q.items.length !== 1 ? "s" : ""}
+                  {q.createdAt.toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", { day: "numeric", month: "short", year: "numeric" })} · {q.items.length} {t("common.lines")}
                 </div>
               </div>
               <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${BADGE[q.status] ?? BADGE.REQUESTED}`}>
-                {q.status}
+                {t(`status.${q.status}` as never)}
               </span>
             </Link>
           ))}

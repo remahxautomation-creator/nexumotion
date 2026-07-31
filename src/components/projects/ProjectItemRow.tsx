@@ -5,16 +5,18 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import { useT } from "@/i18n/client";
 
 type Item = {
   id: string; qty: number; sku: string; name: string; slug: string;
-  brand: string; price: number; stockLabel: string; stockClass: string;
+  brand: string; price: number; stockLabelKey: string; stockClass: string;
 };
 
 export default function ProjectItemRow({ projectId, item }: { projectId: string; item: Item }) {
   const [qty, setQty] = useState(item.qty);
   const [busy, setBusy] = useState(false);
   const router = useRouter();
+  const { t } = useT();
 
   const update = async (next: number) => {
     setBusy(true);
@@ -39,7 +41,7 @@ export default function ProjectItemRow({ projectId, item }: { projectId: string;
       <td className="px-4 py-2.5">{formatPrice(item.price)}</td>
       <td className="px-4 py-2.5">
         <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${item.stockClass}`}>
-          {item.stockLabel}
+          {t(item.stockLabelKey as never)}
         </span>
       </td>
       <td className="px-4 py-2.5">
@@ -52,7 +54,7 @@ export default function ProjectItemRow({ projectId, item }: { projectId: string;
       </td>
       <td className="px-4 py-2.5 font-semibold">{formatPrice(item.price * qty)}</td>
       <td className="px-4 py-2.5">
-        <button onClick={() => update(0)} disabled={busy} className="text-slate-400 hover:text-red-600" aria-label="Remove">
+        <button onClick={() => update(0)} disabled={busy} className="text-slate-400 hover:text-red-600" aria-label={t("common.remove")}>
           <Trash2 className="w-4 h-4" />
         </button>
       </td>

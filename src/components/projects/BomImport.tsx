@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Loader2 } from "lucide-react";
+import { useT } from "@/i18n/client";
 
 type Result = { sku: string; status: "added" | "not_found" | "invalid"; name?: string };
 
@@ -27,6 +28,7 @@ export default function BomImport({ projectId }: { projectId: string }) {
   const [busy, setBusy] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const { t } = useT();
 
   const submit = async () => {
     const lines = parseLines(text);
@@ -60,16 +62,16 @@ export default function BomImport({ projectId }: { projectId: string }) {
     <div className="bg-white rounded-lg border border-slate-200 p-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-          <Upload className="w-4 h-4 text-[#0052CC]" /> Import BOM / add parts
+          <Upload className="w-4 h-4 text-[#0052CC]" /> {t("projects.importTitle")}
         </div>
         <div className="flex gap-2">
           <label className="text-xs font-medium border border-slate-300 rounded-md px-3 py-1.5 cursor-pointer bg-white hover:bg-slate-50">
-            Upload CSV
+            {t("projects.uploadCsv")}
             <input type="file" accept=".csv,.txt" onChange={onFile} className="hidden" />
           </label>
           <button onClick={() => setOpen((v) => !v)}
             className="text-xs font-medium border border-slate-300 rounded-md px-3 py-1.5 bg-white hover:bg-slate-50">
-            {open ? "Hide paste area" : "Paste lines"}
+            {open ? t("projects.hidePaste") : t("projects.pasteLines")}
           </button>
         </div>
       </div>
@@ -85,7 +87,7 @@ export default function BomImport({ projectId }: { projectId: string }) {
           />
           <button onClick={submit} disabled={busy || !text.trim()}
             className="mt-2 flex items-center gap-2 bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
-            {busy && <Loader2 className="w-4 h-4 animate-spin" />} Import to project
+            {busy && <Loader2 className="w-4 h-4 animate-spin" />} {t("projects.importToProject")}
           </button>
         </div>
       )}
@@ -95,9 +97,9 @@ export default function BomImport({ projectId }: { projectId: string }) {
           {results.map((r, i) => (
             <div key={i} className="px-3 py-2 flex items-center justify-between">
               <span className="sku">{r.sku}</span>
-              {r.status === "added" && <span className="text-emerald-600 text-xs font-medium">✓ Added{r.name ? ` — ${r.name}` : ""}</span>}
-              {r.status === "not_found" && <span className="text-red-600 text-xs font-medium">Not found</span>}
-              {r.status === "invalid" && <span className="text-amber-600 text-xs font-medium">Invalid</span>}
+              {r.status === "added" && <span className="text-emerald-600 text-xs font-medium">✓ {t("projects.lineAdded")}{r.name ? ` — ${r.name}` : ""}</span>}
+              {r.status === "not_found" && <span className="text-red-600 text-xs font-medium">{t("projects.lineNotFound")}</span>}
+              {r.status === "invalid" && <span className="text-amber-600 text-xs font-medium">{t("projects.lineInvalid")}</span>}
             </div>
           ))}
         </div>

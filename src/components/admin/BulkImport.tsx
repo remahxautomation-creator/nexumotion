@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Loader2 } from "lucide-react";
+import { useT } from "@/i18n/client";
 
 type Result = { sku: string; status: "created" | "updated" | "error"; error?: string };
 
@@ -53,6 +54,7 @@ export default function BulkImport() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const router = useRouter();
+  const { t } = useT();
 
   const submit = async () => {
     setError("");
@@ -71,7 +73,7 @@ export default function BulkImport() {
       setResults(data.results);
       router.refresh();
     } else {
-      setError(data.error ?? "Import failed");
+      setError(data.error ?? t("admin.importFailed"));
     }
   };
 
@@ -92,7 +94,7 @@ export default function BulkImport() {
       <div className="bg-white rounded-lg border border-slate-200 p-4">
         <div className="flex gap-2 mb-3">
           <label className="text-xs font-medium border border-slate-300 rounded-md px-3 py-1.5 cursor-pointer bg-white hover:bg-slate-50">
-            Upload CSV file
+            {t("admin.uploadCsvFile")}
             <input type="file" accept=".csv,.txt" onChange={onFile} className="hidden" />
           </label>
         </div>
@@ -108,23 +110,23 @@ export default function BulkImport() {
         )}
         <button onClick={submit} disabled={busy || !text.trim()}
           className="mt-3 flex items-center gap-2 bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold px-5 py-2.5 rounded-lg text-sm disabled:opacity-50">
-          {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />} Import
+          {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />} {t("admin.import")}
         </button>
       </div>
 
       {results.length > 0 && (
         <div className="mt-4">
           <div className="text-sm text-slate-600 mb-2">
-            <span className="text-emerald-600 font-semibold">{counts.created} created</span> ·{" "}
-            <span className="text-blue-600 font-semibold">{counts.updated} updated</span> ·{" "}
-            <span className="text-red-600 font-semibold">{counts.error} errors</span>
+            <span className="text-emerald-600 font-semibold">{counts.created} {t("admin.created")}</span> ·{" "}
+            <span className="text-blue-600 font-semibold">{counts.updated} {t("admin.updated")}</span> ·{" "}
+            <span className="text-red-600 font-semibold">{counts.error} {t("admin.errors")}</span>
           </div>
           <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100 text-sm max-h-72 overflow-y-auto">
             {results.map((r, i) => (
               <div key={i} className="px-4 py-2 flex items-center justify-between gap-3">
                 <span className="sku">{r.sku}</span>
-                {r.status === "created" && <span className="text-emerald-600 text-xs font-medium">Created</span>}
-                {r.status === "updated" && <span className="text-blue-600 text-xs font-medium">Updated</span>}
+                {r.status === "created" && <span className="text-emerald-600 text-xs font-medium">{t("admin.created")}</span>}
+                {r.status === "updated" && <span className="text-blue-600 text-xs font-medium">{t("admin.updated")}</span>}
                 {r.status === "error" && <span className="text-red-600 text-xs font-medium truncate">{r.error}</span>}
               </div>
             ))}

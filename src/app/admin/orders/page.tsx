@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
 import OrderStatusSelect from "@/components/admin/OrderStatusSelect";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,7 @@ export default async function AdminOrdersPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await searchParams;
+  const { t, locale } = await getT();
   const filter = status && STATUSES.includes(status) ? status : undefined;
 
   const orders = await prisma.order.findMany({
@@ -25,16 +27,16 @@ export default async function AdminOrdersPage({
   return (
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t("admin.orders")}</h1>
         <div className="flex gap-1 flex-wrap">
           <Link href="/admin/orders"
             className={`text-xs font-medium px-3 py-1.5 rounded-full border ${!filter ? "bg-[#0052CC] text-white border-[#0052CC]" : "bg-white text-slate-600 border-slate-300"}`}>
-            All
+            {t("admin.all")}
           </Link>
           {STATUSES.map((s) => (
             <Link key={s} href={`/admin/orders?status=${s}`}
               className={`text-xs font-medium px-3 py-1.5 rounded-full border ${filter === s ? "bg-[#0052CC] text-white border-[#0052CC]" : "bg-white text-slate-600 border-slate-300"}`}>
-              {s}
+              {t(`status.${s}` as never)}
             </Link>
           ))}
         </div>
@@ -44,24 +46,24 @@ export default async function AdminOrdersPage({
         <table className="w-full text-sm">
           <thead>
             <tr className="text-start text-xs text-slate-500 border-b border-slate-200">
-              <th className="px-4 py-3">Order</th>
-              <th className="px-4 py-3">Customer</th>
-              <th className="px-4 py-3">Lines</th>
-              <th className="px-4 py-3">Total</th>
-              <th className="px-4 py-3">Payment</th>
-              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">{t("orders.order")}</th>
+              <th className="px-4 py-3">{t("common.customer")}</th>
+              <th className="px-4 py-3">{t("common.lines")}</th>
+              <th className="px-4 py-3">{t("cart.total")}</th>
+              <th className="px-4 py-3">{t("admin.payment")}</th>
+              <th className="px-4 py-3">{t("common.status")}</th>
             </tr>
           </thead>
           <tbody>
             {orders.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-slate-500">No orders.</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-slate-500">{t("admin.noOrdersFilter")}</td></tr>
             )}
             {orders.map((o) => (
               <tr key={o.id} className="border-b border-slate-100 last:border-0">
                 <td className="px-4 py-3">
                   <Link href={`/orders/${o.orderNumber}`} className="sku text-[#0052CC] hover:underline">{o.orderNumber}</Link>
                   <div className="text-[10px] text-slate-400">
-                    {o.createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                    {o.createdAt.toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", { day: "numeric", month: "short" })}
                   </div>
                 </td>
                 <td className="px-4 py-3 text-slate-600">{o.user.email}</td>

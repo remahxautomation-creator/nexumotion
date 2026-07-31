@@ -3,11 +3,13 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { useT } from "@/i18n/client";
 
 export default function AdminProductSearch() {
   const router = useRouter();
   const sp = useSearchParams();
   const [q, setQ] = useState(sp.get("q") ?? "");
+  const { t } = useT();
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ export default function AdminProductSearch() {
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search SKU, name, brand…"
+          placeholder={t("admin.searchPlaceholder")}
           className="w-64 border border-slate-300 rounded-md ps-8 pe-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40"
         />
         <Search className="absolute start-2.5 top-2 w-4 h-4 text-slate-400" />
@@ -43,7 +45,7 @@ export default function AdminProductSearch() {
             : "bg-white text-slate-600 border-slate-300"
         }`}
       >
-        Low stock
+        {t("admin.lowStockFilter")}
       </button>
     </div>
   );

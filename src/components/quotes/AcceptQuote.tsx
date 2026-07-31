@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, X, Loader2 } from "lucide-react";
+import { useT } from "@/i18n/client";
 
 export default function AcceptQuote({ quoteId }: { quoteId: string }) {
   const [open, setOpen] = useState(false);
@@ -10,6 +11,7 @@ export default function AcceptQuote({ quoteId }: { quoteId: string }) {
   const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "", phone: "", address: "", city: "", country: "Egypt" });
   const router = useRouter();
+  const { t } = useT();
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -26,11 +28,11 @@ export default function AcceptQuote({ quoteId }: { quoteId: string }) {
     const data = await res.json().catch(() => ({}));
     setBusy(false);
     if (res.ok) router.push(`/orders/${data.orderNumber}`);
-    else setError(data.error ?? "Accept failed");
+    else setError(data.error ?? t("quotes.acceptFailed"));
   };
 
   const reject = async () => {
-    if (!confirm("Decline this quote?")) return;
+    if (!confirm(t("quotes.confirmDecline"))) return;
     await fetch(`/api/quotes/${quoteId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -48,27 +50,27 @@ export default function AcceptQuote({ quoteId }: { quoteId: string }) {
         <div className="flex gap-3">
           <button onClick={() => setOpen(true)}
             className="flex items-center gap-2 bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold px-5 py-2.5 rounded-lg text-sm">
-            <Check className="w-4 h-4" /> Accept quote & order
+            <Check className="w-4 h-4" /> {t("quotes.accept")}
           </button>
           <button onClick={reject}
             className="flex items-center gap-2 border border-slate-300 bg-white text-slate-600 font-semibold px-5 py-2.5 rounded-lg text-sm hover:text-red-600">
-            <X className="w-4 h-4" /> Decline
+            <X className="w-4 h-4" /> {t("quotes.decline")}
           </button>
         </div>
       ) : (
         <form onSubmit={accept} className="bg-white rounded-lg border border-slate-200 p-5 max-w-lg space-y-3">
-          <h2 className="font-semibold text-slate-900 text-sm">Shipping address</h2>
+          <h2 className="font-semibold text-slate-900 text-sm">{t("quotes.shippingAddress")}</h2>
           {error && <div className="text-sm bg-red-50 text-red-700 border border-red-200 rounded-md px-3 py-2">{error}</div>}
-          <input required placeholder="Full name" value={form.name} onChange={set("name")} className={input} />
-          <input required placeholder="Phone" value={form.phone} onChange={set("phone")} className={input} />
-          <input required placeholder="Address" value={form.address} onChange={set("address")} className={input} />
+          <input required placeholder={t("auth.fullName")} value={form.name} onChange={set("name")} className={input} />
+          <input required placeholder={t("checkout.phone")} value={form.phone} onChange={set("phone")} className={input} />
+          <input required placeholder={t("checkout.address")} value={form.address} onChange={set("address")} className={input} />
           <div className="grid grid-cols-2 gap-3">
-            <input required placeholder="City" value={form.city} onChange={set("city")} className={input} />
-            <input required placeholder="Country" value={form.country} onChange={set("country")} className={input} />
+            <input required placeholder={t("checkout.city")} value={form.city} onChange={set("city")} className={input} />
+            <input required placeholder={t("checkout.country")} value={form.country} onChange={set("country")} className={input} />
           </div>
           <button type="submit" disabled={busy}
             className="flex items-center gap-2 bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold px-5 py-2.5 rounded-lg text-sm disabled:opacity-60">
-            {busy && <Loader2 className="w-4 h-4 animate-spin" />} Confirm order
+            {busy && <Loader2 className="w-4 h-4 animate-spin" />} {t("quotes.confirmOrder")}
           </button>
         </form>
       )}

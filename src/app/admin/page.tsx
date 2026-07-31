@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
+  const { t } = await getT();
   const [orderCount, pendingCount, revenueAgg, productCount, lowStock, recentOrders, userCount] =
     await Promise.all([
       prisma.order.count(),
@@ -26,16 +28,16 @@ export default async function AdminDashboard() {
     ]);
 
   const stats = [
-    { label: "Total Orders", value: orderCount, href: "/admin/orders" },
-    { label: "Pending Orders", value: pendingCount, href: "/admin/orders?status=PENDING" },
-    { label: "Revenue (booked)", value: formatPrice(Number(revenueAgg._sum.total ?? 0)) },
-    { label: "Active Products", value: productCount, href: "/admin/products" },
-    { label: "Users", value: userCount },
+    { label: t("admin.totalOrders"), value: orderCount, href: "/admin/orders" },
+    { label: t("admin.pendingOrders"), value: pendingCount, href: "/admin/orders?status=PENDING" },
+    { label: t("admin.revenue"), value: formatPrice(Number(revenueAgg._sum.total ?? 0)) },
+    { label: t("admin.activeProducts"), value: productCount, href: "/admin/products" },
+    { label: t("admin.users"), value: userCount },
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">{t("admin.dashboard")}</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
         {stats.map((s) => (
@@ -50,18 +52,18 @@ export default async function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <section>
-          <h2 className="font-semibold text-slate-900 text-sm mb-3">Recent Orders</h2>
+          <h2 className="font-semibold text-slate-900 text-sm mb-3">{t("admin.recentOrders")}</h2>
           <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
-            {recentOrders.length === 0 && <div className="p-6 text-sm text-slate-500">No orders yet.</div>}
+            {recentOrders.length === 0 && <div className="p-6 text-sm text-slate-500">{t("admin.noOrders")}</div>}
             {recentOrders.map((o) => (
               <Link key={o.id} href={`/orders/${o.orderNumber}`} className="flex justify-between items-center px-4 py-3 text-sm hover:bg-slate-50">
                 <div>
                   <span className="sku">{o.orderNumber}</span>
-                  <div className="text-xs text-slate-400">{o.user.email} · {o.items.length} lines</div>
+                  <div className="text-xs text-slate-400">{o.user.email} · {o.items.length} {t("common.lines")}</div>
                 </div>
                 <div className="text-end">
                   <div className="font-semibold">{formatPrice(Number(o.total))}</div>
-                  <div className="text-[10px] text-slate-500">{o.status}</div>
+                  <div className="text-[10px] text-slate-500">{t(`status.${o.status}` as never)}</div>
                 </div>
               </Link>
             ))}
@@ -69,9 +71,9 @@ export default async function AdminDashboard() {
         </section>
 
         <section>
-          <h2 className="font-semibold text-slate-900 text-sm mb-3">Low / Out of Stock</h2>
+          <h2 className="font-semibold text-slate-900 text-sm mb-3">{t("admin.lowStockTitle")}</h2>
           <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
-            {lowStock.length === 0 && <div className="p-6 text-sm text-slate-500">All stocked.</div>}
+            {lowStock.length === 0 && <div className="p-6 text-sm text-slate-500">{t("admin.allStocked")}</div>}
             {lowStock.map((p) => (
               <div key={p.id} className="flex justify-between items-center px-4 py-3 text-sm">
                 <div>
@@ -79,7 +81,7 @@ export default async function AdminDashboard() {
                   <div className="text-xs text-slate-400">{p.brand.name}</div>
                 </div>
                 <span className={`text-xs font-semibold ${p.stockQty === 0 ? "text-red-600" : "text-amber-600"}`}>
-                  {p.stockQty} units
+                  {p.stockQty} {t("common.units")}
                 </span>
               </div>
             ))}

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import ProductRowEditor from "@/components/admin/ProductRowEditor";
 import AdminProductSearch from "@/components/admin/AdminProductSearch";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,7 @@ export default async function AdminProductsPage({
   searchParams: Promise<{ q?: string; stock?: string }>;
 }) {
   const { q, stock } = await searchParams;
+  const { t } = await getT();
   const query = (q ?? "").trim();
 
   const products = await prisma.product.findMany({
@@ -27,7 +29,7 @@ export default async function AdminProductsPage({
   return (
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="text-2xl font-bold text-slate-900">Products</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t("admin.products")}</h1>
         <AdminProductSearch />
       </div>
 
@@ -35,17 +37,17 @@ export default async function AdminProductsPage({
         <table className="w-full text-sm">
           <thead>
             <tr className="text-start text-xs text-slate-500 border-b border-slate-200">
-              <th className="px-4 py-3">SKU / Name</th>
-              <th className="px-4 py-3">Brand</th>
-              <th className="px-4 py-3">Price (USD)</th>
-              <th className="px-4 py-3">Stock</th>
-              <th className="px-4 py-3">Active</th>
+              <th className="px-4 py-3">{t("admin.skuName")}</th>
+              <th className="px-4 py-3">{t("common.brand")}</th>
+              <th className="px-4 py-3">{t("admin.priceUsd")}</th>
+              <th className="px-4 py-3">{t("common.stock")}</th>
+              <th className="px-4 py-3">{t("admin.active")}</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody>
             {products.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-slate-500">No products match.</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-slate-500">{t("admin.noProductsMatch")}</td></tr>
             )}
             {products.map((p) => (
               <ProductRowEditor
@@ -60,7 +62,7 @@ export default async function AdminProductsPage({
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-slate-400 mt-3">Showing up to 50 results, most recently updated first. Use search to narrow.</p>
+      <p className="text-xs text-slate-400 mt-3">{t("admin.showingLimit")}</p>
     </div>
   );
 }

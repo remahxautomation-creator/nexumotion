@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { formatPrice } from "@/lib/utils";
 import AcceptQuote from "@/components/quotes/AcceptQuote";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Quote" };
@@ -11,6 +12,7 @@ export const metadata = { title: "Quote" };
 export default async function QuoteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user) redirect("/login?callbackUrl=/account/quotes");
+  const { t } = await getT();
 
   const { id } = await params;
   const quote = await prisma.quoteRequest.findUnique({
@@ -29,21 +31,21 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
         <h1 className="text-2xl font-bold text-slate-900">
-          Quote <span className="sku">Q-{quote.id.slice(-8).toUpperCase()}</span>
+          {t("quotes.quote")} <span className="sku">Q-{quote.id.slice(-8).toUpperCase()}</span>
         </h1>
-        <Link href="/account/quotes" className="text-sm text-[#0052CC] font-medium">← All quotes</Link>
+        <Link href="/account/quotes" className="text-sm text-[#0052CC] font-medium">{t("quotes.all")}</Link>
       </div>
-      <div className="text-sm text-slate-500 mb-6">Status: <strong>{quote.status}</strong></div>
+      <div className="text-sm text-slate-500 mb-6">{t("common.status")}: <strong>{t(`status.${quote.status}` as never)}</strong></div>
 
       <div className="bg-white rounded-lg border border-slate-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-start text-xs text-slate-500 border-b border-slate-200">
-              <th className="px-4 py-3">Part</th>
-              <th className="px-4 py-3">Qty</th>
-              <th className="px-4 py-3">List Price</th>
-              <th className="px-4 py-3">Quoted Price</th>
-              <th className="px-4 py-3">Line Total</th>
+              <th className="px-4 py-3">{t("common.part")}</th>
+              <th className="px-4 py-3">{t("cart.qty")}</th>
+              <th className="px-4 py-3">{t("quotes.listPrice")}</th>
+              <th className="px-4 py-3">{t("quotes.quotedPrice")}</th>
+              <th className="px-4 py-3">{t("common.lineTotal")}</th>
             </tr>
           </thead>
           <tbody>
@@ -59,7 +61,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
                   {it.quotedPrice !== null ? (
                     <span className="text-emerald-700">{formatPrice(Number(it.quotedPrice))}</span>
                   ) : (
-                    <span className="text-slate-400 text-xs">pending</span>
+                    <span className="text-slate-400 text-xs">{t("quotes.pendingPrice")}</span>
                   )}
                 </td>
                 <td className="px-4 py-2.5 font-semibold">
@@ -74,22 +76,22 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
       <div className="mt-4 flex justify-end">
         <div className="bg-white rounded-lg border border-slate-200 p-4 text-sm w-full sm:w-80 space-y-1.5">
           <div className="flex justify-between text-slate-500">
-            <span>List total</span><span className="line-through">{formatPrice(listTotal)}</span>
+            <span>{t("quotes.listTotal")}</span><span className="line-through">{formatPrice(listTotal)}</span>
           </div>
           {allQuoted && (
             <div className="flex justify-between font-bold text-base">
-              <span>Quoted total</span><span className="text-emerald-700">{formatPrice(quotedTotal)}</span>
+              <span>{t("quotes.quotedTotal")}</span><span className="text-emerald-700">{formatPrice(quotedTotal)}</span>
             </div>
           )}
-          <div className="text-[11px] text-slate-400">+ 14% VAT on acceptance · shipping per agreement</div>
+          <div className="text-[11px] text-slate-400">{t("quotes.vatNote")}</div>
         </div>
       </div>
 
       {quote.notes && (
-        <div className="mt-4 text-sm text-slate-600"><strong>Your notes:</strong> {quote.notes}</div>
+        <div className="mt-4 text-sm text-slate-600"><strong>{t("quotes.yourNotes")}</strong> {quote.notes}</div>
       )}
       {quote.adminNotes && (
-        <div className="mt-2 text-sm text-slate-600"><strong>Our reply:</strong> {quote.adminNotes}</div>
+        <div className="mt-2 text-sm text-slate-600"><strong>{t("quotes.ourReply")}</strong> {quote.adminNotes}</div>
       )}
 
       {quote.status === "QUOTED" && allQuoted && <AcceptQuote quoteId={quote.id} />}

@@ -6,6 +6,7 @@ import { formatPrice, STOCK_LABELS } from "@/lib/utils";
 import ProjectItemRow from "@/components/projects/ProjectItemRow";
 import BomImport from "@/components/projects/BomImport";
 import ProjectActions from "@/components/projects/ProjectActions";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Project" };
@@ -13,6 +14,7 @@ export const metadata = { title: "Project" };
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user) redirect("/login?callbackUrl=/projects");
+  const { t } = await getT();
 
   const { id } = await params;
   const project = await prisma.project.findUnique({
@@ -42,10 +44,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     <div className="max-w-5xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
         <h1 className="text-2xl font-bold text-slate-900">{project.name}</h1>
-        <Link href="/projects" className="text-sm text-[#0052CC] font-medium">← All projects</Link>
+        <Link href="/projects" className="text-sm text-[#0052CC] font-medium">{t("projects.all")}</Link>
       </div>
       <p className="text-sm text-slate-500 mb-6">
-        {project.items.length} items · estimated total {formatPrice(total)}
+        {project.items.length} {t("common.items")} · {t("projects.estimatedTotal")} {formatPrice(total)}
       </p>
 
       <BomImport projectId={project.id} />
@@ -54,18 +56,18 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         <table className="w-full text-sm">
           <thead>
             <tr className="text-start text-xs text-slate-500 border-b border-slate-200">
-              <th className="px-4 py-3">Part</th>
-              <th className="px-4 py-3">Unit Price</th>
-              <th className="px-4 py-3">Stock</th>
-              <th className="px-4 py-3">Qty</th>
-              <th className="px-4 py-3">Line Total</th>
+              <th className="px-4 py-3">{t("common.part")}</th>
+              <th className="px-4 py-3">{t("cart.unitPrice")}</th>
+              <th className="px-4 py-3">{t("common.stock")}</th>
+              <th className="px-4 py-3">{t("cart.qty")}</th>
+              <th className="px-4 py-3">{t("common.lineTotal")}</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody>
             {project.items.length === 0 && (
               <tr><td colSpan={6} className="px-4 py-10 text-center text-slate-500">
-                No items yet — import a BOM above or add parts by SKU.
+                {t("projects.noItems")}
               </td></tr>
             )}
             {project.items.map((it) => {
@@ -78,7 +80,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                     id: it.id, qty: it.qty,
                     sku: it.product.sku, name: it.product.name, slug: it.product.slug,
                     brand: it.product.brand.name, price: Number(it.product.price),
-                    stockLabel: stock.label, stockClass: stock.className,
+                    stockLabelKey: stock.labelKey, stockClass: stock.className,
                   }}
                 />
               );

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Save, Loader2 } from "lucide-react";
 import { STOCK_LABELS } from "@/lib/utils";
+import { useT } from "@/i18n/client";
 
 type P = {
   id: string; sku: string; name: string; slug: string; brand: string;
@@ -17,6 +18,7 @@ export default function ProductRowEditor({ product }: { product: P }) {
   const [isActive, setIsActive] = useState(product.isActive);
   const [busy, setBusy] = useState(false);
   const router = useRouter();
+  const { t } = useT();
 
   const dirty =
     Number(price) !== product.price ||
@@ -32,7 +34,7 @@ export default function ProductRowEditor({ product }: { product: P }) {
     });
     setBusy(false);
     if (res.ok) router.refresh();
-    else alert("Update failed");
+    else alert(t("admin.updateFailed"));
   };
 
   const stock = STOCK_LABELS[product.stockStatus] ?? STOCK_LABELS.IN_STOCK;
@@ -61,7 +63,7 @@ export default function ProductRowEditor({ product }: { product: P }) {
             className="w-20 border border-slate-300 rounded-md px-2 py-1 text-sm"
           />
           <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${stock.className}`}>
-            {stock.label}
+            {t(stock.labelKey)}
           </span>
         </div>
       </td>
@@ -74,7 +76,7 @@ export default function ProductRowEditor({ product }: { product: P }) {
           disabled={!dirty || busy}
           className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-md bg-[#0052CC] text-white disabled:opacity-30"
         >
-          {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />} Save
+          {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />} {t("admin.save")}
         </button>
       </td>
     </tr>

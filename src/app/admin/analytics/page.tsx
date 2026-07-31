@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Analytics" };
 
 export default async function AnalyticsPage() {
+  const { t } = await getT();
   const [bestSellers, ordersByStatus, brandSales, categorySales] = await Promise.all([
     prisma.orderItem.groupBy({
       by: ["productId"],
@@ -42,13 +44,13 @@ export default async function AnalyticsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Analytics</h1>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">{t("admin.analytics")}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <section>
-          <h2 className="font-semibold text-slate-900 text-sm mb-3">Best Sellers (by revenue)</h2>
+          <h2 className="font-semibold text-slate-900 text-sm mb-3">{t("admin.bestSellers")}</h2>
           <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
-            {bestSellers.length === 0 && <div className="p-6 text-sm text-slate-500">No sales yet.</div>}
+            {bestSellers.length === 0 && <div className="p-6 text-sm text-slate-500">{t("admin.noSales")}</div>}
             {bestSellers.map((b) => {
               const p = productById.get(b.productId);
               if (!p) return null;
@@ -57,7 +59,7 @@ export default async function AnalyticsPage() {
                   className="flex justify-between items-center px-4 py-3 text-sm hover:bg-slate-50">
                   <div>
                     <span className="sku">{p.sku}</span>
-                    <div className="text-xs text-slate-400">{p.brand.name} · {b._sum.qty} units sold</div>
+                    <div className="text-xs text-slate-400">{p.brand.name} · {b._sum.qty} {t("admin.unitsSold")}</div>
                   </div>
                   <span className="font-semibold">{formatPrice(Number(b._sum.total ?? 0))}</span>
                 </Link>
@@ -67,22 +69,22 @@ export default async function AnalyticsPage() {
         </section>
 
         <section>
-          <h2 className="font-semibold text-slate-900 text-sm mb-3">Orders by Status</h2>
+          <h2 className="font-semibold text-slate-900 text-sm mb-3">{t("admin.ordersByStatus")}</h2>
           <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
-            {ordersByStatus.length === 0 && <div className="p-6 text-sm text-slate-500">No orders yet.</div>}
+            {ordersByStatus.length === 0 && <div className="p-6 text-sm text-slate-500">{t("admin.noOrders")}</div>}
             {ordersByStatus.map((s) => (
               <div key={s.status} className="flex justify-between items-center px-4 py-3 text-sm">
-                <span className="font-medium">{s.status}</span>
+                <span className="font-medium">{t(`status.${s.status}` as never)}</span>
                 <span className="text-slate-600">
-                  {s._count} order{s._count !== 1 ? "s" : ""} · {formatPrice(Number(s._sum.total ?? 0))}
+                  {s._count} · {formatPrice(Number(s._sum.total ?? 0))}
                 </span>
               </div>
             ))}
           </div>
 
-          <h2 className="font-semibold text-slate-900 text-sm mb-3 mt-6">Revenue by Brand</h2>
+          <h2 className="font-semibold text-slate-900 text-sm mb-3 mt-6">{t("admin.revenueByBrand")}</h2>
           <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
-            {topBrands.length === 0 && <div className="p-6 text-sm text-slate-500">No sales yet.</div>}
+            {topBrands.length === 0 && <div className="p-6 text-sm text-slate-500">{t("admin.noSales")}</div>}
             {topBrands.map(([name, total]) => (
               <div key={name} className="flex justify-between items-center px-4 py-2.5 text-sm">
                 <span>{name}</span>
@@ -91,9 +93,9 @@ export default async function AnalyticsPage() {
             ))}
           </div>
 
-          <h2 className="font-semibold text-slate-900 text-sm mb-3 mt-6">Revenue by Category</h2>
+          <h2 className="font-semibold text-slate-900 text-sm mb-3 mt-6">{t("admin.revenueByCategory")}</h2>
           <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
-            {topCategories.length === 0 && <div className="p-6 text-sm text-slate-500">No sales yet.</div>}
+            {topCategories.length === 0 && <div className="p-6 text-sm text-slate-500">{t("admin.noSales")}</div>}
             {topCategories.map(([name, total]) => (
               <div key={name} className="flex justify-between items-center px-4 py-2.5 text-sm">
                 <span>{name}</span>

@@ -4,6 +4,7 @@ import { Bookmark } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import DeleteSavedSearch from "@/components/search/DeleteSavedSearch";
+import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Saved Searches" };
@@ -11,6 +12,7 @@ export const metadata = { title: "Saved Searches" };
 export default async function SavedSearchesPage() {
   const session = await auth();
   if (!session?.user) redirect("/login?callbackUrl=/account/searches");
+  const { t } = await getT();
 
   const searches = await prisma.savedSearch.findMany({
     where: { userId: session.user.id },
@@ -22,14 +24,14 @@ export default async function SavedSearchesPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Bookmark className="w-6 h-6 text-[#0052CC]" />
-          <h1 className="text-2xl font-bold text-slate-900">Saved Searches</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t("searches.title")}</h1>
         </div>
-        <Link href="/account" className="text-sm text-[#0052CC] font-medium">← Account</Link>
+        <Link href="/account" className="text-sm text-[#0052CC] font-medium">{t("nav.account")}</Link>
       </div>
 
       {searches.length === 0 ? (
         <div className="bg-white rounded-lg border border-slate-200 p-12 text-center text-sm text-slate-500">
-          No saved searches yet. Use “Save search” on any category or search page.
+          {t("searches.none")}
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">

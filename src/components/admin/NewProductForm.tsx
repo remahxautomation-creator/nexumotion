@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Plus } from "lucide-react";
+import { useT } from "@/i18n/client";
 
 export default function NewProductForm({
   brands,
@@ -18,6 +19,7 @@ export default function NewProductForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { t } = useT();
 
   const set = (k: keyof typeof form) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
@@ -38,7 +40,7 @@ export default function NewProductForm({
     if (res.ok && result?.status !== "error") {
       router.push(`/admin/products?q=${encodeURIComponent(form.sku)}`);
     } else {
-      setError(result?.error ?? data.error ?? "Create failed");
+      setError(result?.error ?? data.error ?? t("admin.createFailed"));
     }
   };
 
@@ -52,41 +54,41 @@ export default function NewProductForm({
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="text-xs font-semibold text-slate-600 block mb-1">SKU *</label>
+          <label className="text-xs font-semibold text-slate-600 block mb-1">{t("admin.sku")} *</label>
           <input required value={form.sku} onChange={set("sku")} className={`${input} font-mono`} />
         </div>
         <div>
-          <label className="text-xs font-semibold text-slate-600 block mb-1">Name *</label>
+          <label className="text-xs font-semibold text-slate-600 block mb-1">{t("admin.name")} *</label>
           <input required value={form.name} onChange={set("name")} className={input} />
         </div>
         <div>
-          <label className="text-xs font-semibold text-slate-600 block mb-1">Brand *</label>
+          <label className="text-xs font-semibold text-slate-600 block mb-1">{t("common.brand")} *</label>
           <select value={form.brand} onChange={set("brand")} className={input}>
             {brands.map((b) => <option key={b}>{b}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs font-semibold text-slate-600 block mb-1">Category *</label>
+          <label className="text-xs font-semibold text-slate-600 block mb-1">{t("admin.category")} *</label>
           <select value={form.category} onChange={set("category")} className={input}>
             {categories.map((c) => <option key={c}>{c}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs font-semibold text-slate-600 block mb-1">Price (USD) *</label>
+          <label className="text-xs font-semibold text-slate-600 block mb-1">{t("admin.priceUsd")} *</label>
           <input required type="number" min={0} step="0.01" value={form.price} onChange={set("price")} className={input} />
         </div>
         <div>
-          <label className="text-xs font-semibold text-slate-600 block mb-1">Stock quantity</label>
+          <label className="text-xs font-semibold text-slate-600 block mb-1">{t("admin.stockQty")}</label>
           <input type="number" min={0} value={form.stockQty} onChange={set("stockQty")} className={input} />
         </div>
         <div className="sm:col-span-2">
-          <label className="text-xs font-semibold text-slate-600 block mb-1">Short description</label>
+          <label className="text-xs font-semibold text-slate-600 block mb-1">{t("admin.shortDesc")}</label>
           <input value={form.shortDesc} onChange={set("shortDesc")} className={input} maxLength={255} />
         </div>
       </div>
       <button type="submit" disabled={busy}
         className="flex items-center gap-2 bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold px-5 py-2.5 rounded-lg text-sm disabled:opacity-60">
-        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} Create product
+        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} {t("admin.createProduct")}
       </button>
     </form>
   );

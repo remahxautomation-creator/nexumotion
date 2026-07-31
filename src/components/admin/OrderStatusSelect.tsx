@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useT } from "@/i18n/client";
 
 export default function OrderStatusSelect({
   orderId,
@@ -16,6 +17,7 @@ export default function OrderStatusSelect({
 }) {
   const [busy, setBusy] = useState(false);
   const router = useRouter();
+  const { t } = useT();
 
   const change = async (next: string) => {
     setBusy(true);
@@ -26,7 +28,7 @@ export default function OrderStatusSelect({
     });
     setBusy(false);
     if (res.ok) router.refresh();
-    else alert("Update failed");
+    else alert(t("admin.updateFailed"));
   };
 
   return (
@@ -37,7 +39,7 @@ export default function OrderStatusSelect({
       className="text-xs border border-slate-300 rounded-md px-1.5 py-1 bg-white disabled:opacity-50"
     >
       {options.map((o) => (
-        <option key={o} value={o}>{o}</option>
+        <option key={o} value={o}>{t(`status.${o}` as never)}</option>
       ))}
     </select>
   );
