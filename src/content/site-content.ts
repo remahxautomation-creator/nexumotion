@@ -67,6 +67,17 @@ export const testimonials: Testimonial[] = [
   },
 ];
 
+// ── Contact details ─────────────────────────────────────────────────────────
+// Shown in the floating contact dock. REPLACE THESE with your real numbers
+// before the site goes public — the placeholders below are not live lines.
+// `whatsapp` must be digits only, international format, no + or spaces.
+export const contact = {
+  phone: "+20 100 000 0000",
+  whatsapp: "201000000000",
+  email: "sales@autoparts-mena.com",
+  whatsappGreeting: "Hello, I'd like to ask about a part.",
+};
+
 // ── About page facts ────────────────────────────────────────────────────────
 // These are claims about your business. Set them to what is actually true.
 export const companyFacts = {

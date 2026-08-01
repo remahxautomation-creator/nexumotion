@@ -9,6 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       // Private/transactional areas must never be indexed
       disallow: ["/admin", "/account", "/api", "/checkout", "/cart", "/orders", "/projects"],
+      // /assistant and /systems are intentionally indexable
     },
     sitemap: `${BASE}/sitemap.xml`,
   };

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ShoppingCart, Menu, ChevronDown, Cpu, User } from "lucide-react";
+import { ShoppingCart, Menu, ChevronDown, Cpu, User, Sparkles } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import SearchAutocomplete from "@/components/search/SearchAutocomplete";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
@@ -31,6 +31,9 @@ export default function Header({ categories }: { categories: Cat[] }) {
           </div>
 
           <nav className="flex items-center gap-1 ms-auto">
+            <Link href="/assistant" className="hidden lg:flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#0052CC] hover:text-[#003D99]">
+              <Sparkles className="w-4 h-4" /> {t("nav.assistant")}
+            </Link>
             <Link href="/systems" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0052CC]">
               {t("nav.systems")}
             </Link>

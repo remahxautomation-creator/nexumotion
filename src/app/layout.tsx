@@ -7,6 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { getLocale } from "@/i18n/server";
 import { isRtl } from "@/i18n/dictionaries";
 import { I18nProvider } from "@/i18n/client";
+import SiteGuide from "@/components/chat/SiteGuide";
+import ContactDock from "@/components/chat/ContactDock";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
@@ -41,6 +43,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Header categories={categories} />
           <main className="flex-1">{children}</main>
           <Footer />
+          <SiteGuide />
+          <ContactDock />
         </I18nProvider>
       </body>
     </html>

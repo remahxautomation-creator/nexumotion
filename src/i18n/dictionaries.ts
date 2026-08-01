@@ -395,6 +395,43 @@ export const dictionaries = {
     "inqStatus.QUALIFIED": "Qualified",
     "inqStatus.CLOSED": "Closed",
 
+    // ── AI assistant / guide / contact ──────────────────────────────────
+    "nav.assistant": "AI Assistant",
+    "assistant.title": "Technical part finder",
+    "assistant.lead":
+      "Describe what you need the way you'd say it to a colleague — rating, voltage, protection class, protocol — and we'll match it against the catalogue.",
+    "assistant.badgeAi": "AI-assisted",
+    "assistant.badgeSpec": "Spec matching",
+    "assistant.dataNote":
+      "Results come from our live catalogue, never generated. Every part number shown is one we actually list.",
+    "assistant.startTitle": "What are you looking for?",
+    "assistant.startBody":
+      "Give a requirement in plain words. Try one of these, or write your own.",
+    "assistant.placeholder": "e.g. 15 kW drive, 380V, IP54, Modbus",
+    "assistant.send": "Search",
+    "assistant.searching": "Searching the catalogue…",
+    "assistant.understood": "Read as:",
+    "assistant.matches": "matching parts",
+    "assistant.noResults": "Nothing in the catalogue matches that yet.",
+    "assistant.askUs": "Ask us to source it →",
+    "assistant.relaxedSpecs":
+      "No exact spec match — showing the closest parts in that category instead.",
+    "assistant.crossRef": "Interpreted as a competitor part number. Equivalents for",
+    "assistant.failed": "Search failed. Please try again.",
+
+    "guide.launcher": "Help",
+    "guide.title": "Site guide",
+    "guide.subtitle": "Finding your way around",
+    "guide.welcome":
+      "Hello. I can show you where things are — finding parts, uploading a BOM, requesting a quote. What do you need?",
+    "guide.placeholder": "Ask about the site…",
+    "guide.toAssistant": "Looking for a specific part? Try the AI assistant",
+
+    "contact.title": "Contact us",
+    "contact.phone": "Call us",
+    "contact.whatsapp": "WhatsApp",
+    "contact.email": "Email",
+
     "lang.switch": "العربية",
   },
 
@@ -790,6 +827,41 @@ export const dictionaries = {
     "inqStatus.CONTACTED": "تم التواصل",
     "inqStatus.QUALIFIED": "مؤهل",
     "inqStatus.CLOSED": "مغلق",
+
+    // ── AI assistant / guide / contact ──────────────────────────────────
+    "nav.assistant": "المساعد الذكي",
+    "assistant.title": "البحث الفني عن القطع",
+    "assistant.lead":
+      "صف ما تحتاجه كما تقوله لزميلك — القدرة والجهد ودرجة الحماية والبروتوكول — وسنطابقه مع الكتالوج.",
+    "assistant.badgeAi": "مدعوم بالذكاء الاصطناعي",
+    "assistant.badgeSpec": "مطابقة المواصفات",
+    "assistant.dataNote":
+      "النتائج من كتالوجنا الفعلي ولا تُولَّد آليًا. كل كود قطعة معروض هو كود ندرجه فعلًا.",
+    "assistant.startTitle": "عمّا تبحث؟",
+    "assistant.startBody": "اكتب المتطلب بكلماتك. جرّب أحد الأمثلة أو اكتب طلبك.",
+    "assistant.placeholder": "مثال: مغيّر ١٥ كيلوواط، ٣٨٠ فولت، IP54، Modbus",
+    "assistant.send": "ابحث",
+    "assistant.searching": "جارٍ البحث في الكتالوج…",
+    "assistant.understood": "فُهم كالتالي:",
+    "assistant.matches": "قطعة مطابقة",
+    "assistant.noResults": "لا يوجد في الكتالوج ما يطابق ذلك بعد.",
+    "assistant.askUs": "اطلب منا توريدها ←",
+    "assistant.relaxedSpecs": "لا تطابق دقيق للمواصفات — نعرض أقرب القطع في الفئة.",
+    "assistant.crossRef": "فُهم كأنه كود منافس. البدائل المكافئة لـ",
+    "assistant.failed": "تعذّر البحث. من فضلك حاول مرة أخرى.",
+
+    "guide.launcher": "مساعدة",
+    "guide.title": "دليل الموقع",
+    "guide.subtitle": "إرشادك داخل الموقع",
+    "guide.welcome":
+      "أهلًا. أستطيع إرشادك إلى مواضع الأشياء — البحث عن القطع، ورفع قوائم المواد، وطلب عروض الأسعار. ماذا تحتاج؟",
+    "guide.placeholder": "اسأل عن الموقع…",
+    "guide.toAssistant": "تبحث عن قطعة محددة؟ جرّب المساعد الذكي",
+
+    "contact.title": "تواصل معنا",
+    "contact.phone": "اتصل بنا",
+    "contact.whatsapp": "واتساب",
+    "contact.email": "البريد الإلكتروني",
 
     "lang.switch": "English",
   },
