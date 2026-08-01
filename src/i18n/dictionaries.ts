@@ -291,6 +291,56 @@ export const dictionaries = {
     "admin.noteToCustomer": "Note to customer (validity, lead time, terms)…",
     "admin.off": "off",
 
+    // ── Home sections / About ───────────────────────────────────────────
+    "home.hero.eyebrow": "Egypt · Middle East · Africa",
+    "home.hero.stat1": "brands stocked",
+    "home.hero.stat2": "categories",
+    "home.hero.stat3": "specs searchable",
+    "home.customers.title": "Trusted by industry",
+    "home.customers.subtitle": "Panel builders, OEMs and maintenance teams across the region.",
+    "home.testimonials.title": "What engineers say",
+    "home.testimonials.subtitle": "Feedback from the people who specify and install these parts.",
+    "home.cta.title": "Can't find the part?",
+    "home.cta.body":
+      "Send us the competitor part number, a photo of the nameplate, or your whole bill of materials. We'll come back with the equivalent, the price and the lead time.",
+    "home.cta.primary": "Request a quote",
+    "home.cta.secondary": "Upload a BOM",
+
+    "nav.about": "About",
+    "about.title": "Built by engineers, for engineers",
+    "about.lead":
+      "AutoParts MENA supplies genuine industrial automation components across Egypt, the Middle East and Africa — with the technical data engineers actually need to specify them.",
+    "about.story.title": "Why we exist",
+    "about.story.p1":
+      "Sourcing automation parts in this region usually means a phone call, a wait, and a price you can't verify. Catalogues are out of date, cross-references live in someone's head, and obsolete parts send you hunting through forums.",
+    "about.story.p2":
+      "We built the catalogue we wanted as engineers: every specification searchable, competitor part numbers mapped to equivalents, stock and pricing visible without an account, and bills of materials you can paste in rather than retype.",
+    "about.values.specs": "Specs before marketing",
+    "about.values.specsBody":
+      "Every product carries its full parametric data. Filter by voltage, current, IP rating, power — whatever the application demands.",
+    "about.values.genuine": "Genuine parts only",
+    "about.values.genuineBody":
+      "Sourced through manufacturer and authorised distribution channels, with the warranty chain intact.",
+    "about.values.open": "No login walls",
+    "about.values.openBody":
+      "Prices and specifications are visible to everyone. Check out as a guest if you'd rather not open an account.",
+    "about.values.regional": "Regional by design",
+    "about.values.regionalBody":
+      "Priced in the currencies you buy in, shipped across Egypt, the GCC and Africa, supported in Arabic and English.",
+    "about.capabilities.title": "What we do",
+    "about.cap1": "Cross-reference sourcing",
+    "about.cap1Body": "Give us a competitor or obsolete part number and we'll find the equivalent.",
+    "about.cap2": "BOM pricing",
+    "about.cap2Body": "Upload a bill of materials and get line-by-line availability and pricing.",
+    "about.cap3": "Volume quotations",
+    "about.cap3Body": "Project quantities priced per line, with lead times you can plan against.",
+    "about.cap4": "Technical support",
+    "about.cap4Body": "Selection help from people who have wired a panel, not just read a datasheet.",
+    "about.founded": "Founded",
+    "about.based": "Based in",
+    "about.serving": "Serving",
+    "about.brands": "Brands",
+
     "lang.switch": "العربية",
   },
 
@@ -583,6 +633,56 @@ export const dictionaries = {
     "admin.sendQuoteFailed": "تعذّر إرسال العرض",
     "admin.noteToCustomer": "ملاحظة للعميل (مدة الصلاحية، مدة التوريد، الشروط)…",
     "admin.off": "خصم",
+
+    // ── Home sections / About ───────────────────────────────────────────
+    "home.hero.eyebrow": "مصر · الشرق الأوسط · أفريقيا",
+    "home.hero.stat1": "ماركة متوفرة",
+    "home.hero.stat2": "فئة",
+    "home.hero.stat3": "مواصفة قابلة للبحث",
+    "home.customers.title": "يثق بنا قطاع الصناعة",
+    "home.customers.subtitle": "مقاولو اللوحات ومصنّعو المعدات وفرق الصيانة في المنطقة.",
+    "home.testimonials.title": "ماذا يقول المهندسون",
+    "home.testimonials.subtitle": "آراء من يختارون هذه القطع ويركّبونها.",
+    "home.cta.title": "لم تجد القطعة؟",
+    "home.cta.body":
+      "أرسل لنا كود المنافس، أو صورة للوحة البيانات، أو قائمة المواد كاملة. وسنعود إليك بالبديل المكافئ والسعر ومدة التوريد.",
+    "home.cta.primary": "اطلب عرض سعر",
+    "home.cta.secondary": "ارفع قائمة مواد",
+
+    "nav.about": "من نحن",
+    "about.title": "صُمم بأيدي مهندسين، من أجل المهندسين",
+    "about.lead":
+      "أوتوبارتس مينا تورّد مكوّنات أتمتة صناعية أصلية في مصر والشرق الأوسط وأفريقيا — مع البيانات الفنية التي يحتاجها المهندس فعليًا لاختيارها.",
+    "about.story.title": "لماذا بدأنا",
+    "about.story.p1":
+      "توريد قطع الأتمتة في منطقتنا يعني عادةً مكالمة هاتفية، وانتظارًا، وسعرًا لا يمكنك التحقق منه. الكتالوجات قديمة، وأكواد البدائل محفوظة في ذاكرة أحدهم، والقطع المتوقفة تدفعك للبحث في المنتديات.",
+    "about.story.p2":
+      "بنينا الكتالوج الذي كنّا نتمناه كمهندسين: كل مواصفة قابلة للبحث، وأكواد المنافسين مرتبطة ببدائلها، والمخزون والأسعار ظاهرة بدون حساب، وقوائم المواد تُلصق بدل إعادة كتابتها.",
+    "about.values.specs": "المواصفات قبل التسويق",
+    "about.values.specsBody":
+      "كل منتج يحمل بياناته الفنية كاملة. صفِّ حسب الجهد أو التيار أو درجة الحماية أو القدرة — حسبما يتطلبه التطبيق.",
+    "about.values.genuine": "قطع أصلية فقط",
+    "about.values.genuineBody":
+      "موردة عبر قنوات التصنيع والتوزيع المعتمدة، مع الحفاظ على سلسلة الضمان.",
+    "about.values.open": "بدون حواجز تسجيل",
+    "about.values.openBody":
+      "الأسعار والمواصفات ظاهرة للجميع. ويمكنك إتمام الطلب كضيف إن لم ترغب في إنشاء حساب.",
+    "about.values.regional": "مصمم للمنطقة",
+    "about.values.regionalBody":
+      "بالعملات التي تشتري بها، وشحن يغطي مصر والخليج وأفريقيا، ودعم بالعربية والإنجليزية.",
+    "about.capabilities.title": "ماذا نقدّم",
+    "about.cap1": "توريد بالأكواد المكافئة",
+    "about.cap1Body": "أعطنا كود المنافس أو القطعة المتوقفة، ونجد لك البديل.",
+    "about.cap2": "تسعير قوائم المواد",
+    "about.cap2Body": "ارفع قائمة المواد واحصل على التوفر والسعر لكل سطر.",
+    "about.cap3": "عروض أسعار الكميات",
+    "about.cap3Body": "كميات المشاريع مسعّرة لكل سطر، بمدد توريد يمكنك التخطيط عليها.",
+    "about.cap4": "دعم فني",
+    "about.cap4Body": "مساعدة في الاختيار من أشخاص ركّبوا لوحات فعليًا، لا قرأوا كتالوجًا فحسب.",
+    "about.founded": "تأسست",
+    "about.based": "المقر",
+    "about.serving": "نخدم",
+    "about.brands": "الماركات",
 
     "lang.switch": "English",
   },

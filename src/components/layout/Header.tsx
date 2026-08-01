@@ -31,6 +31,9 @@ export default function Header({ categories }: { categories: Cat[] }) {
           </div>
 
           <nav className="flex items-center gap-1 ms-auto">
+            <Link href="/about" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0052CC]">
+              {t("nav.about")}
+            </Link>
             <Link href="/brands" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0052CC]">
               {t("nav.brands")}
             </Link>

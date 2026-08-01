@@ -14,6 +14,7 @@ export default async function Footer() {
         <div>
           <h4 className="font-semibold text-white mb-3">{t("footer.shop")}</h4>
           <ul className="space-y-2">
+            <li><Link href="/about" className="hover:text-white">{t("nav.about")}</Link></li>
             <li><Link href="/brands" className="hover:text-white">{t("footer.allBrands")}</Link></li>
             <li><Link href="/search" className="hover:text-white">{t("footer.searchParts")}</Link></li>
             <li><Link href="/quick-order" className="hover:text-white">{t("footer.quickOrderPad")}</Link></li>
