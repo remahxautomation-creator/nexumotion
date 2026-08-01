@@ -247,6 +247,24 @@ model QuoteItem {
   quotedPrice Decimal?     // admin-set price
 }
 
+// Contact-form submissions from the system solution pages.
+// status: NEW | CONTACTED | QUALIFIED | CLOSED
+model Inquiry {
+  id          String   @id @default(cuid())
+  systemSlug  String? // which /systems/[slug] page it came from
+  name        String
+  company     String?
+  email       String
+  phone       String?
+  country     String?
+  message     String
+  status      String   @default("NEW")
+  createdAt   DateTime @default(now())
+
+  @@index([status])
+  @@index([createdAt])
+}
+
 model SavedSearch {
   id        String   @id @default(cuid())
   userId    String

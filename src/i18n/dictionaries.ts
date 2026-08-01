@@ -204,6 +204,20 @@ export const dictionaries = {
     "projects.lineAdded": "Added",
     "projects.lineNotFound": "Not found",
     "projects.lineInvalid": "Invalid",
+    "projects.pastePlaceholder":
+      "Paste your BOM — CSV, tab or semicolon separated. Any column layout works; you pick which column holds the part number below.",
+    "projects.colPartNumber": "Part number column",
+    "projects.colQty": "Quantity column",
+    "projects.column": "Column",
+    "projects.qtyDefaultOne": "None — use qty 1",
+    "projects.skipHeader": "First row is a header",
+    "projects.previewOf": "Preview — first rows of",
+    "projects.importNothingParsed":
+      "Nothing could be read from that text. Check the part-number column selection above.",
+    "projects.importTooMany": "Too many lines — 500 maximum per import.",
+    "projects.importFailed": "Import failed.",
+    "projects.notFoundHint":
+      "Not-found parts aren't in the catalogue yet. Load them via Admin → Bulk Import, or send us the list to source.",
 
     // ── Quotes ──────────────────────────────────────────────────────────
     "quotes.title": "My Quotes",
@@ -340,6 +354,46 @@ export const dictionaries = {
     "about.based": "Based in",
     "about.serving": "Serving",
     "about.brands": "Brands",
+
+    // ── Systems ─────────────────────────────────────────────────────────
+    "nav.systems": "Systems",
+    "systems.title": "System Solutions",
+    "systems.lead":
+      "The integration work most in demand across Egypt, the Gulf and Africa — what each system does, what it needs, and how a project actually runs.",
+    "systems.learnMore": "Learn more",
+    "systems.discussCta": "Discuss your project",
+    "systems.whatItIs": "What it is",
+    "systems.outcomes": "What you get",
+    "systems.architecture": "System architecture",
+    "systems.diagramNote": "Typical architecture — the layers scale to your site count and process.",
+    "systems.requirements": "What it requires",
+    "systems.requirementsLead":
+      "Gather these before pricing. A project quoted without them gets re-quoted halfway through.",
+    "systems.howTo": "How a project runs",
+    "systems.howToLead": "The sequence we follow, and the order that keeps surprises out of the commissioning week.",
+    "systems.partsFor": "Parts for this system",
+    "systems.brandsFor": "Brands we supply for this system",
+    "systems.related": "Related systems",
+
+    "inquiry.title": "Tell us about your project",
+    "inquiry.subtitle": "Send the requirement and we'll come back with scope, parts and lead time.",
+    "inquiry.company": "Company",
+    "inquiry.message": "Your requirement",
+    "inquiry.messagePlaceholder":
+      "What are you trying to achieve, what's installed today, and when do you need it running?",
+    "inquiry.submit": "Send enquiry",
+    "inquiry.sentTitle": "Enquiry received",
+    "inquiry.sentBody":
+      "Thank you — our engineering team will come back to you within one business day.",
+    "inquiry.failed": "Could not send. Please try again.",
+    "inquiry.privacyNote": "We use your details to answer this enquiry only.",
+
+    "admin.inquiries": "Enquiries",
+    "admin.noInquiries": "No enquiries yet.",
+    "inqStatus.NEW": "New",
+    "inqStatus.CONTACTED": "Contacted",
+    "inqStatus.QUALIFIED": "Qualified",
+    "inqStatus.CLOSED": "Closed",
 
     "lang.switch": "العربية",
   },
@@ -547,6 +601,20 @@ export const dictionaries = {
     "projects.lineAdded": "تمت الإضافة",
     "projects.lineNotFound": "غير موجود",
     "projects.lineInvalid": "غير صالح",
+    "projects.pastePlaceholder":
+      "الصق قائمة المواد — مفصولة بفاصلة أو فاصلة منقوطة أو Tab. أي ترتيب للأعمدة مقبول؛ تختار بالأسفل العمود الذي يحتوي كود القطعة.",
+    "projects.colPartNumber": "عمود كود القطعة",
+    "projects.colQty": "عمود الكمية",
+    "projects.column": "عمود",
+    "projects.qtyDefaultOne": "بدون — الكمية ١",
+    "projects.skipHeader": "الصف الأول عناوين",
+    "projects.previewOf": "معاينة — أول صفوف من",
+    "projects.importNothingParsed":
+      "تعذّرت قراءة أي بيانات من النص. راجع اختيار عمود كود القطعة بالأعلى.",
+    "projects.importTooMany": "عدد الأسطر كبير — الحد الأقصى ٥٠٠ سطر لكل استيراد.",
+    "projects.importFailed": "تعذّر الاستيراد.",
+    "projects.notFoundHint":
+      "القطع غير الموجودة ليست في الكتالوج بعد. أضفها من الإدارة ← استيراد بالجملة، أو أرسل لنا القائمة لتوريدها.",
 
     // ── Quotes ──────────────────────────────────────────────────────────
     "quotes.title": "عروض الأسعار",
@@ -683,6 +751,45 @@ export const dictionaries = {
     "about.based": "المقر",
     "about.serving": "نخدم",
     "about.brands": "الماركات",
+
+    // ── Systems ─────────────────────────────────────────────────────────
+    "nav.systems": "الأنظمة",
+    "systems.title": "حلول الأنظمة",
+    "systems.lead":
+      "أعمال التكامل الأكثر طلبًا في مصر والخليج وأفريقيا — ماذا يفعل كل نظام، وما الذي يحتاجه، وكيف يسير المشروع فعليًا.",
+    "systems.learnMore": "اعرف المزيد",
+    "systems.discussCta": "ناقش مشروعك",
+    "systems.whatItIs": "ما هو النظام",
+    "systems.outcomes": "ماذا تحقق",
+    "systems.architecture": "بنية النظام",
+    "systems.diagramNote": "بنية نموذجية — تتوسّع الطبقات حسب عدد مواقعك وطبيعة العملية.",
+    "systems.requirements": "ما الذي يتطلبه",
+    "systems.requirementsLead":
+      "اجمع هذه البيانات قبل التسعير. المشروع المسعّر بدونها يُعاد تسعيره في منتصف الطريق.",
+    "systems.howTo": "كيف يسير المشروع",
+    "systems.howToLead": "التسلسل الذي نتبعه، والترتيب الذي يجنّبك المفاجآت في أسبوع التشغيل.",
+    "systems.partsFor": "قطع هذا النظام",
+    "systems.brandsFor": "الماركات التي نوردها لهذا النظام",
+    "systems.related": "أنظمة ذات صلة",
+
+    "inquiry.title": "أخبرنا عن مشروعك",
+    "inquiry.subtitle": "أرسل المتطلبات وسنعود إليك بنطاق العمل والقطع ومدة التوريد.",
+    "inquiry.company": "الشركة",
+    "inquiry.message": "متطلباتك",
+    "inquiry.messagePlaceholder":
+      "ما الذي تريد تحقيقه، وما المركّب حاليًا، ومتى تحتاجه جاهزًا للعمل؟",
+    "inquiry.submit": "أرسل الطلب",
+    "inquiry.sentTitle": "تم استلام طلبك",
+    "inquiry.sentBody": "شكرًا لك — سيعود إليك فريقنا الهندسي خلال يوم عمل واحد.",
+    "inquiry.failed": "تعذّر الإرسال. من فضلك حاول مرة أخرى.",
+    "inquiry.privacyNote": "نستخدم بياناتك للرد على هذا الطلب فقط.",
+
+    "admin.inquiries": "طلبات التواصل",
+    "admin.noInquiries": "لا توجد طلبات بعد.",
+    "inqStatus.NEW": "جديد",
+    "inqStatus.CONTACTED": "تم التواصل",
+    "inqStatus.QUALIFIED": "مؤهل",
+    "inqStatus.CLOSED": "مغلق",
 
     "lang.switch": "English",
   },
