@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { stockStatusFor } from "@/lib/inventory";
 
 const slugify = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
       continue;
     }
 
-    const stockStatus = stockQty === 0 ? "OUT_OF_STOCK" : stockQty < 10 ? "LOW_STOCK" : "IN_STOCK";
+    const stockStatus = stockStatusFor(stockQty);
     const existing = await prisma.product.findUnique({ where: { sku } });
 
     try {

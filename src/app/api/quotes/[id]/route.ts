@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { calculateTotals } from "@/lib/pricing";
+import { stockStatusFor, generateOrderNumber } from "@/lib/inventory";
 
 // PATCH — two roles:
 //  ADMIN:    { action: "quote", prices: {itemId: number}, adminNotes? }  → status QUOTED
@@ -76,21 +78,21 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
             where: { id: it.productId },
             data: {
               stockQty: newQty,
-              stockStatus: newQty === 0 ? "OUT_OF_STOCK" : newQty < 10 ? "LOW_STOCK" : "IN_STOCK",
+              stockStatus: stockStatusFor(newQty),
             },
           });
           subtotal += Number(it.quotedPrice) * it.qty;
         }
-        const tax = Math.round(subtotal * 0.14 * 100) / 100;
-        const shipping = 0; // negotiated quotes ship per agreement
-        const orderNumber = `AM-${Date.now().toString(36).toUpperCase()}${Math.floor(Math.random() * 36 ** 3).toString(36).toUpperCase().padStart(3, "0")}`;
+        // Carriage on a negotiated quote is agreed separately, so it is not added here.
+        const { shipping, tax, total } = calculateTotals(subtotal, { freeShipping: true });
+        const orderNumber = generateOrderNumber();
 
         const created = await tx.order.create({
           data: {
             orderNumber,
             userId: quote.userId,
             status: "CONFIRMED",
-            subtotal, shipping, tax, total: subtotal + shipping + tax,
+            subtotal, shipping, tax, total,
             currency: "USD",
             shippingAddress: addr,
             paymentStatus: "PENDING",

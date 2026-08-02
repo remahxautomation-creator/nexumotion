@@ -118,8 +118,7 @@ export function parseQuery(raw: string, knownBrands: string[] = []): ParsedQuery
   // Explicit ranges: "10-30 kW", "between 10 and 30 kW"
   const explicit = lower.match(/(\d+(?:\.\d+)?)\s*(?:-|to|–|and)\s*(\d+(?:\.\d+)?)\s*(kw|a|amps?|w|bar|mm|rpm|nm)\b/i);
   if (explicit) {
-    const unitKey = UNIT_TO_SPEC.find((u) => new RegExp(`\\d\\s*${explicit[3]}\\b`, "i").test(`1 ${explicit[3]}`))?.key;
-    const key = unitKey ?? guessKeyForUnit(explicit[3]);
+    const key = guessKeyForUnit(explicit[3]);
     if (key) {
       rangeFilters.push({ key, min: Number(explicit[1]), max: Number(explicit[2]) });
       consumed.push(explicit[0]);

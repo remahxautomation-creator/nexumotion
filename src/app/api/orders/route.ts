@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-
-const SHIPPING_FLAT = 25;
-const FREE_SHIPPING_OVER = 1000;
-const VAT_RATE = 0.14; // Egypt VAT
+import { calculateTotals } from "@/lib/pricing";
+import { stockStatusFor, generateOrderNumber } from "@/lib/inventory";
 
 type LineInput = { productId: string; qty: number };
 
@@ -91,15 +89,13 @@ export async function POST(req: NextRequest) {
           where: { id: p.id },
           data: {
             stockQty: newQty,
-            stockStatus: newQty === 0 ? "OUT_OF_STOCK" : newQty < 10 ? "LOW_STOCK" : "IN_STOCK",
+            stockStatus: stockStatusFor(newQty),
           },
         });
       }
 
-      const shipping = subtotal >= FREE_SHIPPING_OVER ? 0 : SHIPPING_FLAT;
-      const tax = Math.round(subtotal * VAT_RATE * 100) / 100;
-      const total = subtotal + shipping + tax;
-      const orderNumber = `AM-${Date.now().toString(36).toUpperCase()}${Math.floor(Math.random() * 36 ** 3).toString(36).toUpperCase().padStart(3, "0")}`;
+      const { shipping, tax, total } = calculateTotals(subtotal);
+      const orderNumber = generateOrderNumber();
 
       return tx.order.create({
         data: {

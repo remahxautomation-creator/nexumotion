@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { stockStatusFor } from "@/lib/inventory";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -25,7 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       return NextResponse.json({ error: "Invalid stock quantity" }, { status: 400 });
     }
     data.stockQty = qty;
-    data.stockStatus = qty === 0 ? "OUT_OF_STOCK" : qty < 10 ? "LOW_STOCK" : "IN_STOCK";
+    data.stockStatus = stockStatusFor(qty);
   }
   if (typeof body?.isActive === "boolean") data.isActive = body.isActive;
 

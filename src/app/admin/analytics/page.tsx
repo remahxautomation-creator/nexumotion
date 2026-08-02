@@ -8,7 +8,7 @@ export const metadata = { title: "Analytics" };
 
 export default async function AnalyticsPage() {
   const { t } = await getT();
-  const [bestSellers, ordersByStatus, brandSales, categorySales] = await Promise.all([
+  const [bestSellers, ordersByStatus, brandSales] = await Promise.all([
     prisma.orderItem.groupBy({
       by: ["productId"],
       _sum: { qty: true, total: true },
@@ -21,7 +21,6 @@ export default async function AnalyticsPage() {
       _sum: { total: true },
     }),
     prisma.orderItem.findMany({ include: { product: { include: { brand: true, category: true } } } }),
-    null,
   ]);
 
   const products = await prisma.product.findMany({
@@ -39,8 +38,6 @@ export default async function AnalyticsPage() {
   }
   const topBrands = [...byBrand.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
   const topCategories = [...byCategory.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
-
-  void categorySales;
 
   return (
     <div>

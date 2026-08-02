@@ -7,10 +7,7 @@ import { Loader2, ShieldCheck } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import { useT } from "@/i18n/client";
 import { formatPrice } from "@/lib/utils";
-
-const SHIPPING_FLAT = 25;
-const FREE_SHIPPING_OVER = 1000;
-const VAT_RATE = 0.14;
+import { calculateTotals, FREE_SHIPPING_OVER } from "@/lib/pricing";
 
 export default function CheckoutPage() {
   const { items, clear } = useCart();
@@ -25,10 +22,11 @@ export default function CheckoutPage() {
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  const subtotal = items.reduce((n, i) => n + i.price * i.qty, 0);
-  const shipping = subtotal >= FREE_SHIPPING_OVER ? 0 : SHIPPING_FLAT;
-  const tax = Math.round(subtotal * VAT_RATE * 100) / 100;
-  const total = subtotal + shipping + tax;
+  // Same module the order API uses, so the figure shown here cannot drift
+  // from the figure the customer is actually charged.
+  const { subtotal, shipping, tax, total } = calculateTotals(
+    items.reduce((n, i) => n + i.price * i.qty, 0)
+  );
 
   if (items.length === 0) {
     return (
