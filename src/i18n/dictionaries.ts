@@ -432,6 +432,11 @@ export const dictionaries = {
     "contact.whatsapp": "WhatsApp",
     "contact.email": "Email",
 
+    "theme.label": "Colour theme",
+    "theme.light": "Light",
+    "theme.dark": "Dark",
+    "theme.system": "Match system",
+
     "lang.switch": "العربية",
   },
 
@@ -862,6 +867,11 @@ export const dictionaries = {
     "contact.phone": "اتصل بنا",
     "contact.whatsapp": "واتساب",
     "contact.email": "البريد الإلكتروني",
+
+    "theme.label": "سمة الألوان",
+    "theme.light": "فاتح",
+    "theme.dark": "داكن",
+    "theme.system": "حسب النظام",
 
     "lang.switch": "English",
   },

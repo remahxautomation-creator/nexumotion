@@ -214,7 +214,7 @@ export default async function SystemPage({ params }: { params: Promise<{ slug: s
       </section>
 
       {/* Related systems */}
-      <section className="bg-slate-900 text-white">
+      <section className="surface-inverse">
         <div className="max-w-7xl mx-auto px-4 py-12">
           <h2 className="text-lg font-bold mb-5">{t("systems.related")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

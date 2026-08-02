@@ -127,7 +127,7 @@ export default async function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-slate-900 text-white">
+      <section className="surface-inverse">
         <div className="max-w-7xl mx-auto px-4 py-14 flex flex-col md:flex-row items-center gap-8 justify-between">
           <div className="max-w-xl">
             <h2 className="text-2xl font-bold">{t("home.cta.title")}</h2>

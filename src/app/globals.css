@@ -11,15 +11,133 @@
   --color-canvas: #f4f5f7;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   THEMING
+
+   Tailwind v4 compiles colour utilities to var(--color-*), so the slate ramp
+   can be inverted wholesale and every existing `text-slate-*` / `bg-slate-*`
+   utility re-themes without touching component markup.
+
+   What is NOT done by variable: `white` and the status tints. Those variables
+   back BOTH a text and a background utility (`text-white` on the hero, and
+   `bg-white` on cards), so remapping the variable would drag the text colour
+   along with the surface. Those are overridden per-utility further down —
+   backgrounds only — leaving text-white white.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --app-canvas: #f4f5f7;
+  --app-fg: #172b4d;
+}
+
+:root[data-theme="dark"] {
+  --app-canvas: #0b1220;
+  --app-fg: #e2e8f0;
+
+  /* Inverted slate ramp — 50 is now darkest, 900 lightest */
+  --color-slate-50: #1a2436;
+  --color-slate-100: #22304a;
+  --color-slate-200: #2f3f5c;
+  --color-slate-300: #46587a;
+  --color-slate-400: #8195b5;
+  --color-slate-500: #9aabc7;
+  --color-slate-600: #b8c6dc;
+  --color-slate-700: #d3dded;
+  --color-slate-800: #e8eefa;
+  --color-slate-900: #f5f8ff;
+
+  /* Icon accents that sit on dark surfaces need lifting */
+  --color-emerald-600: #34d399;
+  --color-amber-600: #fbbf24;
+  --color-red-600: #f87171;
+  color-scheme: dark;
+}
+
+/* ── Surface utilities: background only ─────────────────────────────────── */
+:root[data-theme="dark"] .bg-white {
+  background-color: #131c2e;
+}
+:root[data-theme="dark"] .bg-blue-50 {
+  background-color: #16273f;
+}
+:root[data-theme="dark"] .bg-emerald-100 {
+  background-color: #10352a;
+}
+:root[data-theme="dark"] .bg-amber-50 {
+  background-color: #3a2a09;
+}
+:root[data-theme="dark"] .bg-red-50 {
+  background-color: #3d1618;
+}
+:root[data-theme="dark"] .bg-blue-100 {
+  background-color: #1c3453;
+}
+:root[data-theme="dark"] .bg-indigo-100 {
+  background-color: #1e2a52;
+}
+:root[data-theme="dark"] .bg-slate-900 {
+  background-color: #060b16;
+}
+
+/* Badge/alert text sitting on those tinted surfaces */
+:root[data-theme="dark"] .text-emerald-800 { color: #a7f3d0; }
+:root[data-theme="dark"] .text-emerald-700 { color: #6ee7b7; }
+:root[data-theme="dark"] .text-amber-800 { color: #fde68a; }
+:root[data-theme="dark"] .text-red-700 { color: #fca5a5; }
+:root[data-theme="dark"] .text-red-800 { color: #fecaca; }
+:root[data-theme="dark"] .text-blue-800 { color: #b3d5ff; }
+:root[data-theme="dark"] .text-blue-700 { color: #93c2ff; }
+:root[data-theme="dark"] .text-indigo-800 { color: #c7d2fe; }
+:root[data-theme="dark"] .border-amber-200 { border-color: #5d4410; }
+:root[data-theme="dark"] .border-blue-200 { border-color: #27456b; }
+:root[data-theme="dark"] .border-red-200 { border-color: #5f2226; }
+:root[data-theme="dark"] .border-emerald-200 { border-color: #174a3a; }
+
+/* No transition on background-color/color. A transition on a value derived
+   from a custom property stops the engine re-resolving it when the variable
+   changes, which froze the page background on theme switch. */
+html {
+  background-color: var(--app-canvas);
+}
+
 body {
-  background: #f4f5f7;
-  color: #172b4d;
+  background-color: var(--app-canvas);
+  color: var(--app-fg);
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Arabic uses Cairo, which carries proper Arabic glyphs and metrics */
 body.font-arabic {
   font-family: var(--font-cairo), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ── Always-dark band (footer, closing CTAs) ────────────────────────────────
+   These are dark in BOTH themes, so the inverted slate ramp must be undone
+   inside them — otherwise `text-slate-300` resolves dark-on-dark. */
+.surface-inverse {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+:root[data-theme="dark"] .surface-inverse {
+  background-color: #080e1a;
+  border-top: 1px solid #1e293b;
+
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #94a3b8;
+  --color-slate-600: #cbd5e1;
+  --color-slate-700: #e2e8f0;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+}
+.surface-inverse h1,
+.surface-inverse h2,
+.surface-inverse h3,
+.surface-inverse h4,
+.surface-inverse strong {
+  color: #ffffff;
 }
 
 /* Part numbers stay monospace and always read left-to-right, even in RTL pages —
@@ -37,4 +155,21 @@ body.font-arabic {
 [dir="rtl"] .ltr-nums {
   direction: ltr;
   display: inline-block;
+}
+
+/* Form controls don't inherit the themed palette automatically */
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select {
+  background-color: #0f1829;
+  color: var(--color-slate-900);
+  border-color: var(--color-slate-300);
+}
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: var(--color-slate-400);
+}
+:root[data-theme="dark"] select option {
+  background-color: #0f1829;
+  color: #f5f8ff;
 }

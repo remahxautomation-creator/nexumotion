@@ -32,13 +32,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const rtl = isRtl(locale);
 
+  // Applied before first paint so the page never flashes the wrong theme.
+  // Runs ahead of hydration and only touches the root attribute, so server and
+  // client markup stay identical.
+  const noFlashTheme = `(function(){try{var c=localStorage.getItem('autoparts-theme')||'system';var d=c==='dark'||(c==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light')}catch(e){}})()`;
+
   return (
-    <html lang={locale} dir={rtl ? "rtl" : "ltr"}>
+    <html lang={locale} dir={rtl ? "rtl" : "ltr"} suppressHydrationWarning>
       <body
         className={`${inter.variable} ${jetbrains.variable} ${cairo.variable} ${
           rtl ? "font-arabic" : ""
         } min-h-screen flex flex-col antialiased`}
       >
+        <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
         <I18nProvider locale={locale}>
           <Header categories={categories} />
           <main className="flex-1">{children}</main>

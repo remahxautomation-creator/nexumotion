@@ -6,6 +6,7 @@ import { ShoppingCart, Menu, ChevronDown, Cpu, User, Sparkles } from "lucide-rea
 import { useCart } from "@/hooks/useCart";
 import SearchAutocomplete from "@/components/search/SearchAutocomplete";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
+import ThemeToggle from "@/components/layout/ThemeToggle";
 import { useT } from "@/i18n/client";
 
 type Cat = { id: string; name: string; slug: string };
@@ -46,6 +47,7 @@ export default function Header({ categories }: { categories: Cat[] }) {
             <Link href="/quick-order" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0052CC]">
               {t("nav.quickOrder")}
             </Link>
+            <ThemeToggle />
             <LanguageSwitcher />
             <Link href="/account" className="p-2 text-slate-700 hover:text-[#0052CC]" aria-label={t("nav.account")}>
               <User className="w-5 h-5" />
