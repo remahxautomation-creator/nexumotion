@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { systems } from "@/content/systems";
+import { isRateLimited, clientIp } from "@/lib/rate-limit";
 
 const VALID_SLUGS = new Set(systems.map((s) => s.slug));
 
@@ -35,10 +36,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Light rate limit: cap repeat submissions from the same email in an hour.
-  const hourAgo = new Date(Date.now() - 60 * 60 * 1000);
-  const recent = await prisma.inquiry.count({ where: { email, createdAt: { gte: hourAgo } } });
-  if (recent >= 5) {
+  // Rate limit on BOTH the source IP and the supplied email. The email-only
+  // check that used to stand alone here was trivially bypassed by varying the
+  // address; the IP bucket is what actually costs an abuser something.
+  const HOUR = 60 * 60 * 1000;
+  if (
+    isRateLimited(`inquiry:ip:${clientIp(req)}`, 10, HOUR) ||
+    isRateLimited(`inquiry:email:${email}`, 5, HOUR)
+  ) {
     return NextResponse.json(
       { error: "Too many submissions. Please email us directly." },
       { status: 429 }

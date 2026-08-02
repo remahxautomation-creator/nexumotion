@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Resolve user: session user, or guest user by email
+  // Resolve user: session user, or guest user by email.
   const session = await auth();
   let userId = session?.user?.id;
   let orderEmail = session?.user?.email;
@@ -38,11 +38,24 @@ export async function POST(req: NextRequest) {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: "Valid email required for guest checkout" }, { status: 400 });
     }
-    const guest = await prisma.user.upsert({
-      where: { email },
-      update: {},
-      create: { email, name: shippingAddress.name, role: "GUEST", country: shippingAddress.country },
-    });
+
+    // An unauthenticated caller must not be able to attach an order to somebody
+    // else's registered account. Previously this upserted on email alone, so
+    // anyone who knew an address could push orders into that person's history.
+    // A registered account (one with a password) now has to sign in instead.
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing?.password) {
+      return NextResponse.json(
+        { error: "An account exists for this email. Please sign in to place this order." },
+        { status: 409 }
+      );
+    }
+
+    const guest =
+      existing ??
+      (await prisma.user.create({
+        data: { email, name: shippingAddress.name, role: "GUEST", country: shippingAddress.country },
+      }));
     userId = guest.id;
     orderEmail = email;
   }
