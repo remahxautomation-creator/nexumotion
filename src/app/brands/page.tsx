@@ -5,7 +5,10 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "All Brands" };
 
 export default async function BrandsPage() {
+  // Only brands we actually carry stock for. Seeded brands with no catalogue
+  // lines would otherwise render an empty listing page.
   const brands = await prisma.brand.findMany({
+    where: { isActive: true, products: { some: { isActive: true } } },
     orderBy: { name: "asc" },
     include: { _count: { select: { products: true } } },
   });

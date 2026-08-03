@@ -18,6 +18,18 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Product photography currently lives on the supplier's CDN. Routing it
+  // through next/image means the browser requests /_next/image on our own
+  // origin — the source host never appears in a customer-facing URL, and the
+  // optimiser caches each asset so repeat views don't hit their servers.
+  // Replace these hosts once the images are mirrored or licensed directly.
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "uk.rs-online.com" },
+      { protocol: "https", hostname: "*.rs-online.com" },
+    ],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { EGP_PER_USD } from "./pricing";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -11,6 +12,20 @@ export function formatPrice(price: number | string, currency = "USD") {
     currency,
     maximumFractionDigits: 0,
   }).format(Number(price));
+}
+
+/**
+ * EGP figure for display alongside the USD price. Always formatted with Latin
+ * digits so the number reads identically in both site languages — a price is a
+ * figure, not prose.
+ */
+export function formatEgp(usd: number | string) {
+  const egp = Math.round(Number(usd) * EGP_PER_USD);
+  return `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(egp)} EGP`;
+}
+
+export function formatWeight(kg: number) {
+  return kg < 1 ? `${Math.round(kg * 1000)} g` : `${kg.toFixed(kg < 10 ? 1 : 0)} kg`;
 }
 
 // `labelKey` feeds the i18n dictionary; `label` stays as an English fallback for

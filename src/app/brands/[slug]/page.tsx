@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/product/ProductCard";
+import { parseJsonArray } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,7 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
               p={{
                 id: p.id, sku: p.sku, name: p.name, slug: p.slug,
                 price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                stockStatus: p.stockStatus, brandName: brand.name,
+                stockStatus: p.stockStatus, brandName: brand.name, image: parseJsonArray(p.images)[0] ?? null,
               }}
             />
           ))}

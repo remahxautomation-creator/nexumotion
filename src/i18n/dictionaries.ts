@@ -39,6 +39,10 @@ export const dictionaries = {
     "product.cad": "CAD file (STEP/IGES)",
     "product.wiring": "Wiring diagram",
     "product.onRequest": "on request",
+    "product.shipWeight": "Shipping weight",
+    "product.estimated": "estimated",
+    "checkout.weight": "Shipment weight",
+    "checkout.freeOverNote": "Free shipping applies to orders over {value} up to {kg}.",
     "product.related": "Related in",
 
     "stock.inStock": "In Stock",
@@ -478,6 +482,10 @@ export const dictionaries = {
     "product.cad": "ملف CAD (STEP/IGES)",
     "product.wiring": "مخطط التوصيل",
     "product.onRequest": "عند الطلب",
+    "product.shipWeight": "وزن الشحن",
+    "product.estimated": "تقديري",
+    "checkout.weight": "وزن الشحنة",
+    "checkout.freeOverNote": "الشحن المجاني للطلبات فوق {value} وحتى {kg}.",
     "product.related": "منتجات مشابهة في",
 
     "stock.inStock": "متوفر",

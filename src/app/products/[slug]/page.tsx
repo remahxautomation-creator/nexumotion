@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Package, FileText, Box, CircuitBoard, ShieldCheck } from "lucide-react";
+import { FileText, Box, CircuitBoard, ShieldCheck, Download } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { formatPrice, parseJsonArray, STOCK_LABELS } from "@/lib/utils";
+import { formatPrice, formatEgp, formatWeight, parseJsonArray, STOCK_LABELS } from "@/lib/utils";
+import { unitWeightKg } from "@/lib/pricing";
+import { getT } from "@/i18n/server";
 import AddToCartButton from "@/components/product/AddToCartButton";
+import ProductImage from "@/components/product/ProductImage";
 import ProductCard from "@/components/product/ProductCard";
 
 export const dynamic = "force-dynamic";
@@ -51,6 +54,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   const stock = STOCK_LABELS[product.stockStatus] ?? STOCK_LABELS.IN_STOCK;
   const certs = parseJsonArray(product.certifications);
+  const images = parseJsonArray(product.images);
+  const { t } = await getT();
+  // Real weight where the supplier gave one, otherwise the per-category
+  // estimate that checkout will price the shipment on.
+  const shipWeight = unitWeightKg(
+    product.weightKg ? Number(product.weightKg) : null,
+    product.category.slug
+  );
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -87,9 +98,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Image placeholder */}
-        <div className="bg-white rounded-lg border border-slate-200 p-8 flex items-center justify-center min-h-72">
-          <Package className="w-24 h-24 text-slate-200" />
+        {/* Product images */}
+        <div>
+          <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+            <ProductImage
+              src={images[0]}
+              alt={product.name}
+              className="h-72"
+              sizes="(max-width: 1024px) 100vw, 33vw"
+              priority
+            />
+          </div>
+          {images.length > 1 && (
+            <div className="grid grid-cols-4 gap-2 mt-2">
+              {images.slice(1, 5).map((src, i) => (
+                <div key={src} className="bg-white rounded-md border border-slate-200 overflow-hidden">
+                  <ProductImage src={src} alt={`${product.name} — view ${i + 2}`} className="h-16" sizes="12vw" />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Main info */}
@@ -114,12 +142,21 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         {/* Buy box */}
         <div className="bg-white rounded-lg border border-slate-200 p-5 h-fit">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-slate-900">{formatPrice(Number(product.price))}</span>
+            <span className="text-2xl font-bold text-slate-900 ltr-nums">{formatPrice(Number(product.price))}</span>
             {product.comparePrice && (
-              <span className="text-sm text-slate-400 line-through">{formatPrice(Number(product.comparePrice))}</span>
+              <span className="text-sm text-slate-400 line-through ltr-nums">{formatPrice(Number(product.comparePrice))}</span>
             )}
             <span className="text-xs text-slate-500">{product.costPerUnit}</span>
           </div>
+          <div className="text-sm font-semibold text-slate-600 mt-0.5 ltr-nums">
+            {formatEgp(Number(product.price))}
+          </div>
+          {shipWeight > 0 && (
+            <div className="text-xs text-slate-400 mt-1.5 ltr-nums">
+              {t("product.shipWeight")}: {formatWeight(shipWeight)}
+              {product.weightKg ? "" : ` (${t("product.estimated")})`}
+            </div>
+          )}
           <div className={`inline-block mt-3 text-xs font-semibold px-2.5 py-1 rounded-full ${stock.className}`}>
             {stock.label}{product.stockQty > 0 ? ` — ${product.stockQty} units` : ""}
           </div>
@@ -157,9 +194,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           )}
 
           <div className="mt-4 pt-4 border-t border-slate-100 space-y-2 text-xs text-slate-500">
-            <div className="flex items-center gap-2"><FileText className="w-3.5 h-3.5" /> Datasheet PDF {product.datasheetUrl ? "" : "(on request)"}</div>
-            <div className="flex items-center gap-2"><Box className="w-3.5 h-3.5" /> CAD file (STEP/IGES) {product.cadUrl ? "" : "(on request)"}</div>
-            <div className="flex items-center gap-2"><CircuitBoard className="w-3.5 h-3.5" /> Wiring diagram (on request)</div>
+            {product.datasheetUrl ? (
+              <a
+                href={`/datasheet/${encodeURIComponent(product.sku)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[#0052CC] font-medium hover:underline"
+              >
+                <Download className="w-3.5 h-3.5" /> {t("product.datasheet")}
+              </a>
+            ) : (
+              <div className="flex items-center gap-2">
+                <FileText className="w-3.5 h-3.5" /> {t("product.datasheet")} ({t("product.onRequest")})
+              </div>
+            )}
+            <div className="flex items-center gap-2"><Box className="w-3.5 h-3.5" /> {t("product.cad")} ({t("product.onRequest")})</div>
+            <div className="flex items-center gap-2"><CircuitBoard className="w-3.5 h-3.5" /> {t("product.wiring")} ({t("product.onRequest")})</div>
           </div>
         </div>
       </div>
@@ -225,7 +275,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 p={{
                   id: p.id, sku: p.sku, name: p.name, slug: p.slug,
                   price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                  stockStatus: p.stockStatus, brandName: p.brand.name,
+                  stockStatus: p.stockStatus, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
                 }}
               />
             ))}

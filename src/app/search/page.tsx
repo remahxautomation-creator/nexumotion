@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/product/ProductCard";
+import { parseJsonArray } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Search" };
@@ -71,7 +72,7 @@ export default async function SearchPage({
               p={{
                 id: p.id, sku: p.sku, name: p.name, slug: p.slug,
                 price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                stockStatus: p.stockStatus, brandName: p.brand.name,
+                stockStatus: p.stockStatus, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
               }}
             />
           ))}

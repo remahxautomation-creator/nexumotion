@@ -60,9 +60,12 @@ export async function POST(req: NextRequest) {
 
   try {
     const order = await prisma.$transaction(async (tx) => {
-      // Load products at server prices
+      // Load products at server prices. Category is included because shipping
+      // is priced on weight, and lines without a real weight fall back to a
+      // per-category estimate.
       const products = await tx.product.findMany({
         where: { id: { in: items.map((i) => i.productId) }, isActive: true },
+        include: { category: { select: { slug: true } } },
       });
       const byId = new Map(products.map((p) => [p.id, p]));
 
@@ -94,7 +97,16 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      const { shipping, tax, total } = calculateTotals(subtotal);
+      const { shipping, tax, total } = calculateTotals(subtotal, {
+        lines: items.map((line) => {
+          const p = byId.get(line.productId)!;
+          return {
+            qty: line.qty,
+            weightKg: p.weightKg ? Number(p.weightKg) : null,
+            categorySlug: p.category.slug,
+          };
+        }),
+      });
       const orderNumber = generateOrderNumber();
 
       return tx.order.create({

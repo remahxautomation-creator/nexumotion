@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Package } from "lucide-react";
-import { formatPrice, STOCK_LABELS } from "@/lib/utils";
+import { formatPrice, formatEgp, STOCK_LABELS } from "@/lib/utils";
 import { useT } from "@/i18n/client";
 import AddToCartButton from "./AddToCartButton";
+import ProductImage from "./ProductImage";
 
 export type ProductCardData = {
   id: string;
@@ -16,6 +16,7 @@ export type ProductCardData = {
   stockStatus: string;
   brandName: string;
   categoryName?: string;
+  image?: string | null;
 };
 
 export default function ProductCard({ p }: { p: ProductCardData }) {
@@ -24,9 +25,7 @@ export default function ProductCard({ p }: { p: ProductCardData }) {
   return (
     <div className="bg-white rounded-lg border border-slate-200 hover:border-[#0052CC] hover:shadow-md transition-all flex flex-col">
       <Link href={`/products/${p.slug}`} className="p-4 flex-1">
-        <div className="h-28 bg-slate-50 rounded-md flex items-center justify-center mb-3">
-          <Package className="w-10 h-10 text-slate-300" />
-        </div>
+        <ProductImage src={p.image} alt={p.name} className="h-28 rounded-md mb-3" />
         <div className="sku text-slate-500 mb-1">{p.sku}</div>
         <div className="text-sm font-medium text-slate-900 line-clamp-2 mb-1">{p.name}</div>
         <div className="text-xs text-slate-500">{p.brandName}</div>
@@ -34,7 +33,8 @@ export default function ProductCard({ p }: { p: ProductCardData }) {
       <div className="px-4 pb-4">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <span className="font-bold text-slate-900">{formatPrice(p.price)}</span>
+            <span className="font-bold text-slate-900 ltr-nums">{formatPrice(p.price)}</span>
+            <div className="text-[11px] text-slate-500 ltr-nums">{formatEgp(p.price)}</div>
             {p.comparePrice && (
               <span className="ms-2 text-xs text-slate-400 line-through">{formatPrice(p.comparePrice)}</span>
             )}

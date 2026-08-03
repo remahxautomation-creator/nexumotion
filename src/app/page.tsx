@@ -6,6 +6,7 @@ import ControlPanelArt from "@/components/home/ControlPanelArt";
 import Customers from "@/components/home/Customers";
 import Testimonials from "@/components/home/Testimonials";
 import { categoryIcon } from "@/lib/category-icons";
+import { parseJsonArray } from "@/lib/utils";
 import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,11 @@ export default async function HomePage() {
   const { t } = await getT();
   const [categories, brands, featured, specCount] = await Promise.all([
     prisma.category.findMany({ orderBy: { sortOrder: "asc" }, include: { _count: { select: { products: true } } } }),
-    prisma.brand.findMany({ orderBy: { name: "asc" }, take: 18 }),
+    prisma.brand.findMany({
+      where: { isActive: true, products: { some: { isActive: true } } },
+      orderBy: { products: { _count: "desc" } },
+      take: 18,
+    }),
     prisma.product.findMany({ where: { isFeatured: true, isActive: true }, take: 8, include: { brand: true } }),
     prisma.productSpec.count(),
   ]);
@@ -127,7 +132,7 @@ export default async function HomePage() {
                 p={{
                   id: p.id, sku: p.sku, name: p.name, slug: p.slug,
                   price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                  stockStatus: p.stockStatus, brandName: p.brand.name,
+                  stockStatus: p.stockStatus, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
                 }}
               />
             ))}
