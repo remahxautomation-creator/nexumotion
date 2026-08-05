@@ -68,13 +68,18 @@ export const testimonials: Testimonial[] = [
 ];
 
 // ── Contact details ─────────────────────────────────────────────────────────
-// Shown in the floating contact dock. REPLACE THESE with your real numbers
-// before the site goes public — the placeholders below are not live lines.
-// `whatsapp` must be digits only, international format, no + or spaces.
+// Real, live contact details — used by the top bar, the floating contact dock
+// and the footer, so they only need changing here.
+//
+// `phone` is the display form; the tel: link strips it back to E.164, and
+// `whatsapp` must stay digits only (no +, no spaces) because wa.me rejects
+// anything else. Both resolve to +201559404399 — Egypt (20) plus the 015
+// mobile prefix with its leading zero dropped, which is what international
+// dialling expects.
 export const contact = {
-  phone: "+20 100 000 0000",
-  whatsapp: "201000000000",
-  email: "sales@autoparts-mena.com",
+  phone: "+20 15 59404399",
+  whatsapp: "201559404399",
+  email: "technical@nexumotion.com",
   whatsappGreeting: "Hello, I'd like to ask about a part.",
 };
 

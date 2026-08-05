@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Cairo } from "next/font/google";
 import "./globals.css";
+import TopBar from "@/components/layout/TopBar";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { prisma } from "@/lib/prisma";
@@ -59,6 +60,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       >
         <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
         <I18nProvider locale={locale}>
+          <TopBar />
           <Header categories={categories} />
           <main className="flex-1">{children}</main>
           <Footer />

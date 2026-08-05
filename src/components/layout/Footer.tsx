@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logo from "@/components/layout/Logo";
+import { contact } from "@/content/site-content";
 import { getT } from "@/i18n/server";
 
 export default async function Footer() {
@@ -38,7 +39,24 @@ export default async function Footer() {
           <h4 className="font-semibold text-white mb-3">{t("footer.support")}</h4>
           <ul className="space-y-2 text-slate-400">
             <li>{t("home.trust.deliverySub")}</li>
-            <li dir="ltr" className="text-start">support@autoparts-mena.com</li>
+            <li>
+              <a
+                href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}
+                dir="ltr"
+                className="block text-start hover:text-white transition-colors"
+              >
+                {contact.phone}
+              </a>
+            </li>
+            <li>
+              <a
+                href={`mailto:${contact.email}`}
+                dir="ltr"
+                className="block text-start hover:text-white transition-colors"
+              >
+                {contact.email}
+              </a>
+            </li>
             <li>{t("footer.hours")}</li>
           </ul>
         </div>
