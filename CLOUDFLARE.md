@@ -92,8 +92,18 @@ container is not. Enable Developer Mode if you want the full build locally.
 - **Images.** `next/image` optimisation is limited on Workers. Only 38% of the
   supplier image URLs still resolved when last checked, so most products show
   the placeholder regardless — see `ENRICHMENT.md`.
-- **Cold starts.** The Neon HTTP driver opens a connection per request. That is
-  the trade for having no TCP; it is fine at this traffic level.
+- **Query latency is the main cost.** The Neon HTTP driver does a round trip per
+  query — the trade for a runtime with no TCP. Measured from a dev machine in
+  Egypt against the `eu-central-1` database, warm: homepage 3.9s, a category
+  page 7.5s, search 2.4s, a product page 0.7s.
+
+  Most of that is distance, not the driver. A Worker is not in Egypt; it runs at
+  the Cloudflare edge, and Neon is in Frankfurt, so production round trips
+  should be far shorter than this test. **That is a reasonable expectation, not
+  a measurement — re-time these four pages against the deployed Worker before
+  trusting it.** If they are still slow, the fix is fewer queries per page
+  rather than a faster driver: the category page issues one per filter facet,
+  and those can be folded into a single grouped query.
 - **No incremental cache configured.** Every catalogue page is `force-dynamic`
   and reads the database per request. If pages are later made static, add an R2
   incremental cache in `open-next.config.ts`.
