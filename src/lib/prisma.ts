@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 
@@ -45,7 +46,25 @@ function createClient(): PrismaClient {
   return new PrismaClient({ adapter });
 }
 
+// Workers forbid reusing an I/O object across requests. A module-level client
+// holds a Neon socket opened during whichever request happened to be first;
+// the next request on that isolate touches it and the runtime kills the
+// request with "Cannot perform I/O on behalf of a different request", which
+// showed up as the same URL passing and then failing at random.
+//
+// So on Workers the client is scoped to the request instead. React's cache()
+// memoises per request, which keeps it to one client per request rather than
+// one per property access on the proxy below.
+//
+// Node keeps the module-level singleton: there is no such restriction, and a
+// fresh pool per request would leak connections across dev hot reloads.
+const isWorkers =
+  typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
+
+const getRequestClient = cache((): PrismaClient => createClient());
+
 function resolve(): PrismaClient {
+  if (isWorkers) return getRequestClient();
   if (!globalForPrisma.prisma) globalForPrisma.prisma = createClient();
   return globalForPrisma.prisma;
 }
