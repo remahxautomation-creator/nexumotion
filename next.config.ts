@@ -18,6 +18,16 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Prisma must stay out of the Next.js server bundle so the OpenNext
+  // Cloudflare adapter can patch it for workerd. Bundled by Next, it resolves
+  // to the Node build and reaches for the native query engine — which on
+  // Workers surfaces as "Prisma failed to detect the libssl/openssl version"
+  // followed by a 500 on every page that touches the database. Left external,
+  // the adapter substitutes the WASM engine that ships in the generated client
+  // (query_engine_bg.wasm). Both entries are required: the core package and
+  // the generated one.
+  serverExternalPackages: ["@prisma/client", ".prisma/client"],
+
   // Product photography currently lives on the supplier's CDN. Routing it
   // through next/image means the browser requests /_next/image on our own
   // origin — the source host never appears in a customer-facing URL, and the
