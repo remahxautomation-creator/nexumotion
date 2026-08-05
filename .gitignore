@@ -48,3 +48,7 @@ prisma/dev.db-journal
 # supplier import templates are generated
 import-templates/
 
+
+# cloudflare / opennext build output
+.open-next/
+.wrangler/

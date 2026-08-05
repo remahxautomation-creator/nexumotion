@@ -1,15 +1,20 @@
 // AutoParts MENA — Prisma schema
-// Local dev uses SQLite. For production PostgreSQL:
-//   1. change provider to "postgresql"
-//   2. convert Json list fields (images, certifications, options) to String[]
-//   3. convert the String "enum" fields to real Prisma enums if desired
+//
+// Targets PostgreSQL over a driver adapter, so the same client runs on Node
+// (local dev) and on the Cloudflare Workers runtime, which has no TCP.
+//
+// Json list fields (images, certifications, SpecTemplate.options) and the
+// String "enum" fields are kept as-is from the original SQLite design. They
+// are valid on Postgres and changing them now would mean rewriting every read
+// site for no functional gain — see parseJsonArray() in lib/utils.ts.
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

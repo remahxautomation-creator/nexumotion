@@ -4,6 +4,11 @@ import { systems } from "@/content/systems";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+// Generated per request, not at build time. The sitemap reads the catalogue,
+// and the build runs where no database is reachable (Cloudflare's build
+// container, CI). Prerendering it there fails the whole build.
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, categories, brands] = await Promise.all([
     prisma.product.findMany({

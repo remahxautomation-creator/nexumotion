@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nexumotion",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-01",
+
+  // nodejs_compat is required: Prisma and the Neon driver both use Node APIs.
+  // The *_v2 flag lets Node built-ins resolve without an explicit "node:" prefix.
+  "compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"],
+
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+
+  // DATABASE_URL, AUTH_SECRET and ADMIN_PASSWORD are secrets, not plain vars.
+  // Set them with:  npx wrangler secret put DATABASE_URL
+  // Do not add them here — this file is committed.
+}

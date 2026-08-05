@@ -20,15 +20,28 @@ export const metadata: Metadata = {
     "Industrial automation parts for Egypt, Middle East & Africa. 50+ brands, 5000+ SKUs — PLCs, VFDs, HMIs, sensors, and more. Genuine parts, fast delivery.",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [categories, locale] = await Promise.all([
-    prisma.category.findMany({
+/**
+ * Categories for the header mega-menu.
+ *
+ * Every page renders through this layout, including statically prerendered
+ * ones like /_not-found — and the build runs where no database is reachable.
+ * A failure here must degrade to an empty menu rather than fail the build, or
+ * take the whole site down if the database is briefly unavailable.
+ */
+async function getNavCategories() {
+  try {
+    return await prisma.category.findMany({
       where: { isActive: true },
       orderBy: { sortOrder: "asc" },
       select: { id: true, name: true, slug: true },
-    }),
-    getLocale(),
-  ]);
+    });
+  } catch {
+    return [];
+  }
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const [categories, locale] = await Promise.all([getNavCategories(), getLocale()]);
 
   const rtl = isRtl(locale);
 
