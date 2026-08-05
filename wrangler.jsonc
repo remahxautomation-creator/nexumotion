@@ -15,6 +15,23 @@
 
   "observability": {
     "enabled": true
+  },
+
+  // Non-secret runtime values must live here, not only in the dashboard: a
+  // deploy re-applies this file and drops any plain var it does not declare.
+  // Both of these were set through the dashboard and silently disappeared on
+  // the next git-triggered deploy. Secrets are managed separately and are not
+  // affected.
+  //
+  // AUTH_TRUST_HOST: NextAuth sits behind Cloudflare's proxy, so it has to be
+  // told the forwarded host is trustworthy or callback URLs are rejected.
+  //
+  // NEXT_PUBLIC_SITE_URL: also needs to exist as a *build* variable, because
+  // NEXT_PUBLIC_* is inlined into client bundles at build time — this entry
+  // only covers server-side reads such as sitemap.ts.
+  "vars": {
+    "AUTH_TRUST_HOST": "true",
+    "NEXT_PUBLIC_SITE_URL": "https://nexumotion.com"
   }
 
   // DATABASE_URL, AUTH_SECRET and ADMIN_PASSWORD are secrets, not plain vars.
