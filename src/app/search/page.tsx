@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+import { MessageSquareQuote } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
 import { parseJsonArray } from "@/lib/utils";
 
@@ -61,8 +63,30 @@ export default async function SearchPage({
         {query ? `${products.length} products found` : "Search by part number, competitor SKU, brand, or keyword using the bar above."}
       </p>
       {query && products.length === 0 ? (
-        <div className="bg-white rounded-lg border border-slate-200 p-12 text-center text-slate-500">
-          No products found. Try a shorter part number fragment or a different keyword.
+        // A search that returns nothing is the clearest signal we have that
+        // someone wants a part we do not list, so it offers to source it
+        // rather than being a dead end. The query is passed through as the SKU
+        // so the form opens with the part number already filled in.
+        <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
+          <p className="text-slate-500">
+            No products found. Try a shorter part number fragment or a different keyword.
+          </p>
+          <div className="mt-6 pt-6 border-t border-slate-100">
+            <p className="text-sm font-semibold text-slate-700">
+              Looking for a part we don&apos;t list?
+            </p>
+            <p className="text-sm text-slate-500 mt-1 mb-4">
+              We source outside the catalogue. Send the manufacturer and part number and we&apos;ll
+              come back with price and lead time.
+            </p>
+            <Link
+              href={`/inquiry?sku=${encodeURIComponent(query)}`}
+              className="inline-flex items-center gap-2 bg-[#07C89B] hover:bg-[#06B48C] text-[#0A2A38] font-semibold px-6 py-3 rounded-lg text-sm"
+            >
+              <MessageSquareQuote className="w-4 h-4" />
+              Request this part
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -72,7 +96,7 @@ export default async function SearchPage({
               p={{
                 id: p.id, sku: p.sku, name: p.name, slug: p.slug,
                 price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                stockStatus: p.stockStatus, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
+                stockStatus: p.stockStatus, stockQty: p.stockQty, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
               }}
             />
           ))}

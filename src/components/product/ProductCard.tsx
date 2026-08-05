@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { formatPrice, formatEgp, STOCK_LABELS } from "@/lib/utils";
 import { useT } from "@/i18n/client";
+import { isPurchasable } from "@/lib/inventory";
 import AddToCartButton from "./AddToCartButton";
+import InquireButton from "./InquireButton";
 import ProductImage from "./ProductImage";
 
 export type ProductCardData = {
@@ -14,6 +16,7 @@ export type ProductCardData = {
   price: number;
   comparePrice: number | null;
   stockStatus: string;
+  stockQty: number;
   brandName: string;
   categoryName?: string;
   image?: string | null;
@@ -43,10 +46,13 @@ export default function ProductCard({ p }: { p: ProductCardData }) {
             {t(stock.labelKey)}
           </span>
         </div>
-        <AddToCartButton
-          product={{ productId: p.id, sku: p.sku, name: p.name, slug: p.slug, brand: p.brandName, price: p.price }}
-          disabled={p.stockStatus === "OUT_OF_STOCK"}
-        />
+        {isPurchasable(p) ? (
+          <AddToCartButton
+            product={{ productId: p.id, sku: p.sku, name: p.name, slug: p.slug, brand: p.brandName, price: p.price }}
+          />
+        ) : (
+          <InquireButton sku={p.sku} compact />
+        )}
       </div>
     </div>
   );

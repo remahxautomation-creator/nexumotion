@@ -2,50 +2,50 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   calculateTotals,
-  SHIPPING_FLAT,
+  calculateShipping,
+  SHIPPING_BASE,
+  SHIPPING_PER_KG,
+  SHIPPING_MIN,
   FREE_SHIPPING_OVER,
+  FREE_SHIPPING_MAX_KG,
   VAT_RATE,
 } from "../src/lib/pricing";
 
-// Characterisation tests: these pin the CURRENT behaviour of the three
-// previously-duplicated pricing implementations, so extracting them into one
-// module is verifiable rather than assumed.
-//
-// The originals computed:
-//   shipping = subtotal >= 1000 ? 0 : 25
-//   tax      = Math.round(subtotal * 0.14 * 100) / 100
-//   total    = subtotal + shipping + tax
+// These previously pinned the flat-rate behaviour (shipping = subtotal >= 1000
+// ? 0 : 25) and stopped compiling when carriage became weight-based, since
+// SHIPPING_FLAT no longer exists. Rewritten against the current rule rather
+// than deleted: this is the money path, and the free-shipping weight cap in
+// particular is the sort of thing that can quietly stop applying.
 
-const legacy = (subtotal: number) => {
-  const shipping = subtotal >= FREE_SHIPPING_OVER ? 0 : SHIPPING_FLAT;
-  const tax = Math.round(subtotal * VAT_RATE * 100) / 100;
-  return { shipping, tax, total: subtotal + shipping + tax };
-};
-
-test("matches the previous inline calculation across a range of subtotals", () => {
-  for (const subtotal of [0, 1, 9.99, 100, 335, 407, 999.99, 1000, 1000.01, 19494, 250000]) {
-    const now = calculateTotals(subtotal);
-    const before = legacy(subtotal);
-    assert.equal(now.shipping, before.shipping, `shipping @ ${subtotal}`);
-    assert.equal(now.tax, before.tax, `tax @ ${subtotal}`);
-    assert.equal(now.total, Math.round(before.total * 100) / 100, `total @ ${subtotal}`);
-  }
+test("carriage is a base charge plus weight", () => {
+  assert.equal(calculateShipping(0, 0), SHIPPING_BASE);
+  assert.equal(calculateShipping(10, 0), SHIPPING_BASE + 10 * SHIPPING_PER_KG);
+  assert.equal(calculateShipping(2.5, 0), SHIPPING_BASE + 2.5 * SHIPPING_PER_KG);
 });
 
-test("flat shipping below the free threshold", () => {
-  assert.equal(calculateTotals(999.99).shipping, SHIPPING_FLAT);
+test("carriage never falls below the minimum", () => {
+  assert.ok(calculateShipping(0, 0) >= SHIPPING_MIN);
 });
 
-test("free shipping at and above the threshold", () => {
-  assert.equal(calculateTotals(FREE_SHIPPING_OVER).shipping, 0);
-  assert.equal(calculateTotals(FREE_SHIPPING_OVER + 0.01).shipping, 0);
+test("free shipping applies on value up to the weight cap", () => {
+  assert.equal(calculateShipping(1, FREE_SHIPPING_OVER), 0);
+  assert.equal(calculateShipping(FREE_SHIPPING_MAX_KG, FREE_SHIPPING_OVER), 0);
 });
 
-test("known real order: 335 subtotal reproduces the 407 total seen in the app", () => {
+test("free shipping does NOT apply to freight-weight orders", () => {
+  // Why the cap exists: a heavy consignment must not ship free merely because
+  // it cleared the value threshold.
+  assert.ok(
+    calculateShipping(FREE_SHIPPING_MAX_KG + 0.01, FREE_SHIPPING_OVER) > 0,
+    "over the weight cap should still be charged"
+  );
+  assert.equal(calculateShipping(200, 50_000), SHIPPING_BASE + 200 * SHIPPING_PER_KG);
+});
+
+test("VAT is charged on the subtotal only, not on carriage", () => {
   const t = calculateTotals(335);
-  assert.equal(t.shipping, 25);
-  assert.equal(t.tax, 46.9);
-  assert.equal(t.total, 406.9);
+  assert.equal(t.tax, Math.round(335 * VAT_RATE * 100) / 100);
+  assert.equal(t.total, Math.round((t.subtotal + t.shipping + t.tax) * 100) / 100);
 });
 
 test("freeShipping option suppresses carriage (quote acceptance path)", () => {
@@ -61,9 +61,9 @@ test("money values are rounded to cents, not left as float noise", () => {
   assert.equal(t.total, Math.round(t.total * 100) / 100);
 });
 
-test("zero subtotal still charges shipping and no tax", () => {
+test("zero subtotal still charges carriage and no tax", () => {
   const t = calculateTotals(0);
   assert.equal(t.tax, 0);
-  assert.equal(t.shipping, SHIPPING_FLAT);
-  assert.equal(t.total, SHIPPING_FLAT);
+  assert.equal(t.shipping, SHIPPING_BASE);
+  assert.equal(t.total, SHIPPING_BASE);
 });

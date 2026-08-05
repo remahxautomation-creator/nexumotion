@@ -254,8 +254,13 @@ model QuoteItem {
 
 // Contact-form submissions from the system solution pages.
 // status: NEW | CONTACTED | QUALIFIED | CLOSED
+// kind: SYSTEM | PRODUCT | UNLISTED
+//   SYSTEM   — from a /systems/[slug] page, systemSlug set
+//   PRODUCT  — about a catalogue item we cannot ship, productId/sku set
+//   UNLISTED — a part we do not carry, manufacturer/partNumber set
 model Inquiry {
   id          String   @id @default(cuid())
+  kind        String   @default("SYSTEM")
   systemSlug  String? // which /systems/[slug] page it came from
   name        String
   company     String?
@@ -266,8 +271,19 @@ model Inquiry {
   status      String   @default("NEW")
   createdAt   DateTime @default(now())
 
+  // Part being asked about. Deliberately denormalised rather than a relation:
+  // an inquiry is a commercial record and must stay readable after the product
+  // is edited or removed, and an UNLISTED inquiry has no product to point at.
+  // productId is kept only so admin can link through when the item still exists.
+  productId    String?
+  sku          String?
+  manufacturer String?
+  partNumber   String?
+  quantity     Int?
+
   @@index([status])
   @@index([createdAt])
+  @@index([kind])
 }
 
 model SavedSearch {

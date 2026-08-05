@@ -17,6 +17,28 @@ export function stockStatusFor(qty: number): StockStatus {
 }
 
 /**
+ * Whether a line can go in the cart, or has to become an inquiry instead.
+ *
+ * Both conditions matter and neither is redundant:
+ *
+ *   stockQty > 0        — order creation decrements this inside a transaction,
+ *                         so a line with nothing on hand cannot be fulfilled
+ *                         whatever its label says.
+ *   status is sellable  — BACKORDER means we do not hold it; the customer
+ *                         needs a lead time and a price before committing,
+ *                         which is a conversation, not a checkout.
+ *
+ * This replaces a scattered `stockStatus === "OUT_OF_STOCK"` test that only
+ * caught one of the four statuses. Every catalogue row currently sits at
+ * BACKORDER with stockQty 0, so that test disabled nothing and the entire
+ * catalogue was addable to cart with no stock behind any of it.
+ */
+export function isPurchasable(p: { stockStatus: string; stockQty?: number | null }): boolean {
+  if ((p.stockQty ?? 0) <= 0) return false;
+  return p.stockStatus === "IN_STOCK" || p.stockStatus === "LOW_STOCK";
+}
+
+/**
  * Customer-facing order reference, e.g. AM-MSBJ3WV7K9C.
  * Timestamp in base36 plus 3 random base36 chars — short enough to read over
  * the phone, and collision-resistant enough for this volume.

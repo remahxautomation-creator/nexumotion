@@ -17,6 +17,22 @@ export async function POST(req: NextRequest) {
   const rawSlug = (body?.systemSlug as string | undefined)?.trim();
   const systemSlug = rawSlug && VALID_SLUGS.has(rawSlug) ? rawSlug : null;
 
+  // Part context. `kind` is not taken from the client as-is — an inquiry that
+  // claims to be about a catalogue product is only recorded as one if the SKU
+  // resolves below, so a forged body cannot attach itself to a real product.
+  const str = (v: unknown, max: number) => {
+    const s = typeof v === "string" ? v.trim() : "";
+    return s ? s.slice(0, max) : null;
+  };
+  const requestedKind = (body?.kind as string | undefined)?.trim();
+  const sku = str(body?.sku, 120);
+  const manufacturer = str(body?.manufacturer, 120);
+  const partNumber = str(body?.partNumber, 120);
+
+  const rawQty = Number(body?.quantity);
+  const quantity =
+    Number.isFinite(rawQty) && rawQty > 0 ? Math.min(Math.floor(rawQty), 1_000_000) : null;
+
   // Honeypot: bots fill hidden fields, humans don't. Accept silently so the bot
   // sees success and doesn't retry with a different strategy.
   if ((body?.website as string | undefined)?.trim()) {
@@ -50,8 +66,38 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Resolve the SKU against the catalogue rather than trusting the body. This
+  // both attaches the inquiry to a real product for the admin view and decides
+  // the kind: a SKU we do not carry is an UNLISTED request, not a PRODUCT one.
+  const product = sku
+    ? await prisma.product.findUnique({
+        where: { sku },
+        select: { id: true, sku: true, name: true, brand: { select: { name: true } } },
+      })
+    : null;
+
+  let kind: "SYSTEM" | "PRODUCT" | "UNLISTED";
+  if (systemSlug) kind = "SYSTEM";
+  else if (product) kind = "PRODUCT";
+  else if (sku || partNumber || manufacturer) kind = "UNLISTED";
+  else kind = requestedKind === "UNLISTED" ? "UNLISTED" : "SYSTEM";
+
   await prisma.inquiry.create({
-    data: { name, email, message, company, phone, country, systemSlug },
+    data: {
+      name,
+      email,
+      message,
+      company,
+      phone,
+      country,
+      systemSlug,
+      kind,
+      productId: product?.id ?? null,
+      sku: product?.sku ?? sku,
+      manufacturer: manufacturer ?? product?.brand.name ?? null,
+      partNumber,
+      quantity,
+    },
   });
 
   return NextResponse.json({ ok: true });

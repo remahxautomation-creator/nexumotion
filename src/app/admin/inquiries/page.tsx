@@ -93,6 +93,46 @@ export default async function AdminInquiriesPage({
                 </Link>
               )}
 
+              {/* What was actually asked for. Without this the message alone
+                  rarely identifies the part, and sourcing cannot start. An
+                  UNLISTED request has no product to link to, which is the
+                  signal that it needs quoting from scratch. */}
+              {(q.sku || q.partNumber || q.manufacturer) && (
+                <div className="mt-3 rounded-md border border-slate-200 bg-slate-50 p-3">
+                  <div className="flex items-center gap-2 flex-wrap text-xs">
+                    <span
+                      className={`font-semibold px-2 py-0.5 rounded-full ${
+                        q.kind === "PRODUCT"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-amber-100 text-amber-800"
+                      }`}
+                    >
+                      {q.kind === "PRODUCT" ? "In catalogue" : "Not listed"}
+                    </span>
+                    {q.manufacturer && (
+                      <span className="font-medium text-slate-700">{q.manufacturer}</span>
+                    )}
+                    {(q.partNumber || q.sku) && (
+                      <span className="sku text-slate-800">{q.partNumber ?? q.sku}</span>
+                    )}
+                    {q.quantity != null && (
+                      <span className="text-slate-500 ltr-nums">× {q.quantity}</span>
+                    )}
+                    {q.productId && q.sku && (
+                      // By SKU rather than slug: the inquiry stores the SKU
+                      // denormalised so it survives the product changing, and
+                      // search resolves it without another lookup here.
+                      <Link
+                        href={`/search?q=${encodeURIComponent(q.sku)}`}
+                        className="ms-auto text-[#0A6286] font-medium hover:underline"
+                      >
+                        View product →
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <p className="text-sm text-slate-700 mt-3 leading-relaxed whitespace-pre-wrap">{q.message}</p>
 
               <div className="text-[11px] text-slate-400 mt-3">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { isPurchasable } from "@/lib/inventory";
 import { notFound } from "next/navigation";
 import { FileText, Box, CircuitBoard, ShieldCheck, Download } from "lucide-react";
 import { prisma } from "@/lib/prisma";
@@ -6,6 +7,7 @@ import { formatPrice, formatEgp, formatWeight, parseJsonArray, STOCK_LABELS } fr
 import { unitWeightKg } from "@/lib/pricing";
 import { getT } from "@/i18n/server";
 import AddToCartButton from "@/components/product/AddToCartButton";
+import InquireButton from "@/components/product/InquireButton";
 import ProductImage from "@/components/product/ProductImage";
 import ProductCard from "@/components/product/ProductCard";
 
@@ -161,13 +163,21 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {stock.label}{product.stockQty > 0 ? ` — ${product.stockQty} units` : ""}
           </div>
           <div className="mt-4">
-            <AddToCartButton
-              product={{
-                productId: product.id, sku: product.sku, name: product.name,
-                slug: product.slug, brand: product.brand.name, price: Number(product.price),
-              }}
-              disabled={product.stockStatus === "OUT_OF_STOCK"}
-            />
+            {isPurchasable(product) ? (
+              <AddToCartButton
+                product={{
+                  productId: product.id, sku: product.sku, name: product.name,
+                  slug: product.slug, brand: product.brand.name, price: Number(product.price),
+                }}
+              />
+            ) : (
+              <>
+                <InquireButton sku={product.sku} />
+                <p className="text-xs text-slate-500 mt-2">
+                  {t("product.inquireHint")}
+                </p>
+              </>
+            )}
           </div>
           {product.priceTiers.length > 0 && (
             <div className="mt-4 pt-4 border-t border-slate-100">
@@ -275,7 +285,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 p={{
                   id: p.id, sku: p.sku, name: p.name, slug: p.slug,
                   price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                  stockStatus: p.stockStatus, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
+                  stockStatus: p.stockStatus, stockQty: p.stockQty, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
                 }}
               />
             ))}
