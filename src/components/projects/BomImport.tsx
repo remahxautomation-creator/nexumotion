@@ -104,7 +104,7 @@ export default function BomImport({ projectId }: { projectId: string }) {
     <div className="bg-white rounded-lg border border-slate-200 p-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-          <Upload className="w-4 h-4 text-[#0052CC]" /> {t("projects.importTitle")}
+          <Upload className="w-4 h-4 text-[#0A6286]" /> {t("projects.importTitle")}
         </div>
         <div className="flex gap-2">
           <label className="text-xs font-medium border border-slate-300 rounded-md px-3 py-1.5 cursor-pointer bg-white hover:bg-slate-50">
@@ -125,7 +125,7 @@ export default function BomImport({ projectId }: { projectId: string }) {
             onChange={(e) => { setText(e.target.value); setError(""); }}
             rows={6}
             placeholder={t("projects.pastePlaceholder")}
-            className="w-full border border-slate-300 rounded-md p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40"
+            className="w-full border border-slate-300 rounded-md p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40"
             dir="ltr"
           />
 
@@ -215,7 +215,7 @@ export default function BomImport({ projectId }: { projectId: string }) {
           )}
 
           <button onClick={submit} disabled={busy || lineCount === 0}
-            className="mt-3 flex items-center gap-2 bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
+            className="mt-3 flex items-center gap-2 bg-[#0A6286] hover:bg-[#084A66] text-white font-semibold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
             {busy && <Loader2 className="w-4 h-4 animate-spin" />}
             {t("projects.importToProject")}
             {lineCount > 0 ? ` (${lineCount})` : ""}

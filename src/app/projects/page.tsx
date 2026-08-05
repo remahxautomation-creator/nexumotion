@@ -23,7 +23,7 @@ export default async function ProjectsPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex items-center gap-2 mb-1">
-        <FolderKanban className="w-6 h-6 text-[#0052CC]" />
+        <FolderKanban className="w-6 h-6 text-[#0A6286]" />
         <h1 className="text-2xl font-bold text-slate-900">{t("projects.title")}</h1>
       </div>
       <p className="text-sm text-slate-500 mb-6">
@@ -40,7 +40,7 @@ export default async function ProjectsPage() {
         )}
         {projects.map((p) => (
           <Link key={p.id} href={`/projects/${p.id}`}
-            className="block bg-white rounded-lg border border-slate-200 px-5 py-4 hover:border-[#0052CC] transition-colors">
+            className="block bg-white rounded-lg border border-slate-200 px-5 py-4 hover:border-[#0A6286] transition-colors">
             <div className="flex items-center justify-between">
               <div>
                 <div className="font-semibold text-slate-900">{p.name}</div>

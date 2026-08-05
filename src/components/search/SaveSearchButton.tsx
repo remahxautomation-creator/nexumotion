@@ -32,7 +32,7 @@ export default function SaveSearchButton({ defaultName }: { defaultName: string 
   return (
     <button
       onClick={save}
-      className="flex items-center gap-1.5 text-xs font-medium border border-slate-300 bg-white rounded-md px-3 py-1.5 text-slate-600 hover:text-[#0052CC] hover:border-[#0052CC]"
+      className="flex items-center gap-1.5 text-xs font-medium border border-slate-300 bg-white rounded-md px-3 py-1.5 text-slate-600 hover:text-[#0A6286] hover:border-[#0A6286]"
     >
       {state === "saved" ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Bookmark className="w-3.5 h-3.5" />}
       {state === "saved" ? t("filters.saved") : state === "error" ? "…" : t("filters.saveSearch")}

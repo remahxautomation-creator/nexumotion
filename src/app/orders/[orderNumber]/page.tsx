@@ -85,7 +85,7 @@ export default async function OrderPage({
         )}
 
         <div className="mt-6 flex gap-3">
-          <Link href="/search" className="bg-[#0052CC] text-white font-semibold px-5 py-2 rounded-lg text-sm">
+          <Link href="/search" className="bg-[#0A6286] text-white font-semibold px-5 py-2 rounded-lg text-sm">
             {t("orders.continueShopping")}
           </Link>
           {session?.user && (

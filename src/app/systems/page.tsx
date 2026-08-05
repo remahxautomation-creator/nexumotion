@@ -19,7 +19,7 @@ export default async function SystemsPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-[#00317a] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-[#063B54] text-white">
         <div
           aria-hidden
           className="absolute inset-0 opacity-[0.06]"
@@ -35,7 +35,7 @@ export default async function SystemsPage() {
           </h1>
           <p className="mt-4 text-lg text-blue-100 max-w-2xl">{t("systems.lead")}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#enquire" className="bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg">
+            <a href="#enquire" className="bg-[#07C89B] hover:bg-[#06B48C] text-[#0A2A38] font-semibold px-6 py-3 rounded-lg">
               {t("systems.discussCta")}
             </a>
             <Link href="/search" className="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/30">

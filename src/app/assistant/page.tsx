@@ -35,7 +35,7 @@ export default async function AssistantPage() {
 
   return (
     <div className="bg-slate-50 min-h-screen">
-      <section className="bg-gradient-to-br from-[#0052CC] to-[#00317a] text-white">
+      <section className="bg-gradient-to-br from-[#0A6286] to-[#063B54] text-white">
         <div className="max-w-4xl mx-auto px-4 py-12">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="w-6 h-6" />

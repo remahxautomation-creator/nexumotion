@@ -1,14 +1,56 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #0052cc;
-  --color-primary-dark: #003d99;
-  --color-secondary: #ff6b00;
+  /* ── NexuMotion brand palette ─────────────────────────────────────────
+     The five supplied swatches, deep to light. Contrast against white was
+     measured before assigning roles, because the palette is monochromatic
+     and the lighter end cannot carry text:
+
+       deep   #0a6286   6.76:1  — safe as text, and as a fill under white text
+       teal   #07858f   4.41:1  — safe as text
+       mint   #00a88f   3.00:1  — large text / fills only
+       spring #07c89b   2.16:1  — fills only, needs dark ink on top
+       pale   #eff3c3   1.15:1  — background washes only
+     ─────────────────────────────────────────────────────────────────── */
+  --color-brand-deep: #0a6286;
+  --color-brand-teal: #07858f;
+  --color-brand-mint: #00a88f;
+  --color-brand-spring: #07c89b;
+  --color-brand-pale: #eff3c3;
+
+  --color-primary: #0a6286;
+  --color-primary-dark: #084a66;
+
+  /* The accent replaces the outgoing orange on calls to action. It carries
+     dark ink rather than white: white on spring green is 2.16:1, whereas
+     #0a2a38 on it is 6.95:1 — and the orange it replaces was only 2.86:1
+     under white, so this is a gain rather than a regression. */
+  --color-secondary: #07c89b;
+  --color-secondary-dark: #06b48c;
+  --color-on-secondary: #0a2a38;
+
   --color-success: #36b37e;
   --color-warning: #ffab00;
   --color-danger: #de350b;
   --color-surface: #ffffff;
-  --color-canvas: #f4f5f7;
+  --color-canvas: #f5f8f8;
+
+  /* Informational panels use bg-blue-50/text-blue-800 and friends in about
+     forty places. Tailwind v4 compiles those to var(--color-blue-*), so
+     shifting the ramp into the brand's teal family re-themes all of them
+     without editing the markup — the same lever the dark mode below uses on
+     the slate ramp. Lightness is kept close to Tailwind's original so the
+     existing text/background pairings keep their contrast. */
+  --color-blue-50: #eef6f8;
+  --color-blue-100: #d7ebef;
+  --color-blue-200: #b3d9e1;
+  --color-blue-300: #7fbecb;
+  --color-blue-400: #429eb1;
+  --color-blue-500: #1c7f96;
+  --color-blue-600: #0a6286;
+  --color-blue-700: #0b526e;
+  --color-blue-800: #0d445b;
+  --color-blue-900: #0e394c;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -58,7 +100,7 @@
   background-color: #131c2e;
 }
 :root[data-theme="dark"] .bg-blue-50 {
-  background-color: #16273f;
+  background-color: #102b33;
 }
 :root[data-theme="dark"] .bg-emerald-100 {
   background-color: #10352a;
@@ -70,7 +112,7 @@
   background-color: #3d1618;
 }
 :root[data-theme="dark"] .bg-blue-100 {
-  background-color: #1c3453;
+  background-color: #163a44;
 }
 :root[data-theme="dark"] .bg-indigo-100 {
   background-color: #1e2a52;
@@ -85,11 +127,11 @@
 :root[data-theme="dark"] .text-amber-800 { color: #fde68a; }
 :root[data-theme="dark"] .text-red-700 { color: #fca5a5; }
 :root[data-theme="dark"] .text-red-800 { color: #fecaca; }
-:root[data-theme="dark"] .text-blue-800 { color: #b3d5ff; }
-:root[data-theme="dark"] .text-blue-700 { color: #93c2ff; }
+:root[data-theme="dark"] .text-blue-800 { color: #a8dbe4; }
+:root[data-theme="dark"] .text-blue-700 { color: #86cddb; }
 :root[data-theme="dark"] .text-indigo-800 { color: #c7d2fe; }
 :root[data-theme="dark"] .border-amber-200 { border-color: #5d4410; }
-:root[data-theme="dark"] .border-blue-200 { border-color: #27456b; }
+:root[data-theme="dark"] .border-blue-200 { border-color: #1f4a56; }
 :root[data-theme="dark"] .border-red-200 { border-color: #5f2226; }
 :root[data-theme="dark"] .border-emerald-200 { border-color: #174a3a; }
 
@@ -173,3 +215,11 @@ body.font-arabic {
   background-color: #0f1829;
   color: #f5f8ff;
 }
+
+/* ── Logo variant switching ──────────────────────────────────────────────
+   The theme is set by an inline script before hydration, so the logo cannot
+   be chosen during render without a server/client mismatch. Both variants are
+   emitted and CSS hides the wrong one. */
+.light-hidden { display: none; }
+:root[data-theme="dark"] .dark-hidden { display: none; }
+:root[data-theme="dark"] .light-hidden { display: block; }

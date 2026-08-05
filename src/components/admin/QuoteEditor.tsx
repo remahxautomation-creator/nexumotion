@@ -117,11 +117,11 @@ export default function QuoteEditor({
             value={adminNotes}
             onChange={(e) => setAdminNotes(e.target.value)}
             placeholder={t("admin.noteToCustomer")}
-            className="w-full border border-slate-300 rounded-md p-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40"
+            className="w-full border border-slate-300 rounded-md p-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40"
           />
           <div className="flex gap-3">
             <button onClick={send} disabled={busy}
-              className="flex items-center gap-2 bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold px-5 py-2.5 rounded-lg text-sm disabled:opacity-60">
+              className="flex items-center gap-2 bg-[#0A6286] hover:bg-[#084A66] text-white font-semibold px-5 py-2.5 rounded-lg text-sm disabled:opacity-60">
               {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               {status === "QUOTED" ? t("admin.updateQuote") : t("admin.sendQuote")}
             </button>

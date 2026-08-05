@@ -25,7 +25,7 @@ export default function ContactDock() {
 
   const items = [
     { href: waHref, label: t("contact.whatsapp"), value: contact.phone, Icon: WhatsAppIcon, bg: "bg-[#25D366]", external: true },
-    { href: telHref, label: t("contact.phone"), value: contact.phone, Icon: Phone, bg: "bg-[#0052CC]", external: false },
+    { href: telHref, label: t("contact.phone"), value: contact.phone, Icon: Phone, bg: "bg-[#0A6286]", external: false },
     { href: mailHref, label: t("contact.email"), value: contact.email, Icon: Mail, bg: "bg-slate-700", external: false },
   ];
 
@@ -53,11 +53,11 @@ export default function ContactDock() {
         onClick={() => setOpen((v) => !v)}
         aria-label={t("contact.title")}
         aria-expanded={open}
-        className="w-14 h-14 rounded-full bg-[#FF6B00] hover:bg-orange-600 text-white shadow-lg flex items-center justify-center transition-transform hover:scale-105"
+        className="w-14 h-14 rounded-full bg-[#07C89B] hover:bg-[#06B48C] text-[#0A2A38] shadow-lg flex items-center justify-center transition-transform hover:scale-105"
       >
         {open ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6" />}
         {!open && (
-          <span className="absolute -top-0.5 -end-0.5 w-4 h-4 rounded-full bg-white text-[#FF6B00] flex items-center justify-center">
+          <span className="absolute -top-0.5 -end-0.5 w-4 h-4 rounded-full bg-white text-[#07858F] flex items-center justify-center">
             <Plus className="w-3 h-3" strokeWidth={3} />
           </span>
         )}

@@ -33,7 +33,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
         <h1 className="text-2xl font-bold text-slate-900">
           {t("quotes.quote")} <span className="sku">Q-{quote.id.slice(-8).toUpperCase()}</span>
         </h1>
-        <Link href="/account/quotes" className="text-sm text-[#0052CC] font-medium">{t("quotes.all")}</Link>
+        <Link href="/account/quotes" className="text-sm text-[#0A6286] font-medium">{t("quotes.all")}</Link>
       </div>
       <div className="text-sm text-slate-500 mb-6">{t("common.status")}: <strong>{t(`status.${quote.status}` as never)}</strong></div>
 

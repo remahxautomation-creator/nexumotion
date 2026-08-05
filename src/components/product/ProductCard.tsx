@@ -23,7 +23,7 @@ export default function ProductCard({ p }: { p: ProductCardData }) {
   const stock = STOCK_LABELS[p.stockStatus] ?? STOCK_LABELS.IN_STOCK;
   const { t } = useT();
   return (
-    <div className="bg-white rounded-lg border border-slate-200 hover:border-[#0052CC] hover:shadow-md transition-all flex flex-col">
+    <div className="bg-white rounded-lg border border-slate-200 hover:border-[#0A6286] hover:shadow-md transition-all flex flex-col">
       <Link href={`/products/${p.slug}`} className="p-4 flex-1">
         <ProductImage src={p.image} alt={p.name} className="h-28 rounded-md mb-3" />
         <div className="sku text-slate-500 mb-1">{p.sku}</div>

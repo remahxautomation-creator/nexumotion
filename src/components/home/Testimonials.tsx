@@ -30,7 +30,7 @@ export default async function Testimonials() {
               key={i}
               className="bg-slate-50 border border-slate-200 rounded-lg p-5 flex flex-col"
             >
-              <Quote className="w-6 h-6 text-[#0052CC] opacity-40 mb-3 rtl:scale-x-[-1]" />
+              <Quote className="w-6 h-6 text-[#0A6286] opacity-40 mb-3 rtl:scale-x-[-1]" />
               <blockquote className="text-sm text-slate-700 leading-relaxed flex-1">
                 {tst.quote}
               </blockquote>

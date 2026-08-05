@@ -44,7 +44,7 @@ export default async function AdminDashboard() {
           <div key={s.label} className="bg-white rounded-lg border border-slate-200 p-4">
             <div className="text-xs text-slate-500">{s.label}</div>
             <div className="text-xl font-bold text-slate-900 mt-1">
-              {s.href ? <Link href={s.href} className="hover:text-[#0052CC]">{s.value}</Link> : s.value}
+              {s.href ? <Link href={s.href} className="hover:text-[#0A6286]">{s.value}</Link> : s.value}
             </div>
           </div>
         ))}

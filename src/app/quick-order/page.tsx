@@ -43,7 +43,7 @@ export default function QuickOrderPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <div className="flex items-center gap-2 mb-1">
-        <ClipboardList className="w-6 h-6 text-[#0052CC]" />
+        <ClipboardList className="w-6 h-6 text-[#0A6286]" />
         <h1 className="text-2xl font-bold text-slate-900">Quick Order Pad</h1>
       </div>
       <p className="text-sm text-slate-500 mb-6">
@@ -55,13 +55,13 @@ export default function QuickOrderPage() {
         onChange={(e) => setText(e.target.value)}
         rows={10}
         placeholder={"6ES7-42A1234 5\nLC1D-18B2345 2\nVFD-77C3456"}
-        className="w-full bg-white border border-slate-300 rounded-lg p-4 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40"
+        className="w-full bg-white border border-slate-300 rounded-lg p-4 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40"
       />
       <div className="mt-4 flex gap-3">
         <button
           onClick={submit}
           disabled={busy}
-          className="bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold px-6 py-2.5 rounded-lg text-sm flex items-center gap-2 disabled:opacity-60"
+          className="bg-[#0A6286] hover:bg-[#084A66] text-white font-semibold px-6 py-2.5 rounded-lg text-sm flex items-center gap-2 disabled:opacity-60"
         >
           {busy && <Loader2 className="w-4 h-4 animate-spin" />}
           Add to Cart

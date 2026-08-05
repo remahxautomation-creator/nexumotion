@@ -56,7 +56,7 @@ export default function CheckoutPage() {
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
         <h1 className="text-xl font-bold text-slate-900">{t("checkout.empty")}</h1>
         <p className="text-sm text-slate-500 mt-2">{t("checkout.emptySub")}</p>
-        <Link href="/search" className="inline-block mt-6 bg-[#0052CC] text-white font-semibold px-6 py-2.5 rounded-lg text-sm">
+        <Link href="/search" className="inline-block mt-6 bg-[#0A6286] text-white font-semibold px-6 py-2.5 rounded-lg text-sm">
           {t("home.hero.searchCta")}
         </Link>
       </div>
@@ -91,7 +91,7 @@ export default function CheckoutPage() {
   };
 
   const input =
-    "w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40";
+    "w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40";
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
@@ -148,7 +148,7 @@ export default function CheckoutPage() {
           </div>
 
           <button type="submit" disabled={busy}
-            className="w-full bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold py-3 rounded-lg text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+            className="w-full bg-[#07C89B] hover:bg-[#06B48C] text-[#0A2A38] font-semibold py-3 rounded-lg text-sm flex items-center justify-center gap-2 disabled:opacity-60">
             {busy && <Loader2 className="w-4 h-4 animate-spin" />} {t("checkout.placeOrder")} — <span className="ltr-nums">{formatPrice(total)}</span>
           </button>
           <p className="text-[11px] text-slate-400 text-center">{t("auth.browseFreely")}</p>

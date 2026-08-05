@@ -103,13 +103,13 @@ export default function BulkImport() {
           onChange={(e) => setText(e.target.value)}
           rows={10}
           placeholder={"sku,name,brand,category,price,stockQty,shortDesc\nTEST-001,Test Contactor 9A,Siemens,Motor Control,45,20,SIRIUS-style contactor"}
-          className="w-full border border-slate-300 rounded-md p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40"
+          className="w-full border border-slate-300 rounded-md p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40"
         />
         {error && (
           <div className="mt-2 text-sm bg-red-50 text-red-700 border border-red-200 rounded-md px-3 py-2">{error}</div>
         )}
         <button onClick={submit} disabled={busy || !text.trim()}
-          className="mt-3 flex items-center gap-2 bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold px-5 py-2.5 rounded-lg text-sm disabled:opacity-50">
+          className="mt-3 flex items-center gap-2 bg-[#0A6286] hover:bg-[#084A66] text-white font-semibold px-5 py-2.5 rounded-lg text-sm disabled:opacity-50">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />} {t("admin.import")}
         </button>
       </div>

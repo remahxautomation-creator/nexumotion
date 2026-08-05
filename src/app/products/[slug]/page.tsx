@@ -92,8 +92,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       />
       {/* Breadcrumb */}
       <nav className="text-xs text-slate-500 mb-4 flex gap-1.5 flex-wrap">
-        <Link href="/" className="hover:text-[#0052CC]">Home</Link> /
-        <Link href={`/categories/${product.category.slug}`} className="hover:text-[#0052CC]">{product.category.name}</Link> /
+        <Link href="/" className="hover:text-[#0A6286]">Home</Link> /
+        <Link href={`/categories/${product.category.slug}`} className="hover:text-[#0A6286]">{product.category.name}</Link> /
         <span className="text-slate-700">{product.sku}</span>
       </nav>
 
@@ -124,7 +124,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="lg:col-span-1">
           <div className="sku text-slate-500">{product.sku}</div>
           <h1 className="text-xl font-bold text-slate-900 mt-1">{product.name}</h1>
-          <Link href={`/brands/${product.brand.slug}`} className="text-sm text-[#0052CC] font-medium mt-1 inline-block">
+          <Link href={`/brands/${product.brand.slug}`} className="text-sm text-[#0A6286] font-medium mt-1 inline-block">
             {product.brand.name} · {product.brand.country}
           </Link>
           <p className="text-sm text-slate-600 mt-3">{product.description}</p>
@@ -199,7 +199,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 href={`/datasheet/${encodeURIComponent(product.sku)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[#0052CC] font-medium hover:underline"
+                className="flex items-center gap-2 text-[#0A6286] font-medium hover:underline"
               >
                 <Download className="w-3.5 h-3.5" /> {t("product.datasheet")}
               </a>

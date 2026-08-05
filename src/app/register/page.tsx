@@ -41,7 +41,7 @@ export default function RegisterPage() {
     <div className="max-w-md mx-auto px-4 py-16">
       <div className="bg-white rounded-lg border border-slate-200 p-8">
         <div className="flex items-center gap-2 mb-6">
-          <UserPlus className="w-6 h-6 text-[#0052CC]" />
+          <UserPlus className="w-6 h-6 text-[#0A6286]" />
           <h1 className="text-xl font-bold text-slate-900">{t("auth.createAccount")}</h1>
         </div>
         {error && (
@@ -51,30 +51,30 @@ export default function RegisterPage() {
           <div>
             <label className="text-xs font-semibold text-slate-600 block mb-1">{t("auth.fullName")}</label>
             <input value={form.name} onChange={set("name")}
-              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40" />
+              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40" />
           </div>
           <div>
             <label className="text-xs font-semibold text-slate-600 block mb-1">{t("auth.company")}</label>
             <input value={form.companyName} onChange={set("companyName")}
-              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40" />
+              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40" />
           </div>
           <div>
             <label className="text-xs font-semibold text-slate-600 block mb-1">{t("auth.email")}</label>
             <input type="email" required value={form.email} onChange={set("email")}
-              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40" />
+              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40" />
           </div>
           <div>
             <label className="text-xs font-semibold text-slate-600 block mb-1">{t("auth.passwordHint")}</label>
             <input type="password" required minLength={8} value={form.password} onChange={set("password")}
-              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40" />
+              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40" />
           </div>
           <button type="submit" disabled={busy}
-            className="w-full bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold py-2.5 rounded-lg text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+            className="w-full bg-[#0A6286] hover:bg-[#084A66] text-white font-semibold py-2.5 rounded-lg text-sm flex items-center justify-center gap-2 disabled:opacity-60">
             {busy && <Loader2 className="w-4 h-4 animate-spin" />} {t("auth.createAccount")}
           </button>
         </form>
         <p className="text-sm text-slate-500 mt-4 text-center">
-          {t("auth.alreadyRegistered")} <Link href="/login" className="text-[#0052CC] font-medium">{t("auth.signIn")}</Link>
+          {t("auth.alreadyRegistered")} <Link href="/login" className="text-[#0A6286] font-medium">{t("auth.signIn")}</Link>
         </p>
         <p className="text-xs text-slate-400 mt-4 text-center">
           {t("auth.browseFreely")}

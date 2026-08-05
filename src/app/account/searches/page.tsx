@@ -23,10 +23,10 @@ export default async function SavedSearchesPage() {
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <Bookmark className="w-6 h-6 text-[#0052CC]" />
+          <Bookmark className="w-6 h-6 text-[#0A6286]" />
           <h1 className="text-2xl font-bold text-slate-900">{t("searches.title")}</h1>
         </div>
-        <Link href="/account" className="text-sm text-[#0052CC] font-medium">{t("nav.account")}</Link>
+        <Link href="/account" className="text-sm text-[#0A6286] font-medium">{t("nav.account")}</Link>
       </div>
 
       {searches.length === 0 ? (
@@ -37,7 +37,7 @@ export default async function SavedSearchesPage() {
         <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
           {searches.map((s) => (
             <div key={s.id} className="flex items-center justify-between px-5 py-3.5">
-              <Link href={s.url} className="min-w-0 hover:text-[#0052CC]">
+              <Link href={s.url} className="min-w-0 hover:text-[#0A6286]">
                 <div className="font-medium text-sm text-slate-900">{s.name}</div>
                 <div className="text-xs text-slate-400 truncate">{s.url}</div>
               </Link>

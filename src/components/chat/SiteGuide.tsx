@@ -67,7 +67,7 @@ export default function SiteGuide() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={t("guide.title")}
-        className="fixed bottom-5 start-5 z-40 flex items-center gap-2 bg-[#0052CC] hover:bg-[#003D99] text-white rounded-full shadow-lg ps-4 pe-5 py-3 transition-transform hover:scale-105"
+        className="fixed bottom-5 start-5 z-40 flex items-center gap-2 bg-[#0A6286] hover:bg-[#084A66] text-white rounded-full shadow-lg ps-4 pe-5 py-3 transition-transform hover:scale-105"
       >
         {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
         <span className="text-sm font-semibold hidden sm:inline">{t("guide.launcher")}</span>
@@ -77,7 +77,7 @@ export default function SiteGuide() {
       {open && (
         <div className="fixed bottom-20 start-5 z-40 w-[min(22rem,calc(100vw-2.5rem))] bg-white rounded-xl border border-slate-200 shadow-2xl flex flex-col max-h-[min(30rem,calc(100vh-8rem))]">
           <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-100 bg-slate-50 rounded-t-xl">
-            <div className="w-8 h-8 rounded-full bg-[#0052CC] text-white flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[#0A6286] text-white flex items-center justify-center">
               <Bot className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -95,7 +95,7 @@ export default function SiteGuide() {
                 <div
                   className={
                     m.role === "user"
-                      ? "bg-[#0052CC] text-white rounded-lg rounded-se-sm px-3 py-2 text-sm max-w-[85%]"
+                      ? "bg-[#0A6286] text-white rounded-lg rounded-se-sm px-3 py-2 text-sm max-w-[85%]"
                       : "bg-slate-100 text-slate-700 rounded-lg rounded-ss-sm px-3 py-2 text-sm max-w-[92%]"
                   }
                 >
@@ -107,7 +107,7 @@ export default function SiteGuide() {
                           key={l.href}
                           href={l.href}
                           onClick={() => setOpen(false)}
-                          className="text-xs font-medium bg-white border border-slate-300 rounded-full px-2.5 py-1 text-[#0052CC] hover:border-[#0052CC]"
+                          className="text-xs font-medium bg-white border border-slate-300 rounded-full px-2.5 py-1 text-[#0A6286] hover:border-[#0A6286]"
                         >
                           {l.label}
                         </Link>
@@ -124,7 +124,7 @@ export default function SiteGuide() {
                   <button
                     key={topic.id}
                     onClick={() => send(topic[lang].label)}
-                    className="text-xs border border-slate-300 rounded-full px-2.5 py-1 text-slate-600 hover:border-[#0052CC] hover:text-[#0052CC]"
+                    className="text-xs border border-slate-300 rounded-full px-2.5 py-1 text-slate-600 hover:border-[#0A6286] hover:text-[#0A6286]"
                   >
                     {topic[lang].label}
                   </button>
@@ -138,7 +138,7 @@ export default function SiteGuide() {
             <Link
               href="/assistant"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-1.5 justify-center text-xs font-semibold text-[#0052CC] mb-2 hover:underline"
+              className="flex items-center gap-1.5 justify-center text-xs font-semibold text-[#0A6286] mb-2 hover:underline"
             >
               <Sparkles className="w-3.5 h-3.5" /> {t("guide.toAssistant")}
             </Link>
@@ -147,12 +147,12 @@ export default function SiteGuide() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={t("guide.placeholder")}
-                className="flex-1 border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40"
+                className="flex-1 border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40"
               />
               <button
                 type="submit"
                 disabled={!input.trim()}
-                className="bg-[#0052CC] text-white rounded-md px-3 disabled:opacity-40"
+                className="bg-[#0A6286] text-white rounded-md px-3 disabled:opacity-40"
                 aria-label={t("assistant.send")}
               >
                 <Send className="w-4 h-4 rtl:scale-x-[-1]" />

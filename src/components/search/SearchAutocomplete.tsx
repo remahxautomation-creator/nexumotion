@@ -71,7 +71,7 @@ export default function SearchAutocomplete() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length > 0 && setOpen(true)}
           placeholder={t("nav.search.placeholder")}
-          className="w-full rounded-lg border border-slate-300 ps-10 pe-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40 focus:border-[#0052CC]"
+          className="w-full rounded-lg border border-slate-300 ps-10 pe-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40 focus:border-[#0A6286]"
         />
         <Search className="absolute start-3 top-2.5 w-4 h-4 text-slate-400" />
       </form>

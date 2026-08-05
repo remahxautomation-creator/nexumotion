@@ -44,7 +44,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     <div className="max-w-5xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
         <h1 className="text-2xl font-bold text-slate-900">{project.name}</h1>
-        <Link href="/projects" className="text-sm text-[#0052CC] font-medium">{t("projects.all")}</Link>
+        <Link href="/projects" className="text-sm text-[#0A6286] font-medium">{t("projects.all")}</Link>
       </div>
       <p className="text-sm text-slate-500 mb-6">
         {project.items.length} {t("common.items")} · {t("projects.estimatedTotal")} {formatPrice(total)}

@@ -33,12 +33,12 @@ export default async function OrdersPage() {
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-slate-900">{t("orders.title")}</h1>
-        <Link href="/account" className="text-sm text-[#0052CC] font-medium">{t("nav.account")}</Link>
+        <Link href="/account" className="text-sm text-[#0A6286] font-medium">{t("nav.account")}</Link>
       </div>
 
       {orders.length === 0 ? (
         <div className="bg-white rounded-lg border border-slate-200 p-12 text-center text-slate-500 text-sm">
-          {t("orders.none")} <Link href="/search" className="text-[#0052CC] font-medium">{t("orders.startShopping")}</Link>
+          {t("orders.none")} <Link href="/search" className="text-[#0A6286] font-medium">{t("orders.startShopping")}</Link>
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">

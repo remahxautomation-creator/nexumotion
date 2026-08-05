@@ -64,7 +64,7 @@ export default function TechAssistant({ examples }: { examples: string[] }) {
         {turns.length === 0 && (
           <div className="bg-white rounded-lg border border-slate-200 p-6">
             <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="w-5 h-5 text-[#0052CC]" />
+              <Sparkles className="w-5 h-5 text-[#0A6286]" />
               <h2 className="font-bold text-slate-900">{t("assistant.startTitle")}</h2>
             </div>
             <p className="text-sm text-slate-600 mb-4">{t("assistant.startBody")}</p>
@@ -73,7 +73,7 @@ export default function TechAssistant({ examples }: { examples: string[] }) {
                 <button
                   key={e}
                   onClick={() => ask(e)}
-                  className="text-xs text-start border border-slate-300 bg-slate-50 rounded-full px-3 py-1.5 hover:border-[#0052CC] hover:text-[#0052CC]"
+                  className="text-xs text-start border border-slate-300 bg-slate-50 rounded-full px-3 py-1.5 hover:border-[#0A6286] hover:text-[#0A6286]"
                 >
                   {e}
                 </button>
@@ -86,7 +86,7 @@ export default function TechAssistant({ examples }: { examples: string[] }) {
           <div key={i} className="space-y-3">
             {/* Question */}
             <div className="flex justify-end">
-              <div className="bg-[#0052CC] text-white rounded-lg rounded-se-sm px-4 py-2.5 text-sm max-w-2xl">
+              <div className="bg-[#0A6286] text-white rounded-lg rounded-se-sm px-4 py-2.5 text-sm max-w-2xl">
                 {turn.query}
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function TechAssistant({ examples }: { examples: string[] }) {
                           <Link
                             key={s.slug}
                             href={`/categories/${s.slug}`}
-                            className="text-xs border border-slate-300 rounded-full px-3 py-1.5 hover:border-[#0052CC] hover:text-[#0052CC]"
+                            className="text-xs border border-slate-300 rounded-full px-3 py-1.5 hover:border-[#0A6286] hover:text-[#0A6286]"
                           >
                             {s.name}
                           </Link>
@@ -145,7 +145,7 @@ export default function TechAssistant({ examples }: { examples: string[] }) {
                     )}
                     <Link
                       href="/systems#enquire"
-                      className="inline-block mt-4 text-sm font-semibold text-[#0052CC] hover:underline"
+                      className="inline-block mt-4 text-sm font-semibold text-[#0A6286] hover:underline"
                     >
                       {t("assistant.askUs")}
                     </Link>
@@ -162,7 +162,7 @@ export default function TechAssistant({ examples }: { examples: string[] }) {
                           <Link
                             key={p.id}
                             href={`/products/${p.slug}`}
-                            className="flex items-center gap-3 border border-slate-200 rounded-md p-2.5 hover:border-[#0052CC] transition-colors"
+                            className="flex items-center gap-3 border border-slate-200 rounded-md p-2.5 hover:border-[#0A6286] transition-colors"
                           >
                             <div className="w-9 h-9 rounded bg-slate-50 flex items-center justify-center shrink-0">
                               <Package className="w-4 h-4 text-slate-300" />
@@ -211,7 +211,7 @@ export default function TechAssistant({ examples }: { examples: string[] }) {
         <button
           type="submit"
           disabled={busy || !query.trim()}
-          className="bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold px-4 py-2.5 rounded-md text-sm disabled:opacity-40 flex items-center gap-2"
+          className="bg-[#0A6286] hover:bg-[#084A66] text-white font-semibold px-4 py-2.5 rounded-md text-sm disabled:opacity-40 flex items-center gap-2"
         >
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 rtl:scale-x-[-1]" />}
           <span className="hidden sm:inline">{t("assistant.send")}</span>

@@ -38,7 +38,7 @@ export default async function AboutPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-[#00317a] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-[#063B54] text-white">
         <div
           aria-hidden
           className="absolute inset-0 opacity-[0.06]"
@@ -53,7 +53,7 @@ export default async function AboutPage() {
             <h1 className="text-3xl md:text-4xl font-bold leading-tight">{t("about.title")}</h1>
             <p className="mt-4 text-lg text-blue-100 max-w-xl">{t("about.lead")}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/search" className="bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg">
+              <Link href="/search" className="bg-[#07C89B] hover:bg-[#06B48C] text-[#0A2A38] font-semibold px-6 py-3 rounded-lg">
                 {t("home.hero.searchCta")}
               </Link>
               <Link href="/brands" className="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/30">
@@ -96,7 +96,7 @@ export default async function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 py-14 grid grid-cols-1 md:grid-cols-2 gap-6">
           {values.map((v) => (
             <div key={v.title} className="flex gap-4">
-              <div className="w-11 h-11 rounded-lg bg-blue-50 text-[#0052CC] flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 rounded-lg bg-blue-50 text-[#0A6286] flex items-center justify-center shrink-0">
                 <v.icon className="w-5 h-5" />
               </div>
               <div>
@@ -114,7 +114,7 @@ export default async function AboutPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {capabilities.map((c) => (
             <div key={c.title} className="bg-white rounded-lg border border-slate-200 p-5">
-              <c.icon className="w-6 h-6 text-[#0052CC] mb-3" />
+              <c.icon className="w-6 h-6 text-[#0A6286] mb-3" />
               <h3 className="font-semibold text-slate-900 text-sm">{c.title}</h3>
               <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{c.body}</p>
             </div>
@@ -122,7 +122,7 @@ export default async function AboutPage() {
         </div>
         <div className="mt-6 text-sm text-slate-500">
           {categoryCount} {t("home.categories.title").toLowerCase()} ·{" "}
-          <Link href="/brands" className="text-[#0052CC] font-medium">{t("home.brands.all")}</Link>
+          <Link href="/brands" className="text-[#0A6286] font-medium">{t("home.brands.all")}</Link>
         </div>
       </section>
 
@@ -133,7 +133,7 @@ export default async function AboutPage() {
             <h2 className="text-2xl font-bold">{t("home.cta.title")}</h2>
             <p className="mt-3 text-slate-300 text-sm leading-relaxed">{t("home.cta.body")}</p>
           </div>
-          <Link href="/cart" className="bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shrink-0">
+          <Link href="/cart" className="bg-[#07C89B] hover:bg-[#06B48C] text-[#0A2A38] font-semibold px-6 py-3 rounded-lg shrink-0">
             {t("home.cta.primary")}
           </Link>
         </div>

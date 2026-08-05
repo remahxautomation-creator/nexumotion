@@ -35,10 +35,10 @@ export default function NewProjectForm() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder={t("projects.newPlaceholder")}
-        className="flex-1 border border-slate-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40"
+        className="flex-1 border border-slate-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40"
       />
       <button type="submit" disabled={busy || !name.trim()}
-        className="flex items-center gap-2 bg-[#0052CC] hover:bg-[#003D99] text-white font-semibold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
+        className="flex items-center gap-2 bg-[#0A6286] hover:bg-[#084A66] text-white font-semibold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} {t("common.create")}
       </button>
     </form>

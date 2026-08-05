@@ -30,12 +30,12 @@ export default async function AdminOrdersPage({
         <h1 className="text-2xl font-bold text-slate-900">{t("admin.orders")}</h1>
         <div className="flex gap-1 flex-wrap">
           <Link href="/admin/orders"
-            className={`text-xs font-medium px-3 py-1.5 rounded-full border ${!filter ? "bg-[#0052CC] text-white border-[#0052CC]" : "bg-white text-slate-600 border-slate-300"}`}>
+            className={`text-xs font-medium px-3 py-1.5 rounded-full border ${!filter ? "bg-[#0A6286] text-white border-[#0A6286]" : "bg-white text-slate-600 border-slate-300"}`}>
             {t("admin.all")}
           </Link>
           {STATUSES.map((s) => (
             <Link key={s} href={`/admin/orders?status=${s}`}
-              className={`text-xs font-medium px-3 py-1.5 rounded-full border ${filter === s ? "bg-[#0052CC] text-white border-[#0052CC]" : "bg-white text-slate-600 border-slate-300"}`}>
+              className={`text-xs font-medium px-3 py-1.5 rounded-full border ${filter === s ? "bg-[#0A6286] text-white border-[#0A6286]" : "bg-white text-slate-600 border-slate-300"}`}>
               {t(`status.${s}` as never)}
             </Link>
           ))}
@@ -61,7 +61,7 @@ export default async function AdminOrdersPage({
             {orders.map((o) => (
               <tr key={o.id} className="border-b border-slate-100 last:border-0">
                 <td className="px-4 py-3">
-                  <Link href={`/orders/${o.orderNumber}`} className="sku text-[#0052CC] hover:underline">{o.orderNumber}</Link>
+                  <Link href={`/orders/${o.orderNumber}`} className="sku text-[#0A6286] hover:underline">{o.orderNumber}</Link>
                   <div className="text-[10px] text-slate-400">
                     {o.createdAt.toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", { day: "numeric", month: "short" })}
                   </div>

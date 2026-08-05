@@ -33,7 +33,7 @@ export default function AddToCartButton({
           ? "bg-slate-100 text-slate-400 cursor-not-allowed"
           : added
           ? "bg-emerald-600 text-white"
-          : "bg-[#0052CC] text-white hover:bg-[#003D99]",
+          : "bg-[#0A6286] text-white hover:bg-[#084A66]",
         className
       )}
     >

@@ -19,8 +19,8 @@ export default function ControlPanelArt({ className = "" }: { className?: string
           <stop offset="100%" stopColor="#1e293b" />
         </linearGradient>
         <linearGradient id="cp-screen" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0052CC" />
-          <stop offset="100%" stopColor="#003D99" />
+          <stop offset="0%" stopColor="#0A6286" />
+          <stop offset="100%" stopColor="#084A66" />
         </linearGradient>
       </defs>
 
@@ -57,8 +57,8 @@ export default function ControlPanelArt({ className = "" }: { className?: string
       <g transform="translate(40, 128)">
         <rect width="116" height="58" rx="4" fill="url(#cp-drive)" stroke="#475569" />
         <rect x="12" y="10" width="52" height="20" rx="2" fill="#0f172a" />
-        <rect x="17" y="16" width="30" height="4" rx="2" fill="#FF6B00" />
-        <rect x="17" y="23" width="20" height="3" rx="1.5" fill="#FF6B00" opacity="0.6" />
+        <rect x="17" y="16" width="30" height="4" rx="2" fill="#07C89B" />
+        <rect x="17" y="23" width="20" height="3" rx="1.5" fill="#07C89B" opacity="0.6" />
         {[0, 1, 2].map((i) => (
           <circle key={i} cx={84 + i * 12} cy="20" r="4" fill="#475569" />
         ))}

@@ -40,7 +40,7 @@ export default function FilterSidebar({
         {activeCount > 0 && (
           <button
             onClick={() => router.push(pathname)}
-            className="text-xs text-[#0052CC] flex items-center gap-1"
+            className="text-xs text-[#0A6286] flex items-center gap-1"
           >
             <X className="w-3 h-3" /> {t("filters.clearAll")}
           </button>

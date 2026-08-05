@@ -44,12 +44,12 @@ export default async function AdminInquiriesPage({
         <h1 className="text-2xl font-bold text-slate-900">{t("admin.inquiries")}</h1>
         <div className="flex gap-1 flex-wrap">
           <Link href="/admin/inquiries"
-            className={`text-xs font-medium px-3 py-1.5 rounded-full border ${!filter ? "bg-[#0052CC] text-white border-[#0052CC]" : "bg-white text-slate-600 border-slate-300"}`}>
+            className={`text-xs font-medium px-3 py-1.5 rounded-full border ${!filter ? "bg-[#0A6286] text-white border-[#0A6286]" : "bg-white text-slate-600 border-slate-300"}`}>
             {t("admin.all")}
           </Link>
           {STATUSES.map((s) => (
             <Link key={s} href={`/admin/inquiries?status=${s}`}
-              className={`text-xs font-medium px-3 py-1.5 rounded-full border ${filter === s ? "bg-[#0052CC] text-white border-[#0052CC]" : "bg-white text-slate-600 border-slate-300"}`}>
+              className={`text-xs font-medium px-3 py-1.5 rounded-full border ${filter === s ? "bg-[#0A6286] text-white border-[#0A6286]" : "bg-white text-slate-600 border-slate-300"}`}>
               {t(`inqStatus.${s}` as never)}
             </Link>
           ))}
@@ -71,7 +71,7 @@ export default async function AdminInquiriesPage({
                     {q.company && <span className="text-slate-500 font-normal"> · {q.company}</span>}
                   </div>
                   <div className="text-xs text-slate-500 mt-0.5 flex flex-wrap gap-x-3" dir="ltr">
-                    <a href={`mailto:${q.email}`} className="text-[#0052CC] hover:underline">{q.email}</a>
+                    <a href={`mailto:${q.email}`} className="text-[#0A6286] hover:underline">{q.email}</a>
                     {q.phone && <a href={`tel:${q.phone}`} className="hover:underline">{q.phone}</a>}
                     {q.country && <span>{q.country}</span>}
                   </div>

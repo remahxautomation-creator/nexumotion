@@ -43,7 +43,7 @@ export default function ProjectActions({
       <div className="flex items-center gap-3">
         <span className="text-sm text-slate-600">{t("projects.estimated")} <strong>{formatPrice(total)}</strong></span>
         <button onClick={addAll}
-          className={`flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg text-sm text-white ${added ? "bg-emerald-600" : "bg-[#FF6B00] hover:bg-orange-600"}`}>
+          className={`flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg text-sm text-[#0A2A38] ${added ? "bg-emerald-600" : "bg-[#07C89B] hover:bg-[#06B48C]"}`}>
           {added ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
           {added ? t("projects.addedToCart") : t("projects.addAllToCart")}
         </button>

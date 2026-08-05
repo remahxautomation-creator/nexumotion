@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/layout/Logo";
 import { getT } from "@/i18n/server";
 
 export default async function Footer() {
@@ -8,7 +9,9 @@ export default async function Footer() {
     <footer className="surface-inverse mt-16">
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
         <div>
-          <h3 className="font-bold text-white mb-3" dir="ltr">AutoParts MENA</h3>
+          {/* Always-dark band, so the reversed variant regardless of theme. */}
+          <Logo className="h-12 w-auto mb-3" alwaysLight />
+          <h3 className="sr-only" dir="ltr">NexuMotion</h3>
           <p className="text-slate-400">{t("footer.tagline")}</p>
         </div>
         <div>

@@ -175,7 +175,7 @@ export default async function SystemPage({ params }: { params: Promise<{ slug: s
                   <Link
                     key={c.id}
                     href={`/categories/${c.slug}`}
-                    className="bg-slate-50 rounded-lg border border-slate-200 p-4 hover:border-[#0052CC] transition-colors"
+                    className="bg-slate-50 rounded-lg border border-slate-200 p-4 hover:border-[#0A6286] transition-colors"
                   >
                     <CatIcon className="w-5 h-5 mb-2" style={{ color: system.accent }} />
                     <div className="font-semibold text-slate-900 text-sm leading-snug">{c.name}</div>
@@ -195,7 +195,7 @@ export default async function SystemPage({ params }: { params: Promise<{ slug: s
                     <Link
                       key={b.id}
                       href={`/brands/${b.slug}`}
-                      className="text-sm font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5 hover:border-[#0052CC] hover:text-[#0052CC]"
+                      className="text-sm font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5 hover:border-[#0A6286] hover:text-[#0A6286]"
                       dir="ltr"
                     >
                       {b.name}

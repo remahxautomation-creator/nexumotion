@@ -39,7 +39,7 @@ export const systems: SystemSolution[] = [
   {
     slug: "scada-telemetry",
     icon: "Server",
-    accent: "#0052CC",
+    accent: "#0A6286",
     categorySlugs: ["dcs-scada", "plc-controllers", "industrial-networking", "hmi-visualization"],
     brands: ["Siemens", "Schneider Electric", "ABB", "Advantech"],
     diagram: [

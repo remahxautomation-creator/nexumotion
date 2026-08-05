@@ -11,7 +11,7 @@ const COUNTRIES = [
 
 export default function InquiryForm({
   systemSlug,
-  accent = "#0052CC",
+  accent = "#0A6286",
 }: {
   systemSlug?: string;
   accent?: string;
@@ -45,7 +45,7 @@ export default function InquiryForm({
   };
 
   const input =
-    "w-full border border-slate-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0052CC]/40";
+    "w-full border border-slate-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0A6286]/40";
 
   if (sent) {
     return (

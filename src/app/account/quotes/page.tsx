@@ -31,10 +31,10 @@ export default async function QuotesPage() {
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <FileText className="w-6 h-6 text-[#0052CC]" />
+          <FileText className="w-6 h-6 text-[#0A6286]" />
           <h1 className="text-2xl font-bold text-slate-900">{t("quotes.title")}</h1>
         </div>
-        <Link href="/account" className="text-sm text-[#0052CC] font-medium">{t("nav.account")}</Link>
+        <Link href="/account" className="text-sm text-[#0A6286] font-medium">{t("nav.account")}</Link>
       </div>
 
       {quotes.length === 0 ? (

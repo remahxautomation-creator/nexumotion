@@ -18,7 +18,7 @@ export default function CartPage() {
         <ShoppingCart className="w-12 h-12 text-slate-300 mx-auto mb-4" />
         <h1 className="text-xl font-bold text-slate-900">{t("cart.empty")}</h1>
         <p className="text-sm text-slate-500 mt-2">{t("cart.emptySub")}</p>
-        <Link href="/search" className="inline-block mt-6 bg-[#0052CC] text-white font-semibold px-6 py-2.5 rounded-lg text-sm">
+        <Link href="/search" className="inline-block mt-6 bg-[#0A6286] text-white font-semibold px-6 py-2.5 rounded-lg text-sm">
           {t("home.hero.searchCta")}
         </Link>
       </div>
@@ -47,7 +47,7 @@ export default function CartPage() {
             {items.map((i) => (
               <tr key={i.productId} className="border-b border-slate-100 last:border-0">
                 <td className="px-4 py-3">
-                  <Link href={`/products/${i.slug}`} className="hover:text-[#0052CC]">
+                  <Link href={`/products/${i.slug}`} className="hover:text-[#0A6286]">
                     <div className="sku text-slate-500">{i.sku}</div>
                     <div className="font-medium text-slate-900">{i.name}</div>
                     <div className="text-xs text-slate-400">{i.brand}</div>
@@ -82,7 +82,7 @@ export default function CartPage() {
             <span className="font-semibold">{formatPrice(subtotal)}</span>
           </div>
           <div className="text-xs text-slate-400 mb-4">{t("cart.shippingNote")}</div>
-          <Link href="/checkout" className="block text-center w-full bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold py-2.5 rounded-lg text-sm">
+          <Link href="/checkout" className="block text-center w-full bg-[#07C89B] hover:bg-[#06B48C] text-[#0A2A38] font-semibold py-2.5 rounded-lg text-sm">
             {t("cart.checkout")}
           </Link>
           <RequestQuoteButton />

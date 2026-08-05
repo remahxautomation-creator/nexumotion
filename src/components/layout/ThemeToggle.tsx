@@ -80,8 +80,8 @@ export default function ThemeToggle() {
             aria-pressed={active}
             className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
               active
-                ? "bg-[#0052CC] text-white"
-                : "text-slate-500 hover:text-[#0052CC]"
+                ? "bg-[#0A6286] text-white"
+                : "text-slate-500 hover:text-[#0A6286]"
             }`}
           >
             <Icon className="w-3.5 h-3.5" />

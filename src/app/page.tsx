@@ -27,7 +27,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#0052CC] via-[#0047b3] to-[#00317a] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0A6286] via-[#075E7A] to-[#063B54] text-white">
         <div
           aria-hidden
           className="absolute inset-0 opacity-[0.07]"
@@ -48,7 +48,7 @@ export default async function HomePage() {
             <p className="mt-4 text-lg text-blue-100 max-w-xl">{t("home.hero.subtitle")}</p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/search" className="bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg">
+              <Link href="/search" className="bg-[#07C89B] hover:bg-[#06B48C] text-[#0A2A38] font-semibold px-6 py-3 rounded-lg">
                 {t("home.hero.searchCta")}
               </Link>
               <Link href="/quick-order" className="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/30">
@@ -86,7 +86,7 @@ export default async function HomePage() {
             { icon: Truck, label: t("home.trust.delivery"), sub: t("home.trust.deliverySub") },
           ].map((f) => (
             <div key={f.label} className="flex items-center gap-3">
-              <f.icon className="w-7 h-7 text-[#0052CC] shrink-0" />
+              <f.icon className="w-7 h-7 text-[#0A6286] shrink-0" />
               <div>
                 <div className="font-semibold text-slate-900">{f.label}</div>
                 <div className="text-slate-500 text-xs">{f.sub}</div>
@@ -106,9 +106,9 @@ export default async function HomePage() {
               <Link
                 key={c.id}
                 href={`/categories/${c.slug}`}
-                className="group bg-white rounded-lg border border-slate-200 p-4 hover:border-[#0052CC] hover:shadow-md transition-all"
+                className="group bg-white rounded-lg border border-slate-200 p-4 hover:border-[#0A6286] hover:shadow-md transition-all"
               >
-                <div className="w-10 h-10 rounded-lg bg-blue-50 text-[#0052CC] flex items-center justify-center mb-3 group-hover:bg-[#0052CC] group-hover:text-white transition-colors">
+                <div className="w-10 h-10 rounded-lg bg-blue-50 text-[#0A6286] flex items-center justify-center mb-3 group-hover:bg-[#0A6286] group-hover:text-white transition-colors">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div className="font-semibold text-slate-900 text-sm leading-snug">{c.name}</div>
@@ -150,7 +150,7 @@ export default async function HomePage() {
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-slate-900">{t("home.brands.title")}</h2>
-          <Link href="/brands" className="text-sm text-[#0052CC] font-medium flex items-center gap-1">
+          <Link href="/brands" className="text-sm text-[#0A6286] font-medium flex items-center gap-1">
             {t("home.brands.all")} <ArrowRight className="w-4 h-4 rtl:rotate-180" />
           </Link>
         </div>
@@ -159,7 +159,7 @@ export default async function HomePage() {
             <Link
               key={b.id}
               href={`/brands/${b.slug}`}
-              className="bg-white rounded-lg border border-slate-200 px-3 py-4 text-center hover:border-[#0052CC] hover:shadow-sm transition-all"
+              className="bg-white rounded-lg border border-slate-200 px-3 py-4 text-center hover:border-[#0A6286] hover:shadow-sm transition-all"
             >
               <div className="text-sm font-bold text-slate-800 tracking-tight truncate" dir="ltr">
                 {b.name}
@@ -178,7 +178,7 @@ export default async function HomePage() {
             <p className="mt-3 text-slate-300 text-sm leading-relaxed">{t("home.cta.body")}</p>
           </div>
           <div className="flex flex-wrap gap-3 shrink-0">
-            <Link href="/cart" className="flex items-center gap-2 bg-[#FF6B00] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg">
+            <Link href="/cart" className="flex items-center gap-2 bg-[#07C89B] hover:bg-[#06B48C] text-[#0A2A38] font-semibold px-6 py-3 rounded-lg">
               <FileText className="w-4 h-4" /> {t("home.cta.primary")}
             </Link>
             <Link href="/projects" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold px-6 py-3 rounded-lg">

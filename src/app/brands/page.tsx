@@ -27,13 +27,13 @@ export default async function BrandsPage() {
       <div className="space-y-8">
         {[...grouped.entries()].map(([letter, list]) => (
           <div key={letter}>
-            <h2 className="text-sm font-bold text-[#0052CC] mb-3">{letter}</h2>
+            <h2 className="text-sm font-bold text-[#0A6286] mb-3">{letter}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {list.map((b) => (
                 <Link
                   key={b.id}
                   href={`/brands/${b.slug}`}
-                  className="bg-white rounded-lg border border-slate-200 p-4 hover:border-[#0052CC] transition-colors"
+                  className="bg-white rounded-lg border border-slate-200 p-4 hover:border-[#0A6286] transition-colors"
                 >
                   <div className="font-semibold text-slate-900 text-sm">{b.name}</div>
                   <div className="text-xs text-slate-500 mt-0.5">
