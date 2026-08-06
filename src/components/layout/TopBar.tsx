@@ -1,4 +1,4 @@
-import { Phone, Mail } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { contact } from "@/content/site-content";
 import { getT } from "@/i18n/server";
 
@@ -23,6 +23,16 @@ export default async function TopBar() {
     <div className="bg-[#0A6286] text-white">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-end gap-4 sm:gap-6 h-9 text-xs">
+          {/* Where we are. Not a link — nothing useful to open, and a dead
+              anchor next to two live ones invites a wasted tap. Pushed to the
+              start so the two actionable items stay together at the end.
+              Hidden on the narrowest screens so the phone and email, which
+              people actually act on, never wrap. */}
+          <span className="hidden sm:flex items-center gap-1.5 me-auto text-white/80">
+            <MapPin className="w-3.5 h-3.5 shrink-0" aria-hidden />
+            <span className="font-medium">{t("footer.location")}</span>
+          </span>
+
           <a
             href={telHref}
             className="flex items-center gap-1.5 hover:text-[#07C89B] transition-colors"

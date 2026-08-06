@@ -276,6 +276,120 @@ function reversed(img: Img, tint: [number, number, number]): Img {
   return { ...img, data };
 }
 
+/**
+ * Isolates the filled sphere for use as an icon.
+ *
+ * The full lockup is unreadable at 16px and the five-circle mark degrades into
+ * a smudge, but the sphere is a single high-contrast shape that survives. It
+ * is also the only part of the mark that is already square.
+ *
+ * Finding it by *solid fill* rather than by height: the sphere is the only
+ * filled shape, so its columns carry a long run of opaque pixels, while the
+ * outline circles contribute only two thin strokes and the "™" a few dozen
+ * pixels near the top. Measuring vertical extent instead pulled in both the
+ * ™ and an arc of the neighbouring circle, which at favicon size read as
+ * smudges rather than as part of the mark.
+ */
+function sphereFrom(mark: Img): Img {
+  const SOLID = 200; // alpha above which a pixel counts as filled
+
+  const colFill = (x: number) => {
+    let n = 0;
+    for (let y = 0; y < mark.h; y++) if (mark.data[(y * mark.w + x) * 4 + 3] > SOLID) n++;
+    return n;
+  };
+
+  // Anchor on the single most-filled column. That is necessarily the sphere's
+  // centre — four overlapping rings can stack enough strokes to clear a fixed
+  // threshold (which produced a box twice as wide as tall), but none of them
+  // approaches a solid chord.
+  let centreX = 0, maxFill = 0;
+  for (let x = 0; x < mark.w; x++) {
+    const n = colFill(x);
+    if (n > maxFill) { maxFill = n; centreX = x; }
+  }
+  if (maxFill < mark.h * 0.5) return crop(mark, contentBox(mark)); // no sphere — fall back
+
+  // The chord through the centre of a circle is its diameter, so the vertical
+  // run at centreX gives both the extent and the size.
+  let top = -1, bottom = -1;
+  for (let y = 0; y < mark.h; y++) {
+    if (mark.data[(y * mark.w + centreX) * 4 + 3] > SOLID) {
+      if (top < 0) top = y;
+      bottom = y;
+    }
+  }
+  const d = bottom - top + 1;
+  const half = Math.floor(d / 2);
+
+  const box = crop(mark, {
+    left: Math.max(0, centreX - half),
+    top,
+    right: Math.min(mark.w - 1, centreX + half),
+    bottom,
+  });
+
+  // Mask to the inscribed circle. Cropping alone is not enough: the adjacent
+  // ring and the ™ physically overlap the sphere's bounding box in the
+  // artwork, and both survive a rectangular cut. The sphere is a circle, so
+  // anything outside the radius is by definition not part of it. The one-pixel
+  // ramp at the boundary keeps the edge from going jagged when downscaled.
+  const cx = (box.w - 1) / 2;
+  const cy = (box.h - 1) / 2;
+  const r = Math.min(cx, cy);
+  for (let y = 0; y < box.h; y++) {
+    for (let x = 0; x < box.w; x++) {
+      const dist = Math.hypot(x - cx, y - cy);
+      const i = (y * box.w + x) * 4;
+      if (dist > r) box.data[i + 3] = 0;
+      else if (dist > r - 1.5) {
+        box.data[i + 3] = Math.round(box.data[i + 3] * (r - dist) / 1.5);
+      }
+    }
+  }
+  return box;
+}
+
+/** Square canvas with a little breathing room, so the icon is not edge-to-edge. */
+function padToSquare(img: Img, size: number, padRatio = 0.06): Img {
+  const inner = Math.round(size * (1 - padRatio * 2));
+  const scaled = downscale(img, inner);
+  const data = Buffer.alloc(size * size * 4); // transparent
+  const ox = Math.round((size - scaled.w) / 2);
+  const oy = Math.round((size - scaled.h) / 2);
+  for (let y = 0; y < scaled.h; y++) {
+    scaled.data.copy(data, ((oy + y) * size + ox) * 4, y * scaled.w * 4, (y + 1) * scaled.w * 4);
+  }
+  return { w: size, h: size, data };
+}
+
+/**
+ * Wraps a PNG in an ICO container.
+ *
+ * Kept alongside the modern icon.png because crawlers, feed readers and older
+ * browsers request /favicon.ico directly rather than reading the link tag, and
+ * would otherwise 404. ICO has allowed PNG payloads since Vista, so this is a
+ * 22-byte header rather than a bitmap re-encode.
+ */
+function pngToIco(png: Buffer, size: number): Buffer {
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0); // reserved
+  header.writeUInt16LE(1, 2); // type: icon
+  header.writeUInt16LE(1, 4); // one image
+
+  const entry = Buffer.alloc(16);
+  entry[0] = size >= 256 ? 0 : size; // 0 means 256
+  entry[1] = size >= 256 ? 0 : size;
+  entry[2] = 0; // palette colours
+  entry[3] = 0; // reserved
+  entry.writeUInt16LE(1, 4); // colour planes
+  entry.writeUInt16LE(32, 6); // bits per pixel
+  entry.writeUInt32LE(png.length, 8);
+  entry.writeUInt32LE(22, 12); // payload offset
+
+  return Buffer.concat([header, entry, png]);
+}
+
 /** Most saturated colours present, as a read on the real brand palette. */
 function sampleColours(img: Img) {
   const counts = new Map<string, number>();
@@ -340,10 +454,25 @@ function main() {
   writeFileSync("public/logo.png", encodePng(fullOut));
   writeFileSync("public/logo-light.png", encodePng(fullLight));
   writeFileSync("public/logo-mark.png", encodePng(markOut));
+
+  // Icons, from the sphere at full source resolution so the downscale to each
+  // size has detail to average rather than resampling an already-small image.
+  const sphere = sphereFrom(mark);
+  const icon512 = padToSquare(sphere, 512);
+  const icon180 = padToSquare(sphere, 180);
+  const icon64 = padToSquare(sphere, 64);
+
+  writeFileSync("src/app/icon.png", encodePng(icon512));
+  writeFileSync("src/app/apple-icon.png", encodePng(icon180));
+  writeFileSync("src/app/favicon.ico", pngToIco(encodePng(icon64), 64));
+
   console.log(
     `\nwrote public/logo.png        ${fullOut.w}x${fullOut.h}` +
     `\nwrote public/logo-light.png  ${fullLight.w}x${fullLight.h}  (reversed, for dark surfaces)` +
-    `\nwrote public/logo-mark.png   ${markOut.w}x${markOut.h}`
+    `\nwrote public/logo-mark.png   ${markOut.w}x${markOut.h}` +
+    `\nwrote src/app/icon.png       512x512  (sphere ${sphere.w}x${sphere.h})` +
+    `\nwrote src/app/apple-icon.png 180x180` +
+    `\nwrote src/app/favicon.ico    64x64`
   );
 }
 

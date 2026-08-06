@@ -88,9 +88,10 @@ export const dictionaries = {
     "footer.crossRefTool": "Cross-Reference Tool",
     "footer.shipping": "Shipping Info",
     "footer.support": "Support — MENA",
+    "footer.location": "Egypt",
     "footer.hours": "Sun–Thu, 9:00–17:00 (Cairo)",
     "footer.rights":
-      "AutoParts MENA — Authenticity guaranteed. CE · UL · ISO 9001 certified suppliers.",
+      "NexuMotion — Authenticity guaranteed. CE · UL · ISO 9001 certified suppliers.",
 
     // ── Common ──────────────────────────────────────────────────────────
     "common.back": "Back",
@@ -327,7 +328,7 @@ export const dictionaries = {
     "nav.about": "About",
     "about.title": "Built by engineers, for engineers",
     "about.lead":
-      "AutoParts MENA supplies genuine industrial automation components across Egypt, the Middle East and Africa — with the technical data engineers actually need to specify them.",
+      "NexuMotion supplies genuine industrial automation components across Egypt, the Middle East and Africa — with the technical data engineers actually need to specify them.",
     "about.story.title": "Why we exist",
     "about.story.p1":
       "Sourcing automation parts in this region usually means a phone call, a wait, and a price you can't verify. Catalogues are out of date, cross-references live in someone's head, and obsolete parts send you hunting through forums.",
@@ -549,9 +550,10 @@ export const dictionaries = {
     "footer.crossRefTool": "أداة مطابقة الأكواد",
     "footer.shipping": "معلومات الشحن",
     "footer.support": "الدعم — المنطقة",
+    "footer.location": "مصر",
     "footer.hours": "الأحد–الخميس، ٩:٠٠–١٧:٠٠ (القاهرة)",
     "footer.rights":
-      "أوتوبارتس مينا — ضمان الأصالة. موردون معتمدون CE · UL · ISO 9001.",
+      "نيكسو موشن — ضمان الأصالة. موردون معتمدون CE · UL · ISO 9001.",
 
     // ── Common ──────────────────────────────────────────────────────────
     "common.back": "رجوع",
@@ -788,7 +790,7 @@ export const dictionaries = {
     "nav.about": "من نحن",
     "about.title": "صُمم بأيدي مهندسين، من أجل المهندسين",
     "about.lead":
-      "أوتوبارتس مينا تورّد مكوّنات أتمتة صناعية أصلية في مصر والشرق الأوسط وأفريقيا — مع البيانات الفنية التي يحتاجها المهندس فعليًا لاختيارها.",
+      "نيكسو موشن تورّد مكوّنات أتمتة صناعية أصلية في مصر والشرق الأوسط وأفريقيا — مع البيانات الفنية التي يحتاجها المهندس فعليًا لاختيارها.",
     "about.story.title": "لماذا بدأنا",
     "about.story.p1":
       "توريد قطع الأتمتة في منطقتنا يعني عادةً مكالمة هاتفية، وانتظارًا، وسعرًا لا يمكنك التحقق منه. الكتالوجات قديمة، وأكواد البدائل محفوظة في ذاكرة أحدهم، والقطع المتوقفة تدفعك للبحث في المنتديات.",

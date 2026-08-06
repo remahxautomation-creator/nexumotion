@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MapPin } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import { contact } from "@/content/site-content";
 import { getT } from "@/i18n/server";
@@ -56,6 +57,10 @@ export default async function Footer() {
               >
                 {contact.email}
               </a>
+            </li>
+            <li className="flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 shrink-0" aria-hidden />
+              {t("footer.location")}
             </li>
             <li>{t("footer.hours")}</li>
           </ul>

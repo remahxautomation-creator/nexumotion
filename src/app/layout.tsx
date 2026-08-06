@@ -16,9 +16,12 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 const cairo = Cairo({ subsets: ["arabic", "latin"], variable: "--font-cairo" });
 
 export const metadata: Metadata = {
-  title: { default: "AutoParts MENA — Industrial Automation Parts", template: "%s | AutoParts MENA" },
+  title: {
+    default: "NexuMotion — Industrial Automation Parts | Egypt, MENA & Africa",
+    template: "%s | NexuMotion",
+  },
   description:
-    "Industrial automation parts for Egypt, Middle East & Africa. 50+ brands, 5000+ SKUs — PLCs, VFDs, HMIs, sensors, and more. Genuine parts, fast delivery.",
+    "NexuMotion supplies genuine industrial automation parts across Egypt, the Middle East and Africa — PLCs, VFDs, HMIs, sensors and more, with the technical data engineers need to specify them.",
 };
 
 /**
