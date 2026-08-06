@@ -458,21 +458,27 @@ function main() {
   // Icons, from the sphere at full source resolution so the downscale to each
   // size has detail to average rather than resampling an already-small image.
   const sphere = sphereFrom(mark);
-  const icon512 = padToSquare(sphere, 512);
+  const icon256 = padToSquare(sphere, 256);
   const icon180 = padToSquare(sphere, 180);
   const icon64 = padToSquare(sphere, 64);
 
-  writeFileSync("src/app/icon.png", encodePng(icon512));
-  writeFileSync("src/app/apple-icon.png", encodePng(icon180));
-  writeFileSync("src/app/favicon.ico", pngToIco(encodePng(icon64), 64));
+  // Written to public/, NOT src/app/. A metadata icon in the app directory
+  // becomes a generated route with the image inlined into the Worker script;
+  // three of them added ~190 KB of base64 and pushed the bundle past the
+  // 3 MiB limit (Prisma's WASM engine already accounts for 2.24 MiB of it).
+  // In public/ they are static assets served from the assets binding and
+  // cost the Worker script nothing. layout.tsx declares them explicitly.
+  writeFileSync("public/icon.png", encodePng(icon256));
+  writeFileSync("public/apple-icon.png", encodePng(icon180));
+  writeFileSync("public/favicon.ico", pngToIco(encodePng(icon64), 64));
 
   console.log(
     `\nwrote public/logo.png        ${fullOut.w}x${fullOut.h}` +
     `\nwrote public/logo-light.png  ${fullLight.w}x${fullLight.h}  (reversed, for dark surfaces)` +
     `\nwrote public/logo-mark.png   ${markOut.w}x${markOut.h}` +
-    `\nwrote src/app/icon.png       512x512  (sphere ${sphere.w}x${sphere.h})` +
-    `\nwrote src/app/apple-icon.png 180x180` +
-    `\nwrote src/app/favicon.ico    64x64`
+    `\nwrote public/icon.png        256x256  (sphere ${sphere.w}x${sphere.h})` +
+    `\nwrote public/apple-icon.png  180x180` +
+    `\nwrote public/favicon.ico     64x64`
   );
 }
 

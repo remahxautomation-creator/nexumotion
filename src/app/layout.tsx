@@ -22,6 +22,20 @@ export const metadata: Metadata = {
   },
   description:
     "NexuMotion supplies genuine industrial automation parts across Egypt, the Middle East and Africa — PLCs, VFDs, HMIs, sensors and more, with the technical data engineers need to specify them.",
+
+  // Declared by hand because the files live in public/, not in this directory.
+  // A metadata icon placed in app/ becomes a generated route with the image
+  // inlined into the Worker script: three of them added ~190 KB of base64 and
+  // pushed the bundle past Cloudflare's 3 MiB limit, which Prisma's WASM query
+  // engine already fills 2.24 MiB of. From public/ they are static assets on
+  // the assets binding and cost the Worker script nothing.
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "64x64", type: "image/x-icon" },
+      { url: "/icon.png", sizes: "256x256", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 /**
