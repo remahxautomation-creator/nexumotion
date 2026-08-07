@@ -1,11 +1,15 @@
 import { prisma } from "@/lib/prisma";
+import { getT } from "@/i18n/server";
 import Link from "next/link";
 import { MessageSquareQuote } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
 import { parseJsonArray } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Search" };
+export async function generateMetadata() {
+  const { t } = await getT();
+  return { title: t("meta.search") };
+}
 
 export default async function SearchPage({
   searchParams,

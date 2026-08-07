@@ -6,7 +6,10 @@ import { formatPrice } from "@/lib/utils";
 import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "My Orders" };
+export async function generateMetadata() {
+  const { t } = await getT();
+  return { title: t("meta.orders") };
+}
 
 const STATUS_STYLES: Record<string, string> = {
   PENDING: "bg-amber-100 text-amber-800",

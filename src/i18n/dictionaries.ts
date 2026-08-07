@@ -318,6 +318,15 @@ export const dictionaries = {
     "home.customers.title": "Trusted by industry",
     "home.customers.note": "{count} companies across food, pharmaceutical, automotive and process industries.",
     "home.customers.subtitle": "Panel builders, OEMs and maintenance teams across the region.",
+    "meta.brands": "All Brands",
+    "meta.search": "Search",
+    "meta.projects": "Projects / BOMs",
+    "meta.inquiry": "Request a part",
+    "meta.inquiryDesc": "Ask us to source any industrial automation part — including items not listed in our catalogue. Send the manufacturer and part number and we come back with price and lead time.",
+    "meta.account": "Account",
+    "meta.orders": "My Orders",
+    "meta.quotes": "My Quotes",
+    "meta.savedSearches": "Saved Searches",
     "home.why.title": "Built for people who specify parts",
     "home.why.subtitle": "What the catalogue actually gives you — every figure below is counted from it, live.",
     "home.why.specs.title": "Filter on specification",
@@ -794,6 +803,15 @@ export const dictionaries = {
     "home.customers.title": "يثق بنا قطاع الصناعة",
     "home.customers.note": "{count} شركة في قطاعات الأغذية والدواء والسيارات والصناعات التحويلية.",
     "home.customers.subtitle": "مقاولو اللوحات ومصنّعو المعدات وفرق الصيانة في المنطقة.",
+    "meta.brands": "كل الماركات",
+    "meta.search": "بحث",
+    "meta.projects": "المشاريع / قوائم المكوّنات",
+    "meta.inquiry": "اطلب قطعة",
+    "meta.inquiryDesc": "اطلب منّا توفير أي قطعة أتمتة صناعية — بما فيها غير المدرجة في الكتالوج. أرسل الشركة المصنّعة ورقم القطعة ونعود إليك بالسعر ومدة التوريد.",
+    "meta.account": "الحساب",
+    "meta.orders": "طلباتي",
+    "meta.quotes": "عروض الأسعار",
+    "meta.savedSearches": "عمليات البحث المحفوظة",
     "home.why.title": "مصمّم لمن يختار القطع",
     "home.why.subtitle": "ما يقدّمه الكتالوج فعليًا — كل رقم أدناه محسوب منه مباشرة.",
     "home.why.specs.title": "التصفية حسب المواصفات",
@@ -955,7 +973,10 @@ export type Locale = keyof typeof dictionaries;
 export type TranslationKey = keyof (typeof dictionaries)["en"];
 
 export const LOCALES: Locale[] = ["en", "ar"];
-export const DEFAULT_LOCALE: Locale = "en";
+// Arabic first: the market is Egypt, and a first-time visitor with no cookie
+// should land in the language most of them read. Anyone who switches gets a
+// cookie and keeps their choice — this only decides the very first request.
+export const DEFAULT_LOCALE: Locale = "ar";
 export const LOCALE_COOKIE = "locale";
 
 export function isRtl(locale: Locale) {

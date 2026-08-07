@@ -7,7 +7,10 @@ import DeleteSavedSearch from "@/components/search/DeleteSavedSearch";
 import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Saved Searches" };
+export async function generateMetadata() {
+  const { t } = await getT();
+  return { title: t("meta.savedSearches") };
+}
 
 export default async function SavedSearchesPage() {
   const session = await auth();

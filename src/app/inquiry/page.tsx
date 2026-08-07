@@ -8,11 +8,13 @@ import { contact } from "@/content/site-content";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Request a part",
-  description:
-    "Ask us to source any industrial automation part — including items not listed in our catalogue. Send the manufacturer and part number and we come back with price and lead time.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT();
+  return {
+    title: t("meta.inquiry"),
+    description: t("meta.inquiryDesc"),
+  };
+}
 
 /**
  * Sourcing request, for two arrivals:

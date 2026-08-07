@@ -6,7 +6,10 @@ import { auth } from "@/lib/auth";
 import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "My Quotes" };
+export async function generateMetadata() {
+  const { t } = await getT();
+  return { title: t("meta.quotes") };
+}
 
 const BADGE: Record<string, string> = {
   REQUESTED: "bg-amber-100 text-amber-800",

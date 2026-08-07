@@ -15,28 +15,49 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 const cairo = Cairo({ subsets: ["arabic", "latin"], variable: "--font-cairo" });
 
-export const metadata: Metadata = {
-  title: {
-    default: "NexuMotion — Industrial Automation Parts | Egypt, MENA & Africa",
-    template: "%s | NexuMotion",
-  },
-  description:
-    "NexuMotion supplies genuine industrial automation parts across Egypt, the Middle East and Africa — PLCs, VFDs, HMIs, sensors and more, with the technical data engineers need to specify them.",
+/**
+ * Title and description follow the visitor's language.
+ *
+ * This was a static English block, which was survivable while the site opened
+ * in English. Now that it opens in Arabic, a static English title would be
+ * what most visitors see in the browser tab and what search engines index for
+ * an Arabic page — the one piece of the page that never translated.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const ar = locale === "ar";
 
-  // Declared by hand because the files live in public/, not in this directory.
-  // A metadata icon placed in app/ becomes a generated route with the image
-  // inlined into the Worker script: three of them added ~190 KB of base64 and
-  // pushed the bundle past Cloudflare's 3 MiB limit, which Prisma's WASM query
-  // engine already fills 2.24 MiB of. From public/ they are static assets on
-  // the assets binding and cost the Worker script nothing.
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "64x64", type: "image/x-icon" },
-      { url: "/icon.png", sizes: "256x256", type: "image/png" },
-    ],
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
-  },
-};
+  return {
+    title: {
+      default: ar
+        ? "نيكسو موشن — قطع غيار الأتمتة الصناعية | مصر والشرق الأوسط وأفريقيا"
+        : "NexuMotion — Industrial Automation Parts | Egypt, MENA & Africa",
+      template: ar ? "%s | نيكسو موشن" : "%s | NexuMotion",
+    },
+    description: ar
+      ? "نيكسو موشن تورّد قطع غيار الأتمتة الصناعية الأصلية في مصر والشرق الأوسط وأفريقيا — وحدات تحكم PLC ومغيّرات السرعة وشاشات HMI والحسّاسات، مع البيانات الفنية التي يحتاجها المهندس لاختيارها."
+      : "NexuMotion supplies genuine industrial automation parts across Egypt, the Middle East and Africa — PLCs, VFDs, HMIs, sensors and more, with the technical data engineers need to specify them.",
+
+    openGraph: {
+      locale: ar ? "ar_EG" : "en_US",
+      type: "website",
+    },
+
+    // Declared by hand because the files live in public/, not in this directory.
+    // A metadata icon placed in app/ becomes a generated route with the image
+    // inlined into the Worker script: three of them added ~190 KB of base64 and
+    // pushed the bundle past Cloudflare's 3 MiB limit, which Prisma's WASM query
+    // engine already fills 2.24 MiB of. From public/ they are static assets on
+    // the assets binding and cost the Worker script nothing.
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "64x64", type: "image/x-icon" },
+        { url: "/icon.png", sizes: "256x256", type: "image/png" },
+      ],
+      apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    },
+  };
+}
 
 /**
  * Categories for the header mega-menu.

@@ -1,8 +1,12 @@
 import Link from "next/link";
+import { getT } from "@/i18n/server";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "All Brands" };
+export async function generateMetadata() {
+  const { t } = await getT();
+  return { title: t("meta.brands") };
+}
 
 export default async function BrandsPage() {
   // Only brands we actually carry stock for. Seeded brands with no catalogue

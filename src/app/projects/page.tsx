@@ -7,7 +7,10 @@ import NewProjectForm from "@/components/projects/NewProjectForm";
 import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Projects / BOMs" };
+export async function generateMetadata() {
+  const { t } = await getT();
+  return { title: t("meta.projects") };
+}
 
 export default async function ProjectsPage() {
   const session = await auth();
