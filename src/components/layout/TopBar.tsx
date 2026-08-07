@@ -1,5 +1,6 @@
 import { Phone, Mail, MapPin } from "lucide-react";
 import { contact } from "@/content/site-content";
+import SocialLinks from "@/components/layout/SocialLinks";
 import { getT } from "@/i18n/server";
 
 /**
@@ -54,6 +55,15 @@ export default async function TopBar() {
               {contact.email}
             </span>
           </a>
+
+          {/* Hidden below md, unlike the phone and email. Four more targets is
+              what finally makes this row wrap on a phone, and someone on a
+              phone taps the number — the icons are in the footer regardless. */}
+          <SocialLinks
+            className="hidden md:flex gap-3 ps-4 border-s border-white/20"
+            iconClass="w-3.5 h-3.5"
+            linkClass="text-white/80 hover:text-[#07C89B]"
+          />
         </div>
       </div>
     </div>

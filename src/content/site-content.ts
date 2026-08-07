@@ -184,6 +184,23 @@ export const contact = {
   whatsappGreeting: "Hello, I'd like to ask about a part.",
 };
 
+// ── Social profiles ─────────────────────────────────────────────────────────
+// Rendered in the top bar and the footer. `id` selects the glyph in
+// components/layout/SocialLinks.tsx — add the glyph there before adding a
+// network here, or it will render nothing.
+export type SocialLink = { id: "linkedin" | "instagram" | "facebook" | "tiktok"; label: string; href: string };
+
+export const social: SocialLink[] = [
+  { id: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/company/nexumotion/" },
+  { id: "instagram", label: "Instagram", href: "https://www.instagram.com/nexumotion/" },
+  {
+    id: "facebook",
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61593233602328",
+  },
+  { id: "tiktok", label: "TikTok", href: "https://www.tiktok.com/@nexumotion_automation" },
+];
+
 // ── About page facts ────────────────────────────────────────────────────────
 // These are claims about your business. Set them to what is actually true.
 export const companyFacts = {

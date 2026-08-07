@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import Logo from "@/components/layout/Logo";
+import SocialLinks from "@/components/layout/SocialLinks";
 import { contact } from "@/content/site-content";
 import { getT } from "@/i18n/server";
 
@@ -15,6 +16,11 @@ export default async function Footer() {
           <Logo className="h-12 w-auto mb-3" alwaysLight />
           <h3 className="sr-only" dir="ltr">NexuMotion</h3>
           <p className="text-slate-400">{t("footer.tagline")}</p>
+          <SocialLinks
+            className="mt-4 gap-4"
+            iconClass="w-5 h-5"
+            linkClass="text-slate-400 hover:text-[#07C89B]"
+          />
         </div>
         <div>
           <h4 className="font-semibold text-white mb-3">{t("footer.shop")}</h4>
