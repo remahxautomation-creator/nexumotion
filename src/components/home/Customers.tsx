@@ -1,23 +1,28 @@
 import Image from "next/image";
-import { AlertTriangle } from "lucide-react";
-import { customers, isPlaceholder } from "@/content/site-content";
+import { customers, customersArePlaceholder } from "@/content/site-content";
 import { getT } from "@/i18n/server";
 
-// Typographic mark used when a customer has no logo file. Safe default: showing
-// a company's actual logo needs their permission.
+/**
+ * Client wall.
+ *
+ * Renders a typographic mark unless an entry carries a `logo` path. That is
+ * the deliberate default: reproducing a customer's actual logo needs their
+ * permission, and the name alone carries the same weight without the exposure.
+ * Drop files into public/customers/ and set `logo` per entry to switch any
+ * individual one over.
+ */
 function Monogram({ name }: { name: string }) {
-  const initials = name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
+  // Two initials from the first two words, or the first two letters of a
+  // single-word name — "Fresh" as "F" alone reads like a missing image.
+  const words = name.split(/[\s&-]+/).filter(Boolean);
+  const initials =
+    words.length > 1
+      ? words.slice(0, 2).map((w) => w[0]).join("")
+      : name.slice(0, 2);
+
   return (
-    <div className="flex items-center gap-2.5">
-      <div className="w-9 h-9 rounded-md bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold shrink-0">
-        {initials}
-      </div>
-      <span className="text-sm font-semibold text-slate-700 truncate">{name}</span>
+    <div className="w-8 h-8 rounded bg-gradient-to-br from-[#0A6286] to-[#07858F] text-white flex items-center justify-center text-[11px] font-bold shrink-0 tracking-tight">
+      {initials.toUpperCase()}
     </div>
   );
 }
@@ -32,38 +37,53 @@ export default async function Customers() {
         <p className="text-sm text-slate-500 mt-1">{t("home.customers.subtitle")}</p>
       </div>
 
-      {isPlaceholder && (
+      {customersArePlaceholder && (
         <div className="mb-6 flex items-start gap-2 text-xs bg-amber-50 border border-amber-200 text-amber-800 rounded-md px-3 py-2 max-w-2xl mx-auto">
-          <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>
             Placeholder customers. Replace them in <code>src/content/site-content.ts</code> and set{" "}
-            <code>isPlaceholder = false</code>. Listing a company you do not supply — or showing
-            their logo without permission — is false advertising.
+            <code>customersArePlaceholder = false</code>. Listing a company you do not supply — or
+            showing their logo without permission — is false advertising.
           </span>
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      {/* Dense on purpose. At five columns the 53 entries ran over a full
+          viewport and pushed the rest of the page down; six columns with
+          tighter cards keeps the wall readable without dominating the home
+          page. */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
         {customers.map((c, i) => (
           <div
             key={`${c.name}-${i}`}
-            className="bg-white border border-slate-200 rounded-lg px-4 py-3.5 flex flex-col gap-1.5 hover:border-slate-300 transition-colors"
+            className="bg-white border border-slate-200 rounded-lg px-2.5 py-2 flex items-center gap-2 hover:border-[#07858F] transition-colors"
           >
             {c.logo ? (
               <Image
                 src={c.logo}
                 alt={c.name}
                 width={120}
-                height={36}
-                className="h-9 w-auto object-contain grayscale opacity-80"
+                height={40}
+                className="h-10 w-auto object-contain shrink-0"
+                unoptimized
               />
             ) : (
               <Monogram name={c.name} />
             )}
-            <span className="text-[11px] text-slate-400">{c.sector}</span>
+            <div className="min-w-0">
+              {/* dir="ltr" so Latin company names are not reordered on the
+                  Arabic pages, where the surrounding text runs right-to-left. */}
+              <div className="text-[12px] font-semibold text-slate-800 truncate leading-tight" dir="ltr">
+                {c.name}
+              </div>
+              <div className="text-[10px] text-slate-400 truncate leading-tight">{c.sector}</div>
+            </div>
           </div>
         ))}
       </div>
+
+      <p className="text-center text-xs text-slate-400 mt-6">
+        {t("home.customers.note").replace("{count}", String(customers.length))}
+      </p>
     </section>
   );
 }

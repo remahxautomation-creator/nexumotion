@@ -1,5 +1,5 @@
 import { Quote, AlertTriangle } from "lucide-react";
-import { testimonials, isPlaceholder } from "@/content/site-content";
+import { testimonials, testimonialsArePlaceholder } from "@/content/site-content";
 import { getT } from "@/i18n/server";
 
 export default async function Testimonials() {
@@ -13,7 +13,7 @@ export default async function Testimonials() {
           <p className="text-sm text-slate-500 mt-1">{t("home.testimonials.subtitle")}</p>
         </div>
 
-        {isPlaceholder && (
+        {testimonialsArePlaceholder && (
           <div className="mb-6 flex items-start gap-2 text-xs bg-amber-50 border border-amber-200 text-amber-800 rounded-md px-3 py-2 max-w-2xl mx-auto">
             <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>

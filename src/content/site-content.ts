@@ -12,7 +12,15 @@
 // visible warning banner; flip it to false only once the content is genuine.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const isPlaceholder = true;
+// Two flags, not one. They started as a single `isPlaceholder` covering both
+// sections, but the customer list is now real while the testimonials are still
+// invented — clearing one flag would have dropped the warning from three made-up
+// quotes as well.
+export const customersArePlaceholder = false;
+export const testimonialsArePlaceholder = true;
+
+/** @deprecated Use the specific flags above. Kept so nothing breaks silently. */
+export const isPlaceholder = testimonialsArePlaceholder;
 
 // ── Customers ───────────────────────────────────────────────────────────────
 // Replace with companies you actually supply. `logo` is an optional path under
@@ -21,15 +29,83 @@ export const isPlaceholder = true;
 // actual logo, and most supply agreements cover this explicitly.
 export type Customer = { name: string; sector: string; logo?: string };
 
+// Transcribed from the client wall supplied by the business. Names only, with
+// no `logo` set, so each renders as a typographic mark — reproducing a
+// customer's actual logo needs their permission, and the names alone carry the
+// same credibility without that exposure. Add `logo: "/customers/<file>.svg"`
+// per entry once permission and the files are in hand.
+//
+// Sectors are the companies' own industries, not claims about the work done for
+// them. A few marks on the supplied sheet were Arabic-only or too small to read
+// with confidence and were left out rather than guessed at — a misspelt client
+// name is worse than a shorter list.
 export const customers: Customer[] = [
-  { name: "Your Customer", sector: "Cement" },
-  { name: "Your Customer", sector: "Food & Beverage" },
-  { name: "Your Customer", sector: "Water Treatment" },
-  { name: "Your Customer", sector: "Oil & Gas" },
-  { name: "Your Customer", sector: "Pharmaceuticals" },
-  { name: "Your Customer", sector: "Textiles" },
-  { name: "Your Customer", sector: "Packaging" },
-  { name: "Your Customer", sector: "Steel" },
+  // Food, beverage and ingredients
+  { name: "Nestlé", sector: "Food & Beverage" },
+  { name: "Danone", sector: "Food & Beverage" },
+  { name: "Coca-Cola", sector: "Food & Beverage" },
+  { name: "PepsiCo", sector: "Food & Beverage" },
+  { name: "Heineken", sector: "Food & Beverage" },
+  { name: "Americana", sector: "Food & Beverage" },
+  { name: "Juhayna", sector: "Dairy" },
+  { name: "Almarai", sector: "Dairy" },
+  { name: "Beyti", sector: "Dairy" },
+  { name: "Edita", sector: "Bakery & Snacks" },
+  { name: "Chipsy", sector: "Snacks" },
+  { name: "Halwani Bros", sector: "Food Processing" },
+  { name: "Farm Frites", sector: "Food Processing" },
+  { name: "Greenland", sector: "Dairy" },
+  { name: "Hero", sector: "Food & Beverage" },
+  { name: "Savola Group", sector: "Food & Beverage" },
+  { name: "Nile Sugar", sector: "Sugar" },
+  { name: "Lesaffre Egypt", sector: "Yeast & Fermentation" },
+  { name: "Döhler", sector: "Ingredients" },
+  { name: "Givaudan", sector: "Flavours & Fragrance" },
+
+  // Pharmaceutical and healthcare
+  { name: "Pfizer", sector: "Pharmaceuticals" },
+  { name: "GlaxoSmithKline", sector: "Pharmaceuticals" },
+  { name: "Novartis", sector: "Pharmaceuticals" },
+  { name: "Sanofi", sector: "Pharmaceuticals" },
+  { name: "Eli Lilly", sector: "Pharmaceuticals" },
+  { name: "SEDICO", sector: "Pharmaceuticals" },
+
+  // Consumer goods
+  { name: "Unilever", sector: "Consumer Goods" },
+  { name: "Procter & Gamble", sector: "Consumer Goods" },
+  { name: "Electrolux", sector: "Home Appliances" },
+  { name: "Olympic Group", sector: "Home Appliances" },
+  { name: "Fresh", sector: "Home Appliances" },
+  { name: "El Araby Group", sector: "Home Appliances" },
+
+  // Automotive and heavy industry
+  { name: "Mercedes-Benz", sector: "Automotive" },
+  { name: "BMW", sector: "Automotive" },
+  { name: "General Motors", sector: "Automotive" },
+  { name: "Pirelli", sector: "Automotive" },
+  { name: "ArcelorMittal", sector: "Steel" },
+  { name: "Saint-Gobain", sector: "Building Materials" },
+  { name: "GLC Paints", sector: "Coatings" },
+
+  // Energy, logistics and process
+  { name: "TotalEnergies", sector: "Oil & Gas" },
+  { name: "Halliburton", sector: "Oil & Gas" },
+  { name: "DP World Sokhna", sector: "Ports & Logistics" },
+  { name: "KONE", sector: "Lifts & Escalators" },
+  { name: "Krones", sector: "Process Machinery" },
+  { name: "Groupe Atlantic", sector: "HVAC" },
+
+  // Packaging, paper and plastics
+  { name: "Rexam", sector: "Packaging" },
+  { name: "Taghleef Industries", sector: "Packaging Films" },
+  { name: "Interstate Paper Industries", sector: "Paper" },
+  { name: "RKW", sector: "Plastic Films" },
+  { name: "HYMA Plastic & Foam", sector: "Plastics" },
+
+  // Other
+  { name: "EgyptAir", sector: "Aviation" },
+  { name: "Eastern Company S.A.E", sector: "Manufacturing" },
+  { name: "Synergy Egypt", sector: "Industrial Services" },
 ];
 
 // ── Testimonials ────────────────────────────────────────────────────────────
