@@ -5,6 +5,7 @@ import ProductCard from "@/components/product/ProductCard";
 import ControlPanelArt from "@/components/home/ControlPanelArt";
 import Customers from "@/components/home/Customers";
 import Testimonials from "@/components/home/Testimonials";
+import WhyEngineers from "@/components/home/WhyEngineers";
 import { categoryIcon } from "@/lib/category-icons";
 import { parseJsonArray } from "@/lib/utils";
 import { getT } from "@/i18n/server";
@@ -143,7 +144,10 @@ export default async function HomePage() {
       {/* ── Customers ────────────────────────────────────────────────── */}
       <Customers />
 
-      {/* ── Testimonials ─────────────────────────────────────────────── */}
+      {/* ── Why engineers use it — real, counted facts ────────────────── */}
+      <WhyEngineers />
+
+      {/* Self-hiding while the quotes are placeholders. */}
       <Testimonials />
 
       {/* ── Brands ───────────────────────────────────────────────────── */}

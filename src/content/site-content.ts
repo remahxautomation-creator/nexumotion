@@ -119,27 +119,52 @@ export type Testimonial = {
   company: string;
 };
 
+// EXAMPLES — not published. The Testimonials component returns null while
+// testimonialsArePlaceholder is true, so none of this reaches the site.
+//
+// They are written out rather than left as "Placeholder — replace me" so there
+// is a target to aim at when asking customers for a quote. Notice what makes
+// each one work: a specific part or situation, a number, and an outcome. "Great
+// service, highly recommended" persuades nobody and is what you get if you ask
+// "can we have a testimonial?" instead of the questions below.
+//
+// Worth asking a customer:
+//   • What were you trying to fix, and what was stopping you?
+//   • How long had you been looking before you found it?
+//   • What would it have cost you to stay down another day?
+//
+// Then send back what you wrote, get their written sign-off on the exact
+// wording, name, role and company, and only then set the flag to false. Written
+// permission matters: publishing a real person's name against words they did
+// not approve is its own problem, separate from inventing the quote.
 export const testimonials: Testimonial[] = [
   {
     quote:
-      "Placeholder — replace with a real customer quote. Ask for something specific: what they needed, how fast it arrived, what it saved them.",
-    author: "Customer name",
+      "We had a drive fail on the packing line and the original was discontinued. "
+      + "I found the replacement through the cross-reference in about ten minutes, "
+      + "with the datasheet there to check the control terminals matched. "
+      + "Back running the next morning.",
+    author: "— name —",
     role: "Maintenance Manager",
-    company: "Company name",
+    company: "— company —",
   },
   {
     quote:
-      "Placeholder — a quote about cross-referencing or finding an obsolete part works well here, because that is what the platform is genuinely good at.",
-    author: "Customer name",
+      "What I actually need is the specification, not a price list. Being able to "
+      + "filter on current rating and IP class and get to three real candidates, "
+      + "each with its datasheet, is the part that saves me time.",
+    author: "— name —",
     role: "Automation Engineer",
-    company: "Company name",
+    company: "— company —",
   },
   {
     quote:
-      "Placeholder — a purchasing-side quote about BOM uploads or quote turnaround balances the two engineering ones above.",
-    author: "Customer name",
+      "I upload the bill of materials from the panel drawing and get a priced quote "
+      + "back against every line, including the parts they had to source. "
+      + "That used to be a morning of emails.",
+    author: "— name —",
     role: "Procurement Lead",
-    company: "Company name",
+    company: "— company —",
   },
 ];
 

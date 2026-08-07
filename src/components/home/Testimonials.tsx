@@ -5,6 +5,19 @@ import { getT } from "@/i18n/server";
 export default async function Testimonials() {
   const { t } = await getT();
 
+  // Renders nothing until the quotes are real.
+  //
+  // The alternative on a live storefront is either a visible "these are fake"
+  // banner or, worse, invented quotes shown as genuine — which is false
+  // advertising in Egypt, the EU and the US alike, and buyers act on it.
+  // WhyEngineers stands in the same slot meanwhile, making the same case out
+  // of facts counted from the catalogue.
+  //
+  // To publish: replace the examples in site-content.ts with quotes real
+  // customers gave you and set testimonialsArePlaceholder = false. This
+  // section then appears on its own — no code change needed.
+  if (testimonialsArePlaceholder) return null;
+
   return (
     <section className="bg-white border-y border-slate-200">
       <div className="max-w-7xl mx-auto px-4 py-14">
