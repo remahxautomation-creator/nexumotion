@@ -6,6 +6,9 @@ export const dictionaries = {
     "nav.quickOrder": "Quick Order",
     "nav.account": "Account",
     "nav.cart": "Cart",
+    "nav.menu": "Menu",
+    "nav.closeMenu": "Close menu",
+    "nav.followUs": "Follow us",
     "nav.allCategories": "All Categories",
     "nav.search.placeholder": "Search by part number, competitor SKU, or keyword…",
 
@@ -491,6 +494,9 @@ export const dictionaries = {
     "nav.quickOrder": "طلب سريع",
     "nav.account": "حسابي",
     "nav.cart": "السلة",
+    "nav.menu": "القائمة",
+    "nav.closeMenu": "إغلاق القائمة",
+    "nav.followUs": "تابعنا",
     "nav.allCategories": "كل الفئات",
     "nav.search.placeholder": "ابحث برقم القطعة أو كود المنافس أو كلمة مفتاحية…",
 

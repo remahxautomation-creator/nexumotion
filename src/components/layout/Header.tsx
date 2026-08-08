@@ -8,6 +8,7 @@ import SearchAutocomplete from "@/components/search/SearchAutocomplete";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import Logo from "@/components/layout/Logo";
+import MobileMenu from "@/components/layout/MobileMenu";
 import { useT } from "@/i18n/client";
 
 type Cat = { id: string; name: string; slug: string };
@@ -20,7 +21,8 @@ export default function Header({ categories }: { categories: Cat[] }) {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center gap-4 h-16">
+        <div className="flex items-center gap-3 sm:gap-4 h-16">
+          <MobileMenu categories={categories} />
           <Link href="/" className="flex items-center shrink-0" aria-label="NexuMotion — home">
             <Logo className="h-11 w-auto" priority />
           </Link>
@@ -61,7 +63,9 @@ export default function Header({ categories }: { categories: Cat[] }) {
           </nav>
         </div>
 
-        <div className="flex items-center gap-2 h-11 -mx-1">
+        {/* Categories live in the drawer below lg, so this strip would be a
+            second route to the same list. */}
+        <div className="hidden lg:flex items-center gap-2 h-11 -mx-1">
           <button
             onMouseEnter={() => setMegaOpen(true)}
             onClick={() => setMegaOpen((v) => !v)}
