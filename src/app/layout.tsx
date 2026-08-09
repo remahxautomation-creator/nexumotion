@@ -10,6 +10,7 @@ import { isRtl } from "@/i18n/dictionaries";
 import { I18nProvider } from "@/i18n/client";
 import SiteGuide from "@/components/chat/SiteGuide";
 import ContactDock from "@/components/chat/ContactDock";
+import GoogleTag from "@/components/analytics/GoogleTag";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
@@ -104,6 +105,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Footer />
           <SiteGuide />
           <ContactDock />
+          <GoogleTag />
         </I18nProvider>
       </body>
     </html>
