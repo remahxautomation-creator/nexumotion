@@ -35,8 +35,20 @@ declare global {
   }
 }
 
-/** Google Ads conversion label, from Tools → Conversions in the Ads account. */
-export const ADS_CONVERSION_LABEL: string | null = null;
+/**
+ * Google Ads conversion label for the "Project Inquiry" action.
+ *
+ * The label identifies WHICH conversion action a hit belongs to; the account
+ * ID alone is not enough. Together they form the send_to value Ads expects.
+ *
+ * That action is configured to count ONE conversion per click and to use the
+ * same value for every conversion, which is why trackLead sends no value —
+ * the amount lives in the Ads account and can be revised there without a
+ * deploy. If it is ever switched to "different values for each conversion",
+ * this code must start sending `value` and `currency`, or every lead will be
+ * recorded at the fallback amount.
+ */
+export const ADS_CONVERSION_LABEL: string | null = "c1usCI7jtd8cEMags7xE";
 export const ADS_ID = "AW-18380279878";
 
 /**
