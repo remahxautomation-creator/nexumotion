@@ -5,6 +5,7 @@ import { ShoppingCart, Check } from "lucide-react";
 import { useCart, type CartItem } from "@/hooks/useCart";
 import { cn } from "@/lib/utils";
 import { useT } from "@/i18n/client";
+import { trackAddToCart } from "@/lib/analytics";
 
 export default function AddToCartButton({
   product,
@@ -24,6 +25,13 @@ export default function AddToCartButton({
       disabled={disabled}
       onClick={() => {
         add(product);
+        trackAddToCart({
+          sku: product.sku,
+          name: product.name,
+          brand: product.brand,
+          price: product.price,
+          quantity: 1,
+        });
         setAdded(true);
         setTimeout(() => setAdded(false), 1200);
       }}

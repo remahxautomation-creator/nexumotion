@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, CheckCircle2, Send } from "lucide-react";
 import { useT } from "@/i18n/client";
+import { trackLead } from "@/lib/analytics";
 
 const COUNTRIES = [
   "Egypt", "Saudi Arabia", "UAE", "Kuwait", "Qatar", "Jordan", "Libya",
@@ -71,8 +72,18 @@ export default function PartInquiryForm({
     });
     setBusy(false);
     const data = await res.json().catch(() => ({}));
-    if (res.ok) setSent(true);
-    else setError(data.error ?? t("inquiry.failed"));
+    if (res.ok) {
+      setSent(true);
+      // Fired only on a confirmed 200. Firing on submit instead would count
+      // validation failures and rate-limited bots as conversions, which is how
+      // ad spend ends up optimised towards noise.
+      trackLead({
+        partNumber: locked ? sku : form.partNumber,
+        manufacturer: form.manufacturer || undefined,
+        quantity: Number(form.quantity) || undefined,
+        listed: locked,
+      });
+    } else setError(data.error ?? t("inquiry.failed"));
   };
 
   const input =

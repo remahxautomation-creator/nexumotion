@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PurchaseTracker } from "@/components/analytics/Trackers";
 import { notFound } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
@@ -38,6 +39,19 @@ export default async function OrderPage({
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
+      <PurchaseTracker
+        orderNumber={order.orderNumber}
+        value={Number(order.total)}
+        tax={Number(order.tax)}
+        shipping={Number(order.shipping)}
+        items={order.items.map((it) => ({
+          sku: it.product.sku,
+          name: it.product.name,
+          brand: it.product.brand.name,
+          price: Number(it.price),
+          quantity: it.qty,
+        }))}
+      />
       <div className="bg-white rounded-lg border border-slate-200 p-8">
         <div className="flex items-center gap-3 mb-2">
           <CheckCircle2 className="w-8 h-8 text-emerald-600" />

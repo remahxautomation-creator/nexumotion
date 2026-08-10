@@ -3,6 +3,7 @@ import { getT } from "@/i18n/server";
 import Link from "next/link";
 import { MessageSquareQuote } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
+import { SearchTracker } from "@/components/analytics/Trackers";
 import { parseJsonArray } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -55,6 +56,7 @@ export default async function SearchPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      {query && <SearchTracker term={query} results={products.length} />}
       <h1 className="text-2xl font-bold text-slate-900 mb-1">
         {query ? `Results for “${query}”` : "Search Parts"}
       </h1>
