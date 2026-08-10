@@ -11,6 +11,7 @@ import { I18nProvider } from "@/i18n/client";
 import SiteGuide from "@/components/chat/SiteGuide";
 import ContactDock from "@/components/chat/ContactDock";
 import GoogleTag from "@/components/analytics/GoogleTag";
+import GoogleTagManager from "@/components/analytics/GoogleTagManager";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
@@ -97,6 +98,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           rtl ? "font-arabic" : ""
         } min-h-screen flex flex-col antialiased`}
       >
+        <GoogleTagManager />
         <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
         <I18nProvider locale={locale}>
           <TopBar />
