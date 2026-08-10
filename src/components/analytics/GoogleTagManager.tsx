@@ -23,7 +23,26 @@ import Script from "next/script";
  */
 export const GTM_ID = "GTM-P7MDK5VS";
 
+/**
+ * Off until the container has something in it.
+ *
+ * gtm.js is 114 KB over the wire, on top of the 180 KB gtag.js already loads
+ * for Ads and GA4. An empty container spends that on every visit and returns
+ * nothing — and page speed feeds Google's Quality Score, which feeds
+ * cost-per-click, so it is charged for twice over while ads are running.
+ *
+ * Flip to true the moment there is a tag to serve — a Meta or TikTok pixel,
+ * a heatmap, anything the site does not already load. The container itself is
+ * installed and verified working; this only decides whether the script ships.
+ *
+ * Note the "Container quality: No Recent Data" warning in the GTM console is
+ * expected while this is false, and was expected while it was true and empty.
+ * It reports tag firings, and there are no tags.
+ */
+const GTM_ENABLED = false;
+
 export default function GoogleTagManager() {
+  if (!GTM_ENABLED) return null;
   if (process.env.NODE_ENV !== "production") return null;
 
   return (
