@@ -6,6 +6,7 @@ import ControlPanelArt from "@/components/home/ControlPanelArt";
 import Customers from "@/components/home/Customers";
 import Testimonials from "@/components/home/Testimonials";
 import WhyEngineers from "@/components/home/WhyEngineers";
+import BrandWall from "@/components/home/BrandWall";
 import { categoryIcon } from "@/lib/category-icons";
 import { parseJsonArray } from "@/lib/utils";
 import { getT } from "@/i18n/server";
@@ -14,12 +15,14 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const { t } = await getT();
-  const [categories, brands, featured, specCount] = await Promise.all([
+  const [categories, brandCount, featured, specCount] = await Promise.all([
     prisma.category.findMany({ orderBy: { sortOrder: "asc" }, include: { _count: { select: { products: true } } } }),
-    prisma.brand.findMany({
+    // A count, not rows: the brand wall fetches its own curated list, and this
+    // is only ever rendered as a number. The previous findMany pulled 18 full
+    // records to compute a length that was then capped at 18 anyway, so the
+    // headline could never exceed "50+" no matter how many brands were stocked.
+    prisma.brand.count({
       where: { isActive: true, products: { some: { isActive: true } } },
-      orderBy: { products: { _count: "desc" } },
-      take: 18,
     }),
     prisma.product.findMany({ where: { isFeatured: true, isActive: true }, take: 8, include: { brand: true } }),
     prisma.productSpec.count(),
@@ -59,7 +62,7 @@ export default async function HomePage() {
 
             <dl className="mt-10 grid grid-cols-3 gap-4 max-w-md border-t border-white/20 pt-6">
               {[
-                { v: `${brands.length >= 18 ? "50+" : brands.length}`, k: t("home.hero.stat1") },
+                { v: brandCount >= 50 ? `${Math.floor(brandCount / 50) * 50}+` : String(brandCount), k: t("home.hero.stat1") },
                 { v: String(categories.length), k: t("home.hero.stat2") },
                 { v: specCount.toLocaleString("en-US"), k: t("home.hero.stat3") },
               ].map((s) => (
@@ -150,29 +153,8 @@ export default async function HomePage() {
       {/* Self-hiding while the quotes are placeholders. */}
       <Testimonials />
 
-      {/* ── Brands ───────────────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-slate-900">{t("home.brands.title")}</h2>
-          <Link href="/brands" className="text-sm text-[#0A6286] font-medium flex items-center gap-1">
-            {t("home.brands.all")} <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-          {brands.map((b) => (
-            <Link
-              key={b.id}
-              href={`/brands/${b.slug}`}
-              className="bg-white rounded-lg border border-slate-200 px-3 py-4 text-center hover:border-[#0A6286] hover:shadow-sm transition-all"
-            >
-              <div className="text-sm font-bold text-slate-800 tracking-tight truncate" dir="ltr">
-                {b.name}
-              </div>
-              <div className="text-[10px] text-slate-400 mt-0.5">{b.country}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* ── Brands we stock ───────────────────────────────────────────── */}
+      <BrandWall />
 
       {/* ── Closing CTA ──────────────────────────────────────────────── */}
       <section className="surface-inverse">

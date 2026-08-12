@@ -184,6 +184,44 @@ export const contact = {
   whatsappGreeting: "Hello, I'd like to ask about a part.",
 };
 
+// ── Featured brands ─────────────────────────────────────────────────────────
+// The manufacturers shown on the home page, in this order. Curated rather than
+// "top 18 by product count", because the wall is a statement about what the
+// business represents, not a leaderboard — a brand with three lines can matter
+// more to a buyer than one with seventy.
+//
+// `logo` is a path under /public (e.g. "/brands/siemens.svg"). Without one the
+// name renders as a wordmark, so the wall works today and improves the moment
+// files are added — no code change needed.
+//
+// Showing a manufacturer's logo to indicate you stock their products is
+// ordinary nominative use and needs no permission, unlike presenting a company
+// as a customer. Most manufacturers publish a brand asset pack for exactly
+// this; those are the files to use, not screenshots.
+//
+// Slugs are checked against the catalogue at render time: any entry with no
+// live products is dropped rather than linking to an empty page.
+export type FeaturedBrand = { slug: string; logo?: string };
+
+export const featuredBrands: FeaturedBrand[] = [
+  { slug: "siemens" },
+  { slug: "abb" },
+  { slug: "schneider-electric" },
+  { slug: "danfoss" },
+  { slug: "omron" },
+  { slug: "burkert" },
+  { slug: "sick" },
+  { slug: "pilz" },
+  { slug: "pepperl-fuchs" },
+  { slug: "weidm-ller" }, // slug generated before the umlaut was handled; see note in BrandWall
+  { slug: "norgren" },
+  { slug: "allen-bradley" },
+  { slug: "mitsubishi-electric" },
+  { slug: "ebm-papst" },
+  { slug: "ifm-electronic" },
+  { slug: "festo" },
+];
+
 // ── Social profiles ─────────────────────────────────────────────────────────
 // Rendered in the top bar and the footer. `id` selects the glyph in
 // components/layout/SocialLinks.tsx — add the glyph there before adding a
