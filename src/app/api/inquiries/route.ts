@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { systems } from "@/content/systems";
 import { isRateLimited, clientIp } from "@/lib/rate-limit";
+import { sendInquiryNotification } from "@/lib/email";
 
 const VALID_SLUGS = new Set(systems.map((s) => s.slug));
 
@@ -82,7 +83,7 @@ export async function POST(req: NextRequest) {
   else if (sku || partNumber || manufacturer) kind = "UNLISTED";
   else kind = requestedKind === "UNLISTED" ? "UNLISTED" : "SYSTEM";
 
-  await prisma.inquiry.create({
+  const created = await prisma.inquiry.create({
     data: {
       name,
       email,
@@ -99,6 +100,13 @@ export async function POST(req: NextRequest) {
       quantity,
     },
   });
+
+  // Notify after the record is committed, and awaited rather than
+  // fire-and-forget: Workers cancel outstanding work once the response is
+  // returned, so an un-awaited send would be killed mid-flight. The call caps
+  // itself at 8s and swallows its own failures, so the worst case is a lead
+  // that is saved but unannounced — never a lead that is lost.
+  await sendInquiryNotification(created);
 
   return NextResponse.json({ ok: true });
 }
