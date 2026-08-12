@@ -204,22 +204,22 @@ export const contact = {
 export type FeaturedBrand = { slug: string; logo?: string };
 
 export const featuredBrands: FeaturedBrand[] = [
-  { slug: "siemens" },
-  { slug: "abb" },
-  { slug: "schneider-electric" },
-  { slug: "danfoss" },
-  { slug: "omron" },
-  { slug: "burkert" },
-  { slug: "sick" },
-  { slug: "pilz" },
+  { slug: "siemens", logo: "/brands/siemens.svg" },
+  { slug: "abb", logo: "/brands/abb.svg" },
+  { slug: "schneider-electric", logo: "/brands/schneider-electric.svg" },
+  { slug: "danfoss", logo: "/brands/danfoss.svg" },
+  { slug: "omron", logo: "/brands/omron.svg" },
+  { slug: "burkert", logo: "/brands/burkert.svg" },
+  { slug: "sick", logo: "/brands/sick.svg" },
+  { slug: "pilz", logo: "/brands/pilz.svg" },
   { slug: "pepperl-fuchs" },
-  { slug: "weidm-ller" }, // slug generated before the umlaut was handled; see note in BrandWall
+  { slug: "weidm-ller", logo: "/brands/weidm-ller.svg" }, // slug generated before the umlaut was handled; see note in BrandWall
   { slug: "norgren" },
-  { slug: "allen-bradley" },
+  { slug: "allen-bradley", logo: "/brands/allen-bradley.svg" },
   { slug: "mitsubishi-electric" },
-  { slug: "ebm-papst" },
-  { slug: "ifm-electronic" },
-  { slug: "festo" },
+  { slug: "ebm-papst", logo: "/brands/ebm-papst.svg" },
+  { slug: "ifm-electronic", logo: "/brands/ifm-electronic.svg" },
+  { slug: "festo", logo: "/brands/festo.svg" },
 ];
 
 // ── Social profiles ─────────────────────────────────────────────────────────
