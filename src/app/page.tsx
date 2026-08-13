@@ -80,6 +80,9 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── Brands we stock — first thing after the hero ──────────────── */}
+      <BrandWall />
+
       {/* ── Trust bar ────────────────────────────────────────────────── */}
       <section className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
@@ -153,8 +156,6 @@ export default async function HomePage() {
       {/* Self-hiding while the quotes are placeholders. */}
       <Testimonials />
 
-      {/* ── Brands we stock ───────────────────────────────────────────── */}
-      <BrandWall />
 
       {/* ── Closing CTA ──────────────────────────────────────────────── */}
       <section className="surface-inverse">

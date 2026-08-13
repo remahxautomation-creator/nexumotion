@@ -42,22 +42,53 @@ const LOGOS: Array<{ slug: string; file: string }> = [
   { slug: "ebm-papst", file: "File:Ebmpapst.svg" },
   { slug: "ifm-electronic", file: "File:Ifm electronic logo.svg" },
   { slug: "festo", file: "File:Festo logo.svg" },
+
+  // Second pass: the largest brands in the catalogue that had no logo yet.
+  // SMC alone carries more products than Festo.
+  { slug: "smc", file: "File:Logo SMC Corporation.svg" },
+  { slug: "bosch-rexroth", file: "File:Logo of Bosch Rexroth AG.svg" },
+  { slug: "fluke", file: "File:Fluke Corporation logo.svg" },
+  { slug: "te-connectivity", file: "File:TE Connectivity logo.svg" },
+  { slug: "phoenix-contact", file: "File:Phoenix Contact Logo.svg" },
+  { slug: "eaton", file: "File:Eaton Corporation Logo.svg" },
+  { slug: "wago", file: "File:Logo WAGO 2020.svg" },
+  { slug: "vishay", file: "File:Vishay Logo.svg" },
+  { slug: "stmicroelectronics", file: "File:STMicroelectronics-Logo.svg" },
+  { slug: "arduino", file: "File:Arduino Logo.svg" },
+  { slug: "igus", file: "File:Igus logo.svg" },
+  { slug: "amphenol-industrial", file: "File:Amphenol Logo.svg" },
+  { slug: "tdk", file: "File:TDK-Logo.svg" },
+  { slug: "knipex", file: "File:Knipex logo.svg" },
+  { slug: "milwaukee", file: "File:Milwaukee Logo.svg" },
+
+  // Stocked at zero today, so the wall filters them out — fetched now so they
+  // appear the moment either is carried, without a second trip here.
+  { slug: "pepperl-fuchs", file: "File:Logo Pepperl+Fuchs.svg" },
+  { slug: "mitsubishi-electric", file: "File:Mitsubishi Electric logo in Japan.svg" },
 ];
+
+// No logo on Commons, checked: Norgren, Finder, MOXA, HARTING, DeWALT. The
+// wall renders a wordmark for these, which is why a missing file is a
+// supported state rather than a gap.
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /**
- * Fetch with one retry on 429.
+ * Fetch with retries on 429.
  *
  * The first run of this script tripped Wikimedia's rate limit part-way
  * through, which is a poor way to treat a free service. Requests are paced
  * and a refusal is backed off rather than hammered.
  */
 async function politeFetch(url: string): Promise<Response> {
-  const res = await fetch(url, { headers: { "User-Agent": UA } });
-  if (res.status !== 429) return res;
-  await sleep(3000);
-  return fetch(url, { headers: { "User-Agent": UA } });
+  let res = await fetch(url, { headers: { "User-Agent": UA } });
+  // Three attempts with growing backoff. One 3s retry was not enough across a
+  // 30-file run: four downloads still came back 429.
+  for (let attempt = 1; attempt <= 3 && res.status === 429; attempt++) {
+    await sleep(attempt * 4000);
+    res = await fetch(url, { headers: { "User-Agent": UA } });
+  }
+  return res;
 }
 
 async function directUrl(title: string): Promise<string | null> {
@@ -82,8 +113,17 @@ async function main() {
 
   let ok = 0;
   let failed = 0;
+  let skipped = 0;
+
+  const FORCE = process.argv.includes("--force");
 
   for (const { slug, file } of LOGOS) {
+    // Skip what we already have, so a re-run after a rate-limited attempt
+    // fetches only the gaps instead of hammering Wikimedia for the whole set.
+    if (!FORCE && COMMIT && existsSync(`${OUT_DIR}/${slug}.svg`)) {
+      skipped++;
+      continue;
+    }
     await sleep(400); // pace the requests; this is a free service
     const url = await directUrl(file);
     if (!url) {

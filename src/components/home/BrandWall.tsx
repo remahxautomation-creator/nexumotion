@@ -20,7 +20,7 @@ import { getT } from "@/i18n/server";
  *
  * Logos render when a file is present and fall back to a wordmark otherwise,
  * so the section is useful before any asset work and improves without a code
- * change. Grayscale until hover keeps sixteen competing brand palettes from
+ * change. Grayscale until hover keeps thirty-odd competing brand palettes from
  * fighting the page.
  */
 export default async function BrandWall() {
@@ -70,12 +70,15 @@ export default async function BrandWall() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      {/* Six across on desktop rather than four. This sits directly under the
+          hero now, and thirty-odd brands in a four-column grid pushed the
+          categories and products most visitors came for below the fold. */}
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5">
         {ordered.map((b) => (
           <Link
             key={b.id}
             href={`/brands/${b.slug}`}
-            className="group bg-white border border-slate-200 rounded-lg h-24 px-4
+            className="group bg-white border border-slate-200 rounded-lg h-20 px-3
                        flex flex-col items-center justify-center gap-1
                        hover:border-[#07858F] hover:shadow-sm transition-all"
           >
@@ -86,13 +89,16 @@ export default async function BrandWall() {
                 width={160}
                 height={44}
                 unoptimized
-                className="max-h-11 w-auto object-contain grayscale opacity-70
+                // max-w-full matters as much as max-h here: these logos vary
+                // from square to 5:1, and the wide ones overrun a three-column
+                // card on a phone without it.
+                className="max-h-9 max-w-full w-auto object-contain grayscale opacity-70
                            group-hover:grayscale-0 group-hover:opacity-100 transition-all"
               />
             ) : (
               <span
                 dir="ltr"
-                className="text-[15px] font-bold text-slate-700 tracking-tight text-center leading-tight
+                className="text-[13px] font-bold text-slate-700 tracking-tight text-center leading-tight line-clamp-2
                            group-hover:text-[#0A6286] transition-colors"
               >
                 {b.name}
