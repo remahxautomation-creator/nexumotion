@@ -93,6 +93,47 @@ export const getCatalogueFacts = unstable_cache(
   { revalidate: HOUR * 6, tags: [CACHE_TAGS.products, CACHE_TAGS.brands] }
 );
 
+/**
+ * The /brands listing — every brand that has stock, with counts.
+ *
+ * 276 rows plus an aggregate per row, previously rebuilt on every visit.
+ */
+export const getAllBrands = unstable_cache(
+  async () =>
+    prisma.brand.findMany({
+      where: { isActive: true, products: { some: { isActive: true } } },
+      orderBy: { name: "asc" },
+      include: { _count: { select: { products: true } } },
+    }),
+  ["all-brands"],
+  { revalidate: HOUR * 6, tags: [CACHE_TAGS.brands, CACHE_TAGS.products] }
+);
+
+/**
+ * One brand and its products.
+ *
+ * Keyed by slug: unstable_cache derives the entry from the arguments, so each
+ * brand gets its own. These are the pages ads and search land on, so they are
+ * the ones worth not rebuilding per visit.
+ */
+export const getBrandBySlug = unstable_cache(
+  async (slug: string) =>
+    prisma.brand.findUnique({
+      where: { slug },
+      include: {
+        products: {
+          where: { isActive: true },
+          include: { brand: true },
+          orderBy: { name: "asc" },
+          take: 60,
+        },
+        _count: { select: { products: true } },
+      },
+    }),
+  ["brand-by-slug"],
+  { revalidate: HOUR, tags: [CACHE_TAGS.brands, CACHE_TAGS.products] }
+);
+
 /** About page counts. */
 export const getAboutCounts = unstable_cache(
   async () => {
