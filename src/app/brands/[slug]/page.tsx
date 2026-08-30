@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getBrandBySlug } from "@/lib/cached";
+import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/product/ProductCard";
 import { parseJsonArray } from "@/lib/utils";
 
@@ -7,7 +7,13 @@ export const dynamic = "force-dynamic";
 
 export default async function BrandPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const brand = await getBrandBySlug(slug);
+  const brand = await prisma.brand.findUnique({
+    where: { slug },
+    include: {
+      products: { where: { isActive: true }, include: { brand: true }, orderBy: { name: "asc" }, take: 60 },
+      _count: { select: { products: true } },
+    },
+  });
   if (!brand) notFound();
 
   return (

@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
-import { CACHE_TAGS } from "@/lib/cached";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { stockStatusFor } from "@/lib/inventory";
@@ -90,13 +88,6 @@ export async function POST(req: NextRequest) {
       results.push({ sku, status: "error", error: e instanceof Error ? e.message.slice(0, 120) : "DB error" });
     }
   }
-
-  // Bulk import touches products, brands and categories at once, so all three
-  // cached reads are expired. "max" drops the entry immediately and the next
-  // request repopulates it.
-  revalidateTag(CACHE_TAGS.products, "max");
-  revalidateTag(CACHE_TAGS.brands, "max");
-  revalidateTag(CACHE_TAGS.categories, "max");
 
   return NextResponse.json({ results });
 }

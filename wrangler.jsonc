@@ -34,25 +34,9 @@
   // awake — and constant scanner traffic on always-dynamic pages exhausted the
   // allowance and took the site down. D1 bills rows read, and runs inside
   // Cloudflare rather than across the Atlantic.
-  // Incremental cache for Next's data cache. The catalogue changes weekly at
-  // most, but every page queried the database on every request — which is what
-  // exhausted the previous provider's allowance and left pages waiting on a
-  // round trip they did not need.
-  "kv_namespaces": [
-    {
-      "binding": "NEXT_INC_CACHE_KV",
-      "id": "f4ef02ae5c334b8a90df01ee95abcf46"
-    }
-  ],
-
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "nexumotion",
-      "database_id": "a92919f7-faab-464a-bef4-442b6dee5ed2"
-    },
-    {
-      "binding": "NEXT_TAG_CACHE_D1",
       "database_name": "nexumotion",
       "database_id": "a92919f7-faab-464a-bef4-442b6dee5ed2"
     }

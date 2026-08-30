@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getT } from "@/i18n/server";
-import { getAllBrands } from "@/lib/cached";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 export async function generateMetadata() {
@@ -11,7 +11,11 @@ export async function generateMetadata() {
 export default async function BrandsPage() {
   // Only brands we actually carry stock for. Seeded brands with no catalogue
   // lines would otherwise render an empty listing page.
-  const brands = await getAllBrands();
+  const brands = await prisma.brand.findMany({
+    where: { isActive: true, products: { some: { isActive: true } } },
+    orderBy: { name: "asc" },
+    include: { _count: { select: { products: true } } },
+  });
 
   const grouped = new Map<string, typeof brands>();
   for (const b of brands) {

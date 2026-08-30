@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { getFeaturedBrands } from "@/lib/cached";
+import { prisma } from "@/lib/prisma";
 import { featuredBrands } from "@/content/site-content";
 import { getT } from "@/i18n/server";
 
@@ -28,7 +28,20 @@ export default async function BrandWall() {
 
   const slugs = featuredBrands.map((b) => b.slug);
 
-  const rows = await getFeaturedBrands();
+  const rows = await prisma.brand.findMany({
+    where: {
+      slug: { in: slugs },
+      isActive: true,
+      // The gate that stops dead links.
+      products: { some: { isActive: true } },
+    },
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      _count: { select: { products: { where: { isActive: true } } } },
+    },
+  });
 
   if (!rows.length) return null;
 

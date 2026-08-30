@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
-import { CACHE_TAGS } from "@/lib/cached";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { stockStatusFor } from "@/lib/inventory";
@@ -38,16 +36,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   const product = await prisma.product.update({ where: { id }, data }).catch(() => null);
   if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
-
-  // The catalogue reads are cached for hours, so an edit made here would
-
-  // otherwise sit invisible on the site until the window expired.
-
-  revalidateTag(CACHE_TAGS.products, "max");
-
-  revalidateTag(CACHE_TAGS.brands, "max");
-
-  revalidateTag(CACHE_TAGS.categories, "max");
 
   return NextResponse.json({ ok: true });
 }
