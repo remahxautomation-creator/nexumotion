@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FileText, GitCompareArrows, PackageSearch, ListChecks } from "lucide-react";
-import { prisma } from "@/lib/prisma";
+import { getCatalogueFacts } from "@/lib/cached";
 import { getT } from "@/i18n/server";
 
 /**
@@ -17,14 +17,7 @@ import { getT } from "@/i18n/server";
  */
 async function getFacts() {
   try {
-    const [products, brands, specs, datasheets, crossRefs] = await Promise.all([
-      prisma.product.count({ where: { isActive: true } }),
-      prisma.brand.count({ where: { isActive: true, products: { some: { isActive: true } } } }),
-      prisma.productSpec.count(),
-      prisma.product.count({ where: { isActive: true, NOT: { datasheetUrl: null } } }),
-      prisma.crossReference.count(),
-    ]);
-    return { products, brands, specs, datasheets, crossRefs };
+    return await getCatalogueFacts();
   } catch {
     return null;
   }

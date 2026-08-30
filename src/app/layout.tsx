@@ -4,7 +4,7 @@ import "./globals.css";
 import TopBar from "@/components/layout/TopBar";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { prisma } from "@/lib/prisma";
+import { getNavCategories as cachedNavCategories } from "@/lib/cached";
 import { getLocale } from "@/i18n/server";
 import { isRtl } from "@/i18n/dictionaries";
 import { I18nProvider } from "@/i18n/client";
@@ -71,11 +71,10 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 async function getNavCategories() {
   try {
-    return await prisma.category.findMany({
-      where: { isActive: true },
-      orderBy: { sortOrder: "asc" },
-      select: { id: true, name: true, slug: true },
-    });
+    // Cached: this ran on every request for a menu that changes when someone
+    // edits a category, which is rarely. The try/catch stays — a database blip
+    // must still cost an empty menu rather than the whole page.
+    return await cachedNavCategories();
   } catch {
     return [];
   }
