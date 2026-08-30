@@ -29,6 +29,19 @@
   // NEXT_PUBLIC_SITE_URL: also needs to exist as a *build* variable, because
   // NEXT_PUBLIC_* is inlined into client bundles at build time — this entry
   // only covers server-side reads such as sitemap.ts.
+  // D1 replaces the Neon Postgres this used to reach over the network. Neon's
+  // free tier meters compute time — it bills for how long the database is
+  // awake — and constant scanner traffic on always-dynamic pages exhausted the
+  // allowance and took the site down. D1 bills rows read, and runs inside
+  // Cloudflare rather than across the Atlantic.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "nexumotion",
+      "database_id": "a92919f7-faab-464a-bef4-442b6dee5ed2"
+    }
+  ],
+
   "vars": {
     "AUTH_TRUST_HOST": "true",
     "NEXT_PUBLIC_SITE_URL": "https://nexumotion.com"

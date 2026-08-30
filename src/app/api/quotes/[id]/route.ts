@@ -66,52 +66,71 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     }
 
     try {
-      const order = await prisma.$transaction(async (tx) => {
-        let subtotal = 0;
-        for (const it of quote.items) {
-          const product = await tx.product.findUnique({ where: { id: it.productId } });
-          if (!product || product.stockQty < it.qty) {
-            throw new Error(`INSUFFICIENT_STOCK:${it.product.sku}`);
-          }
-          const newQty = product.stockQty - it.qty;
-          await tx.product.update({
-            where: { id: it.productId },
-            data: {
-              stockQty: newQty,
-              stockStatus: stockStatusFor(newQty),
-            },
-          });
-          subtotal += Number(it.quotedPrice) * it.qty;
-        }
-        // Carriage on a negotiated quote is agreed separately, so it is not added here.
-        const { shipping, tax, total } = calculateTotals(subtotal, { freeShipping: true });
-        const orderNumber = generateOrderNumber();
+      // Same shape as order creation: D1 has no interactive transactions, so
+      // stock is claimed with conditional updates whose affected-row count is
+      // checked, and anything already claimed is handed back on failure.
+      let subtotal = 0;
+      const claimed: { productId: string; qty: number }[] = [];
 
-        const created = await tx.order.create({
-          data: {
-            orderNumber,
-            userId: quote.userId,
-            status: "CONFIRMED",
-            subtotal, shipping, tax, total,
-            currency: "USD",
-            shippingAddress: addr,
-            paymentStatus: "PENDING",
-            notes: `From quote ${quote.id}`,
-            items: {
-              create: quote.items.map((it) => ({
-                productId: it.productId,
-                qty: it.qty,
-                price: Number(it.quotedPrice),
-                total: Number(it.quotedPrice) * it.qty,
-              })),
-            },
+      for (const it of quote.items) {
+        const res = await prisma.product.updateMany({
+          where: { id: it.productId, stockQty: { gte: it.qty } },
+          data: { stockQty: { decrement: it.qty } },
+        });
+        if (res.count === 0) {
+          for (const c of claimed) {
+            await prisma.product.updateMany({
+              where: { id: c.productId },
+              data: { stockQty: { increment: c.qty } },
+            });
+          }
+          throw new Error(`INSUFFICIENT_STOCK:${it.product.sku}`);
+        }
+        claimed.push({ productId: it.productId, qty: it.qty });
+        subtotal += Number(it.quotedPrice) * it.qty;
+      }
+
+      // stockStatus is derived, so it is refreshed after the quantities settle.
+      for (const it of quote.items) {
+        const fresh = await prisma.product.findUnique({
+          where: { id: it.productId },
+          select: { stockQty: true },
+        });
+        if (fresh) {
+          await prisma.product.update({
+            where: { id: it.productId },
+            data: { stockStatus: stockStatusFor(fresh.stockQty) },
+          });
+        }
+      }
+
+      // Carriage on a negotiated quote is agreed separately, so it is not added here.
+      const { shipping, tax, total } = calculateTotals(subtotal, { freeShipping: true });
+      const orderNumber = generateOrderNumber();
+
+      const order = await prisma.order.create({
+        data: {
+          orderNumber,
+          userId: quote.userId,
+          status: "CONFIRMED",
+          subtotal, shipping, tax, total,
+          currency: "USD",
+          shippingAddress: addr,
+          paymentStatus: "PENDING",
+          notes: `From quote ${quote.id}`,
+          items: {
+            create: quote.items.map((it) => ({
+              productId: it.productId,
+              qty: it.qty,
+              price: Number(it.quotedPrice),
+              total: Number(it.quotedPrice) * it.qty,
+            })),
           },
-        });
-        await tx.quoteRequest.update({
-          where: { id },
-          data: { status: "ACCEPTED", orderId: created.id },
-        });
-        return created;
+        },
+      });
+      await prisma.quoteRequest.update({
+        where: { id },
+        data: { status: "ACCEPTED", orderId: order.id },
       });
       return NextResponse.json({ orderNumber: order.orderNumber });
     } catch (e) {

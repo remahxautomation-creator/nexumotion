@@ -1,76 +1,119 @@
-import { cache } from "react";
 import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
 
 /**
- * Prisma client that works both on Node (local dev, `next start`) and on the
- * Cloudflare Workers runtime.
+ * Prisma client for Cloudflare D1, with a local SQLite fallback.
  *
- * On Workers there is no long-lived process and no TCP, so the standard client
- * cannot be instantiated at module load. It is built lazily instead, over
- * Neon's HTTP/WebSocket driver.
+ * Why D1 rather than the Neon Postgres this replaced: Neon's free tier meters
+ * *compute time*, so it bills for how long the database is awake, not for work
+ * done. Every page here queries on every request, and scanners hitting the site
+ * kept the compute alive around the clock — the allowance ran out and the site
+ * went down. D1 bills rows read instead, so idle costs nothing, and it runs
+ * inside the same network as the Worker rather than across the Atlantic.
  *
- * The export stays a `PrismaClient`-shaped value rather than a factory so the
- * 45 call sites keep working unchanged — the proxy below resolves the real
- * client on first property access.
+ * Two runtimes, one export:
  *
- * Note on transactions: order creation and quote acceptance rely on
- * interactive transactions (`$transaction(async tx => …)`) to decrement stock
- * and write the order atomically. That is why this targets Postgres and not
- * D1 — D1 has no interactive transactions, so an order could deduct stock and
- * then fail to record the order.
+ *   Workers — the D1 binding `DB` from wrangler.jsonc, resolved per request.
+ *   Node    — a plain client against DATABASE_URL (`file:...`), used by
+ *             `next dev`, `next start` and the seed/import scripts.
+ *
+ * The export stays a PrismaClient-shaped value rather than a factory so the
+ * call sites are untouched; the proxy below resolves lazily on first property
+ * access.
+ *
+ * Note on transactions: D1 has no interactive transactions, so the
+ * `$transaction(async tx => …)` form is unavailable. Order creation and quote
+ * acceptance use a conditional UPDATE plus a rows-affected check instead —
+ * see the comments in those routes. That is race-safe in a way the previous
+ * read-then-write was not.
  */
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
-function createClient(): PrismaClient {
+const onWorkers =
+  typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
+
+function nodeClient(): PrismaClient {
   const url = process.env.DATABASE_URL;
   if (!url) {
     throw new Error(
-      "DATABASE_URL is not set. Locally, put it in .env; on Cloudflare, add it " +
-        "as a Worker secret (`npx wrangler secret put DATABASE_URL`)."
+      "DATABASE_URL is not set. Locally this should be a SQLite file, e.g. " +
+        'DATABASE_URL="file:./local.db". On Cloudflare the D1 binding is used instead.'
     );
   }
-
-  // A Neon/Postgres URL over HTTP works in both runtimes. Anything else (a
-  // local `file:` SQLite URL, say) is a configuration mistake now that the
-  // datasource is Postgres — fail loudly rather than half-working.
-  if (url.startsWith("file:")) {
+  if (!url.startsWith("file:")) {
     throw new Error(
-      "DATABASE_URL points at a SQLite file, but the schema targets Postgres. " +
-        "Use a Postgres connection string (Neon works on both Node and Workers)."
+      `DATABASE_URL is "${url.slice(0, 12)}…" but the schema targets SQLite. ` +
+        "Postgres URLs stopped working when this moved to D1."
     );
   }
-
-  const adapter = new PrismaNeon({ connectionString: url });
-  return new PrismaClient({ adapter });
+  return new PrismaClient();
 }
 
-// Workers forbid reusing an I/O object across requests. A module-level client
-// holds a Neon socket opened during whichever request happened to be first;
-// the next request on that isolate touches it and the runtime kills the
-// request with "Cannot perform I/O on behalf of a different request", which
-// showed up as the same URL passing and then failing at random.
-//
-// So on Workers the client is scoped to the request instead. React's cache()
-// memoises per request, which keeps it to one client per request rather than
-// one per property access on the proxy below.
-//
-// Node keeps the module-level singleton: there is no such restriction, and a
-// fresh pool per request would leak connections across dev hot reloads.
-const isWorkers =
-  typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
+async function workerClient(): Promise<PrismaClient> {
+  // Imported lazily: both packages pull in Workers-only APIs, and requiring
+  // them at module scope breaks the Node scripts that share this file's
+  // dependency graph.
+  const [{ PrismaD1 }, { getCloudflareContext }] = await Promise.all([
+    import("@prisma/adapter-d1"),
+    import("@opennextjs/cloudflare"),
+  ]);
+  const { env } = getCloudflareContext();
+  // Typed off PrismaD1's own constructor rather than the global D1Database,
+  // which is only declared when @cloudflare/workers-types is in the tsconfig
+  // lib — and pulling that in would drag Workers globals into the Node scripts
+  // that share this compilation unit.
+  type D1 = ConstructorParameters<typeof PrismaD1>[0];
+  const db = (env as unknown as Record<string, unknown>).DB as D1 | undefined;
+  if (!db) {
+    throw new Error(
+      "D1 binding `DB` is missing. Check the d1_databases block in wrangler.jsonc."
+    );
+  }
+  return new PrismaClient({ adapter: new PrismaD1(db) });
+}
 
-const getRequestClient = cache((): PrismaClient => createClient());
+/**
+ * On Workers the client is built per request rather than cached globally.
+ * Workers forbid reusing an I/O object across requests — the Neon setup hit
+ * exactly that ("Cannot perform I/O on behalf of a different request") and it
+ * presented as the same URL passing and then failing at random.
+ */
+let workerClientPromise: Promise<PrismaClient> | null = null;
 
 function resolve(): PrismaClient {
-  if (isWorkers) return getRequestClient();
-  if (!globalForPrisma.prisma) globalForPrisma.prisma = createClient();
+  if (onWorkers) {
+    // The proxy below is synchronous, so the async binding lookup is wrapped in
+    // a second proxy that awaits it on each call. Prisma's model methods all
+    // return promises, so awaiting inside them is transparent to callers.
+    return new Proxy({} as PrismaClient, {
+      get(_t, model: string | symbol) {
+        return new Proxy(
+          {},
+          {
+            get(_t2, method: string | symbol) {
+              return async (...args: unknown[]) => {
+                workerClientPromise ??= workerClient();
+                const client = await workerClientPromise;
+                const target = (client as unknown as Record<string, Record<string, unknown>>)[
+                  model as string
+                ];
+                const fn = target?.[method as string];
+                if (typeof fn !== "function") {
+                  throw new TypeError(`prisma.${String(model)}.${String(method)} is not a function`);
+                }
+                return (fn as (...a: unknown[]) => unknown).apply(target, args);
+              };
+            },
+          }
+        );
+      },
+    });
+  }
+
+  if (!globalForPrisma.prisma) globalForPrisma.prisma = nodeClient();
   return globalForPrisma.prisma;
 }
 
-// Lazy proxy: nothing connects until the first query, which keeps module load
-// cheap on Workers and lets the build run without a database present.
 export const prisma = new Proxy({} as PrismaClient, {
   get(_target, prop, receiver) {
     const client = resolve();

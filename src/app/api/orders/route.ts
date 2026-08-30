@@ -59,70 +59,93 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const order = await prisma.$transaction(async (tx) => {
-      // Load products at server prices. Category is included because shipping
-      // is priced on weight, and lines without a real weight fall back to a
-      // per-category estimate.
-      const products = await tx.product.findMany({
-        where: { id: { in: items.map((i) => i.productId) }, isActive: true },
-        include: { category: { select: { slug: true } } },
+    // D1 has no interactive transactions, so this is a read, then a
+    // conditional write, then compensation on failure — not
+    // $transaction(async tx => …), which the adapter cannot honour.
+    //
+    // The decrement is conditional and its affected-row count is checked. That
+    // closes a race the previous read-then-write left open: two orders could
+    // both read stock 5, both pass validation, and both decrement it to -5.
+    // Here the second claim matches no rows and is rejected.
+    const products = await prisma.product.findMany({
+      where: { id: { in: items.map((i) => i.productId) }, isActive: true },
+      include: { category: { select: { slug: true } } },
+    });
+    const byId = new Map(products.map((p) => [p.id, p]));
+
+    let subtotal = 0;
+    const orderItems: { productId: string; qty: number; price: number; total: number }[] = [];
+
+    for (const line of items) {
+      const p = byId.get(line.productId);
+      if (!p) throw new Error("PRODUCT_NOT_FOUND");
+      if (p.stockStatus === "OUT_OF_STOCK" || p.stockQty < line.qty) {
+        throw new Error(`INSUFFICIENT_STOCK:${p.sku}:${p.stockQty}`);
+      }
+      const price = Number(p.price);
+      const total = price * line.qty;
+      subtotal += total;
+      orderItems.push({ productId: p.id, qty: line.qty, price, total });
+    }
+
+    // Claim the stock line by line. `gte` makes each claim conditional; a line
+    // another order has already taken matches nothing, and every line claimed
+    // so far is handed back before the request fails. Compensation is safe to
+    // rely on because an increment cannot itself be refused.
+    const claimed: LineInput[] = [];
+    for (const line of items) {
+      const res = await prisma.product.updateMany({
+        where: { id: line.productId, stockQty: { gte: line.qty } },
+        data: { stockQty: { decrement: line.qty } },
       });
-      const byId = new Map(products.map((p) => [p.id, p]));
-
-      let subtotal = 0;
-      const orderItems: { productId: string; qty: number; price: number; total: number }[] = [];
-
-      for (const line of items) {
-        const p = byId.get(line.productId);
-        if (!p) throw new Error("PRODUCT_NOT_FOUND");
-        if (p.stockStatus === "OUT_OF_STOCK" || p.stockQty < line.qty) {
-          throw new Error(`INSUFFICIENT_STOCK:${p.sku}:${p.stockQty}`);
+      if (res.count === 0) {
+        for (const c of claimed) {
+          await prisma.product.updateMany({
+            where: { id: c.productId },
+            data: { stockQty: { increment: c.qty } },
+          });
         }
-        const price = Number(p.price);
-        const total = price * line.qty;
-        subtotal += total;
-        orderItems.push({ productId: p.id, qty: line.qty, price, total });
-      }
-
-      // Decrement stock
-      for (const line of items) {
         const p = byId.get(line.productId)!;
-        const newQty = p.stockQty - line.qty;
-        await tx.product.update({
-          where: { id: p.id },
-          data: {
-            stockQty: newQty,
-            stockStatus: stockStatusFor(newQty),
-          },
-        });
+        throw new Error(`INSUFFICIENT_STOCK:${p.sku}:${p.stockQty}`);
       }
+      claimed.push(line);
+    }
 
-      const { shipping, tax, total } = calculateTotals(subtotal, {
-        lines: items.map((line) => {
-          const p = byId.get(line.productId)!;
-          return {
-            qty: line.qty,
-            weightKg: p.weightKg ? Number(p.weightKg) : null,
-            categorySlug: p.category.slug,
-          };
-        }),
+    // stockStatus is derived from quantity, so it is refreshed once the
+    // quantities have settled rather than being computed mid-claim.
+    for (const line of items) {
+      const p = byId.get(line.productId)!;
+      await prisma.product.update({
+        where: { id: p.id },
+        data: { stockStatus: stockStatusFor(p.stockQty - line.qty) },
       });
-      const orderNumber = generateOrderNumber();
+    }
 
-      return tx.order.create({
-        data: {
-          orderNumber,
-          userId: userId!,
-          status: "PENDING",
-          subtotal, shipping, tax, total,
-          currency: "USD",
-          shippingAddress,
-          paymentStatus: "PENDING",
-          notes,
-          items: { create: orderItems },
-        },
-        include: { items: { include: { product: true } } },
-      });
+    const { shipping, tax, total } = calculateTotals(subtotal, {
+      lines: items.map((line) => {
+        const p = byId.get(line.productId)!;
+        return {
+          qty: line.qty,
+          weightKg: p.weightKg ? Number(p.weightKg) : null,
+          categorySlug: p.category.slug,
+        };
+      }),
+    });
+    const orderNumber = generateOrderNumber();
+
+    const order = await prisma.order.create({
+      data: {
+        orderNumber,
+        userId: userId!,
+        status: "PENDING",
+        subtotal, shipping, tax, total,
+        currency: "USD",
+        shippingAddress,
+        paymentStatus: "PENDING",
+        notes,
+        items: { create: orderItems },
+      },
+      include: { items: { include: { product: true } } },
     });
 
     return NextResponse.json({

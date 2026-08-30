@@ -87,7 +87,7 @@ function buildDescription(
   const maxT = get("maximum_operating_temperature");
   const tempSentence = minT && maxT ? ` Operating range ${minT} to ${maxT}.` : "";
 
-  return `${lead}${specSentence}${tempSentence} Supplied by AutoParts MENA for industrial customers across Egypt, the Middle East and Africa.`
+  return `${lead}${specSentence}${tempSentence} Supplied by NexuMotion for industrial customers across Egypt, the Middle East and Africa.`
     .replace(/\s+/g, " ")
     .trim();
 }
