@@ -7,6 +7,7 @@ import { Menu, X, Sparkles, Boxes, Info, Tag, ListChecks, PackageSearch, User, P
 import { useT } from "@/i18n/client";
 import { isRtl } from "@/i18n/dictionaries";
 import { contact, social } from "@/content/site-content";
+import { telHref, mailHref } from "@/lib/contact";
 import SearchAutocomplete from "@/components/search/SearchAutocomplete";
 
 type Cat = { id: string; name: string; slug: string };
@@ -151,14 +152,14 @@ export default function MobileMenu({ categories }: { categories: Cat[] }) {
             back up through the category list. */}
         <div className="border-t border-slate-200 p-4 space-y-3 shrink-0">
           <a
-            href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}
+            href={telHref}
             className="flex items-center gap-2.5 text-sm font-semibold text-[#0A6286]"
           >
             <Phone className="w-4 h-4 shrink-0" />
             <span dir="ltr" className="text-start">{contact.phone}</span>
           </a>
           <a
-            href={`mailto:${contact.email}`}
+            href={mailHref}
             className="flex items-center gap-2.5 text-sm text-slate-600"
           >
             <Mail className="w-4 h-4 shrink-0" />

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { isRateLimited, clientIp } from "@/lib/rate-limit";
 import { calculateTotals } from "@/lib/pricing";
 
 /**
@@ -12,11 +13,26 @@ import { calculateTotals } from "@/lib/pricing";
  * and the charged total cannot drift.
  */
 export async function POST(req: NextRequest) {
+  // Unauthenticated by design — guests price their basket before signing in —
+  // but it runs a database lookup per call, so it was a free way to make us
+  // query on demand. That is what a metered database bills for. 120/hour is
+  // far above real checkout use and far below useful abuse.
+  const HOUR = 60 * 60 * 1000;
+  if (isRateLimited(`cartquote:ip:${clientIp(req)}`, 120, HOUR)) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  }
+
   const body = await req.json().catch(() => null);
   const items = (body?.items ?? []) as { productId?: string; qty?: number }[];
 
   if (!Array.isArray(items) || items.length === 0) {
     return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+  }
+
+  // Bound the work per request as well as the request rate: a body with ten
+  // thousand lines would otherwise be one very expensive query.
+  if (items.length > 200) {
+    return NextResponse.json({ error: "Too many items in cart" }, { status: 400 });
   }
   if (items.length > 200) {
     return NextResponse.json({ error: "Too many lines" }, { status: 400 });

@@ -5,6 +5,7 @@ import PartInquiryForm from "@/components/inquiry/PartInquiryForm";
 import { prisma } from "@/lib/prisma";
 import { getT } from "@/i18n/server";
 import { contact } from "@/content/site-content";
+import { telHref, mailHref } from "@/lib/contact";
 
 export const dynamic = "force-dynamic";
 
@@ -99,11 +100,11 @@ export default async function InquiryPage({
 
       <p className="text-sm text-slate-500 mt-6">
         {t("inquiry.part.orContact")}{" "}
-        <a href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`} dir="ltr" className="text-[#0A6286] font-medium hover:underline">
+        <a href={telHref} dir="ltr" className="text-[#0A6286] font-medium hover:underline">
           {contact.phone}
         </a>{" "}
         ·{" "}
-        <a href={`mailto:${contact.email}`} dir="ltr" className="text-[#0A6286] font-medium hover:underline">
+        <a href={mailHref} dir="ltr" className="text-[#0A6286] font-medium hover:underline">
           {contact.email}
         </a>
       </p>

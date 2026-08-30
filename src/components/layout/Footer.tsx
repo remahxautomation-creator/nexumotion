@@ -3,6 +3,7 @@ import { MapPin } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import SocialLinks from "@/components/layout/SocialLinks";
 import { contact } from "@/content/site-content";
+import { telHref, mailHref } from "@/lib/contact";
 import { getT } from "@/i18n/server";
 
 export default async function Footer() {
@@ -48,7 +49,7 @@ export default async function Footer() {
             <li>{t("home.trust.deliverySub")}</li>
             <li>
               <a
-                href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}
+                href={telHref}
                 dir="ltr"
                 className="block text-start hover:text-white transition-colors"
               >
@@ -57,7 +58,7 @@ export default async function Footer() {
             </li>
             <li>
               <a
-                href={`mailto:${contact.email}`}
+                href={mailHref}
                 dir="ltr"
                 className="block text-start hover:text-white transition-colors"
               >

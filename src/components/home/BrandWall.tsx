@@ -39,7 +39,6 @@ export default async function BrandWall() {
       id: true,
       slug: true,
       name: true,
-      country: true,
       _count: { select: { products: { where: { isActive: true } } } },
     },
   });

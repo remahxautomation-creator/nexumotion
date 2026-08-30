@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { isRateLimited, clientIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  // Unlimited registration let one source create accounts without bound, which
+  // fills the users table and hands an attacker a supply of valid logins to
+  // probe with. Limited by IP: the email is attacker-controlled.
+  const HOUR = 60 * 60 * 1000;
+  if (isRateLimited(`register:ip:${clientIp(req)}`, 5, HOUR)) {
+    return NextResponse.json(
+      { error: "Too many sign-up attempts. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const body = await req.json().catch(() => null);
   const email = (body?.email as string | undefined)?.toLowerCase().trim();
   const password = body?.password as string | undefined;

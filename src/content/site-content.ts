@@ -8,7 +8,7 @@
 //   • testimonials — quotes real customers actually gave you, with permission
 //
 // Publishing invented testimonials or another company's logo as a "customer"
-// is false advertising and trademark misuse. `isPlaceholder` below controls a
+// is false advertising and trademark misuse. The flags below control a
 // visible warning banner; flip it to false only once the content is genuine.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -19,8 +19,6 @@
 export const customersArePlaceholder = false;
 export const testimonialsArePlaceholder = true;
 
-/** @deprecated Use the specific flags above. Kept so nothing breaks silently. */
-export const isPlaceholder = testimonialsArePlaceholder;
 
 // ── Customers ───────────────────────────────────────────────────────────────
 // Replace with companies you actually supply. `logo` is an optional path under

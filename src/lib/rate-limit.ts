@@ -29,7 +29,11 @@ export function isRateLimited(key: string, limit: number, windowMs: number): boo
   const existing = buckets.get(key);
   if (!existing || existing.resetAt <= now) {
     buckets.set(key, { count: 1, resetAt: now + windowMs });
-    return false;
+    // Compare rather than return false outright. The early return ignored the
+    // limit entirely, so isRateLimited(key, 0, …) let the first request
+    // through — an endpoint "disabled" with a limit of zero would still have
+    // served one caller per window. No effect on any limit of 1 or more.
+    return 1 > limit;
   }
   existing.count += 1;
   return existing.count > limit;

@@ -1,5 +1,6 @@
 import { Phone, Mail, MapPin } from "lucide-react";
 import { contact } from "@/content/site-content";
+import { telHref, mailHref } from "@/lib/contact";
 import SocialLinks from "@/components/layout/SocialLinks";
 import { getT } from "@/i18n/server";
 
@@ -16,9 +17,6 @@ import { getT } from "@/i18n/server";
  */
 export default async function TopBar() {
   const { t } = await getT();
-
-  const telHref = `tel:${contact.phone.replace(/[^\d+]/g, "")}`;
-  const mailHref = `mailto:${contact.email}`;
 
   return (
     <div className="bg-[#0A6286] text-white">

@@ -239,7 +239,16 @@ async function main() {
   console.log(`Seeded ${total} products.`);
 
   console.log("Seeding admin user...");
-  const adminHash = await bcrypt.hash(process.env.ADMIN_PASSWORD ?? "ChangeMe-Admin1", 12);
+  // No fallback password. The previous default was committed here, so anyone
+  // reading the repo could try it against /admin — an account that edits the
+  // catalogue and reads every order. Refusing to seed is the safer failure.
+  if (!process.env.ADMIN_PASSWORD) {
+    throw new Error(
+      "ADMIN_PASSWORD is not set. Run with ADMIN_PASSWORD='...' — or use " +
+        "scripts/create-admin.ts, which seeds only the account and not the demo products."
+    );
+  }
+  const adminHash = await bcrypt.hash(process.env.ADMIN_PASSWORD, 12);
   await prisma.user.upsert({
     where: { email: "admin@autoparts-mena.com" },
     update: { password: adminHash },

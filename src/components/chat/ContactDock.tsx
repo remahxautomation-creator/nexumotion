@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Phone, Mail, MessageSquare, Plus, X } from "lucide-react";
 import { useT } from "@/i18n/client";
 import { contact } from "@/content/site-content";
+import { telHref, mailHref, whatsAppHref } from "@/lib/contact";
 
 // WhatsApp brand glyph — drawn rather than an image file, so no asset to ship.
 function WhatsAppIcon({ className = "" }: { className?: string }) {
@@ -19,9 +20,7 @@ export default function ContactDock() {
   const { t } = useT();
   const [open, setOpen] = useState(false);
 
-  const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(contact.whatsappGreeting)}`;
-  const telHref = `tel:${contact.phone.replace(/[^\d+]/g, "")}`;
-  const mailHref = `mailto:${contact.email}`;
+  const waHref = whatsAppHref;
 
   const items = [
     { href: waHref, label: t("contact.whatsapp"), value: contact.phone, Icon: WhatsAppIcon, bg: "bg-[#25D366]", external: true },
