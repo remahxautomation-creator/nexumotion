@@ -91,8 +91,17 @@ export default async function BrandWall() {
                 // max-w-full matters as much as max-h here: these logos vary
                 // from square to 5:1, and the wide ones overrun a three-column
                 // card on a phone without it.
+                //
+                // Full colour wherever hover does not exist. Greyscale-until-
+                // hover is a reveal, and on a touch device there is nothing to
+                // reveal it with — the logos just stayed grey forever. Keyed on
+                // `hover: none` rather than a width breakpoint because the
+                // question is whether the pointer can hover, not how wide the
+                // screen is: a narrow desktop window still hovers, and a large
+                // tablet still does not.
                 className="max-h-9 max-w-full w-auto object-contain grayscale opacity-70
-                           group-hover:grayscale-0 group-hover:opacity-100 transition-all"
+                           group-hover:grayscale-0 group-hover:opacity-100 transition-all
+                           [@media(hover:none)]:grayscale-0 [@media(hover:none)]:opacity-100"
               />
             ) : (
               <span
