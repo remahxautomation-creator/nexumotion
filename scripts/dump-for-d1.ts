@@ -80,16 +80,29 @@ async function main() {
     const cols = Object.keys(rows[0]);
     const colList = cols.map((c) => `"${c}"`).join(", ");
 
-    // Batched multi-row inserts: one statement per row would make the file
-    // enormous and the load slow, and D1 caps how many statements it will take.
-    const CHUNK = 200;
-    for (let i = 0; i < rows.length; i += CHUNK) {
-      const values = rows
-        .slice(i, i + CHUNK)
-        .map((r) => `(${cols.map((c) => literal(r[c])).join(", ")})`)
-        .join(",\n  ");
-      parts.push(`INSERT INTO "${table}" (${colList}) VALUES\n  ${values};\n`);
+    // Batched by BYTES, not row count. A fixed 200 rows per statement produced
+    // "statement too long: SQLITE_TOOBIG" from D1, because Product rows carry
+    // long descriptions and image URL lists while ProductSpec rows are tiny —
+    // so row count is a poor proxy for statement size. One statement per row
+    // would avoid that but makes the file enormous and the load slow.
+    const MAX_STATEMENT_BYTES = 60_000;
+    let batch: string[] = [];
+    let bytes = 0;
+
+    const flush = () => {
+      if (!batch.length) return;
+      parts.push(`INSERT INTO "${table}" (${colList}) VALUES\n  ${batch.join(",\n  ")};\n`);
+      batch = [];
+      bytes = 0;
+    };
+
+    for (const r of rows) {
+      const tuple = `(${cols.map((c) => literal(r[c])).join(", ")})`;
+      if (bytes + tuple.length > MAX_STATEMENT_BYTES) flush();
+      batch.push(tuple);
+      bytes += tuple.length + 4;
     }
+    flush();
 
     totalRows += rows.length;
     console.log(`  ${table.padEnd(16)} ${rows.length}`);
