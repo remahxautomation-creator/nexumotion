@@ -1,32 +1,39 @@
 /**
- * Transactional email.
+ * Transactional email, over Cloudflare's own `send_email` Worker binding.
  *
- * Resend over its HTTP API rather than SMTP: Cloudflare Workers have no TCP
- * sockets, so nodemailer and every SMTP client are unusable here. This is a
- * plain fetch, which is the one thing the runtime does have.
+ * SMTP is not an option: Workers have no TCP sockets, so nodemailer and every
+ * SMTP client are unusable here. This used to go out through Resend's HTTP API,
+ * which worked but meant a second vendor, a second API key to rotate and a
+ * second free tier to exhaust. The binding is native, needs no key, and its
+ * delivery is the same infrastructure that already handles inbound mail for
+ * this domain.
  *
  * Sending is best-effort by design. An inquiry is already committed to the
  * database before this runs; if the notification fails, the lead is still
  * captured and visible in /admin/inquiries. Losing an email is bad. Losing the
- * lead because the email provider had a bad minute is worse, so nothing here
- * is allowed to fail the request.
+ * lead because mail had a bad minute is worse, so nothing here is allowed to
+ * fail the request.
  */
-
-const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
 /**
  * Sender address.
  *
- * Resend will only send from a domain verified in the account. Until
- * nexumotion.com is verified there, this must stay on resend.dev or every
- * send returns 403. Swap it once the DNS records are in place — the
- * notification is far more likely to be read when it comes from our own
- * domain rather than a shared testing one.
+ * Must be on a domain that is a zone in this Cloudflare account, or the send is
+ * rejected. It does not need a mailbox — replies are steered by Reply-To, which
+ * every message below sets to the customer's own address.
  */
-const FROM = "NexuMotion <onboarding@resend.dev>";
+const FROM_ADDRESS = "noreply@nexumotion.com";
+const FROM = `NexuMotion <${FROM_ADDRESS}>`;
 
-/** Where notifications land. The business address, not a personal one. */
-const NOTIFY_TO = "technical@nexumotion.com";
+/**
+ * Where notifications land.
+ *
+ * Cloudflare only delivers to an address verified under Email Routing, and this
+ * is the verified one; `destination_address` in wrangler.jsonc pins the binding
+ * to it. technical@nexumotion.com forwards to this same inbox, so addressing it
+ * directly loses nothing and removes a forwarding hop that can fail.
+ */
+const NOTIFY_TO = "remahxautomation@gmail.com";
 
 type InquiryNotification = {
   id: string;
@@ -98,44 +105,92 @@ function buildHtml(i: InquiryNotification, siteUrl: string): string {
 </body></html>`;
 }
 
+/** UTF-8 → base64. `btoa` alone is latin1 and mangles anything Arabic. */
+function b64(input: string): string {
+  const bytes = new TextEncoder().encode(input);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+/**
+ * RFC 2047 encoded-word, applied only when a header actually needs it.
+ *
+ * Subjects here carry customer names and part numbers, and an Arabic name in a
+ * raw header is a malformed message that some receivers drop outright. ASCII
+ * subjects are left alone so the common case stays readable in logs.
+ */
+function encodeHeader(value: string): string {
+  // eslint-disable-next-line no-control-regex
+  return /^[\x20-\x7E]*$/.test(value) ? value : `=?UTF-8?B?${b64(value)}?=`;
+}
+
+/**
+ * Builds the raw MIME message the binding expects.
+ *
+ * The body goes out base64-encoded rather than as-is: it is HTML containing
+ * Arabic, and quoted-printable hand-rolling plus the 998-octet line limit is a
+ * class of bug worth designing out. Base64 in 76-character lines is always
+ * valid regardless of what the content turns out to be.
+ */
+function buildMime(msg: { subject: string; html: string; replyTo?: string }): string {
+  const body = b64(msg.html).replace(/(.{76})/g, "$1\r\n");
+
+  const headers = [
+    `From: ${FROM}`,
+    `To: ${NOTIFY_TO}`,
+    msg.replyTo ? `Reply-To: ${msg.replyTo}` : null,
+    `Subject: ${encodeHeader(msg.subject)}`,
+    // Required — Cloudflare rejects a message without one, and receivers use it
+    // to collapse duplicates.
+    `Message-ID: <${crypto.randomUUID()}@nexumotion.com>`,
+    `Date: ${new Date().toUTCString()}`,
+    "MIME-Version: 1.0",
+    'Content-Type: text/html; charset="utf-8"',
+    "Content-Transfer-Encoding: base64",
+  ].filter(Boolean);
+
+  return `${headers.join("\r\n")}\r\n\r\n${body}`;
+}
+
 /**
  * The single place a message actually leaves the building.
  *
  * Never throws. Every caller runs after the record is already committed, so a
  * mail failure must cost a notification and never the order, quote or lead
  * that triggered it. Returns whether it sent so callers can log the outcome.
+ *
+ * Outside Workers — `next dev`, `next start`, the seed scripts — there is no
+ * binding, so this logs and reports failure rather than pretending to send.
  */
 async function send(msg: {
   subject: string;
   html: string;
   replyTo?: string;
 }): Promise<boolean> {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) {
-    console.warn(`[email] RESEND_API_KEY not set — "${msg.subject}" not sent`);
-    return false;
-  }
-
   try {
-    const res = await fetch(RESEND_ENDPOINT, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: FROM,
-        to: [NOTIFY_TO],
-        reply_to: msg.replyTo,
-        subject: msg.subject,
-        html: msg.html,
-      }),
-      // A hanging provider must not hold the customer's checkout open.
-      signal: AbortSignal.timeout(8000),
-    });
+    // Imported lazily for the same reason the Prisma adapter is: `cloudflare:*`
+    // modules do not resolve outside the Workers runtime, and a top-level
+    // import would break every Node script that shares this dependency graph.
+    const [{ EmailMessage }, { getCloudflareContext }] = await Promise.all([
+      import("cloudflare:email"),
+      import("@opennextjs/cloudflare"),
+    ]);
 
-    if (!res.ok) {
-      const detail = await res.text().catch(() => "");
-      console.error(`[email] Resend responded ${res.status}: ${detail.slice(0, 300)}`);
+    const { env } = getCloudflareContext();
+    const binding = (env as unknown as Record<string, unknown>).SEND_EMAIL as
+      | { send(m: unknown): Promise<void> }
+      | undefined;
+
+    if (!binding) {
+      console.warn(
+        `[email] SEND_EMAIL binding missing — "${msg.subject}" not sent. ` +
+          "Check the send_email block in wrangler.jsonc."
+      );
       return false;
     }
+
+    await binding.send(new EmailMessage(FROM_ADDRESS, NOTIFY_TO, buildMime(msg)));
     return true;
   } catch (err) {
     console.error(`[email] send failed: ${String(err).slice(0, 300)}`);

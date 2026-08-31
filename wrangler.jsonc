@@ -42,6 +42,23 @@
     }
   ],
 
+  // Outbound mail, native to the platform. Workers have no TCP sockets, so SMTP
+  // is impossible here and the alternative was a third-party HTTP API (Resend),
+  // which meant another account, another key to rotate and another free tier to
+  // run out of.
+  //
+  // `destination_address` pins the binding to a single recipient. Cloudflare
+  // will only deliver to an address verified under Email Routing → Destination
+  // Addresses, and this is the one verified address on the account.
+  // technical@nexumotion.com already forwards here, so notifications land in
+  // the same inbox either way — this just skips a hop that can fail.
+  "send_email": [
+    {
+      "name": "SEND_EMAIL",
+      "destination_address": "remahxautomation@gmail.com"
+    }
+  ],
+
   "vars": {
     "AUTH_TRUST_HOST": "true",
     "NEXT_PUBLIC_SITE_URL": "https://nexumotion.com"
