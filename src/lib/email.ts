@@ -169,11 +169,23 @@ async function send(msg: {
   replyTo?: string;
 }): Promise<boolean> {
   try {
-    // Imported lazily for the same reason the Prisma adapter is: `cloudflare:*`
-    // modules do not resolve outside the Workers runtime, and a top-level
-    // import would break every Node script that shares this dependency graph.
+    // The specifier is assembled at runtime on purpose.
+    //
+    // `cloudflare:email` is provided by the Workers runtime, not by anything on
+    // disk, so esbuild cannot resolve it and fails the build with
+    // 'Could not resolve "cloudflare:email"'. The fix esbuild suggests is to
+    // mark it external, but OpenNext builds the server bundle itself and
+    // exposes no way to add an external — the only escape is to keep the
+    // specifier out of static analysis. Concatenating it does that: the
+    // bundler leaves the import alone and Workers resolves it at run time.
+    //
+    // Written as a variable rather than a literal for that reason alone. If
+    // OpenNext ever accepts user externals, this becomes a plain import again.
+    const emailModule = "cloudflare:" + "email";
     const [{ EmailMessage }, { getCloudflareContext }] = await Promise.all([
-      import("cloudflare:email"),
+      import(/* webpackIgnore: true */ emailModule) as Promise<{
+        EmailMessage: new (from: string, to: string, raw: string) => unknown;
+      }>,
       import("@opennextjs/cloudflare"),
     ]);
 
