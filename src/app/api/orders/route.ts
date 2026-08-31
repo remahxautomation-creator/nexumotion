@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendOrderNotification } from "@/lib/email";
 import { auth } from "@/lib/auth";
 import { calculateTotals } from "@/lib/pricing";
 import { stockStatusFor, generateOrderNumber } from "@/lib/inventory";
@@ -146,6 +147,20 @@ export async function POST(req: NextRequest) {
         items: { create: orderItems },
       },
       include: { items: { include: { product: true } } },
+    });
+
+    // Same best-effort contract as the other notifications: the order is
+    // already committed, so a mail failure must never fail the checkout.
+    await sendOrderNotification({
+      orderNumber: order.orderNumber,
+      email: orderEmail ?? email ?? "",
+      customerName: shippingAddress?.name ?? null,
+      total: Number(order.total),
+      lines: order.items.map((it) => ({
+        sku: it.product.sku,
+        name: it.product.name,
+        qty: it.qty,
+      })),
     });
 
     return NextResponse.json({

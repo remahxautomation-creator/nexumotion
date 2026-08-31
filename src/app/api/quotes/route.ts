@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendQuoteRequestNotification } from "@/lib/email";
 import { auth } from "@/lib/auth";
 
 // POST { items: [{productId, qty}], notes? } → create quote request
@@ -42,6 +43,20 @@ export async function POST(req: NextRequest) {
         })),
       },
     },
+  });
+
+  // Awaited, not fire-and-forget: Workers cancel outstanding work once the
+  // response returns. The send caps itself at 8s and swallows its own
+  // failures, so the worst case is a quote saved but unannounced.
+  await sendQuoteRequestNotification({
+    id: quote.id,
+    notes,
+    customerName: session.user.name ?? null,
+    customerEmail: session.user.email,
+    lines: items.map((it) => {
+      const prod = byId.get(it.productId!)!;
+      return { sku: prod.sku, name: prod.name, qty: it.qty! };
+    }),
   });
 
   return NextResponse.json({ id: quote.id });
