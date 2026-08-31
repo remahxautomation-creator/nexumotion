@@ -169,21 +169,28 @@ async function send(msg: {
   replyTo?: string;
 }): Promise<boolean> {
   try {
-    // The specifier is assembled at runtime on purpose.
+    // The specifier must not be statically analysable, hence the env lookup.
     //
-    // `cloudflare:email` is provided by the Workers runtime, not by anything on
-    // disk, so esbuild cannot resolve it and fails the build with
-    // 'Could not resolve "cloudflare:email"'. The fix esbuild suggests is to
-    // mark it external, but OpenNext builds the server bundle itself and
-    // exposes no way to add an external — the only escape is to keep the
-    // specifier out of static analysis. Concatenating it does that: the
-    // bundler leaves the import alone and Workers resolves it at run time.
+    // `cloudflare:email` is supplied by the Workers runtime, not by anything on
+    // disk, so a bundler that tries to resolve it fails the build with
+    // 'Could not resolve "cloudflare:email"'. Two of them get a look here —
+    // Turbopack, then OpenNext's esbuild — and neither can be told to leave it
+    // alone: esbuild's external list is hard-coded in bundle-server.js with no
+    // user hook, and `turbopackIgnore` only applies to literal specifiers.
     //
-    // Written as a variable rather than a literal for that reason alone. If
-    // OpenNext ever accepts user externals, this becomes a plain import again.
-    const emailModule = "cloudflare:" + "email";
+    // Simply hiding the literal is not enough. Turbopack constant-folds, and
+    // it saw through both `"cloudflare:" + "email"` and
+    // `["cloudflare","email"].join(":")`, restoring the literal import and
+    // failing again. Reading an environment variable is the cheapest thing it
+    // genuinely cannot evaluate at build time, so `import(x)` survives to
+    // runtime, where Workers resolves it.
+    //
+    // CF_EMAIL_MODULE is never set in practice — it exists to make the
+    // expression opaque, and doubles as an override if the module is ever
+    // renamed.
+    const emailModule = process.env.CF_EMAIL_MODULE ?? "cloudflare:email";
     const [{ EmailMessage }, { getCloudflareContext }] = await Promise.all([
-      import(/* webpackIgnore: true */ emailModule) as Promise<{
+      import(/* webpackIgnore: true */ /* turbopackIgnore: true */ emailModule) as Promise<{
         EmailMessage: new (from: string, to: string, raw: string) => unknown;
       }>,
       import("@opennextjs/cloudflare"),
