@@ -10,15 +10,32 @@ import AddToCartButton from "@/components/product/AddToCartButton";
 import InquireButton from "@/components/product/InquireButton";
 import ProductImage from "@/components/product/ProductImage";
 import ProductCard from "@/components/product/ProductCard";
+import { mirrorProduct } from "@/lib/catalog-mirror";
+import OfflineCatalogueNotice from "@/components/catalog/OfflineCatalogueNotice";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: { brand: true, category: true },
-  });
+  // Metadata runs before the page body and would otherwise throw first, so it
+  // gets the same fallback. A title is not worth a 500.
+  let product;
+  try {
+    product = await prisma.product.findUnique({
+      where: { slug },
+      include: { brand: true, category: true },
+    });
+  } catch {
+    const m = await mirrorProduct(slug);
+    product = m && {
+      sku: m.product.sku,
+      name: m.product.name,
+      slug: m.product.slug,
+      shortDesc: m.product.shortDesc,
+      brand: { name: m.product.brandName },
+      category: { name: m.categoryName ?? "parts" },
+    };
+  }
   if (!product) return { title: "Product not found" };
 
   const title = `${product.sku} — ${product.name} | ${product.brand.name}`;
@@ -36,23 +53,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: {
-      brand: true,
-      category: true,
-      specs: true,
-      crossReferences: true,
-      priceTiers: { orderBy: { minQty: "asc" } },
-    },
-  });
-  if (!product) notFound();
-
-  const related = await prisma.product.findMany({
-    where: { categoryId: product.categoryId, id: { not: product.id }, isActive: true },
-    include: { brand: true },
-    take: 4,
-  });
+  const loaded = await loadProduct(slug);
+  if (!loaded) notFound();
+  const { product, related, offline } = loaded;
 
   const stock = STOCK_LABELS[product.stockStatus] ?? STOCK_LABELS.IN_STOCK;
   const certs = parseJsonArray(product.certifications);
@@ -88,6 +91,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      {offline && <OfflineCatalogueNotice />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -284,8 +288,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 key={p.id}
                 p={{
                   id: p.id, sku: p.sku, name: p.name, slug: p.slug,
-                  price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                  stockStatus: p.stockStatus, stockQty: p.stockQty, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
+                  price: p.price, comparePrice: p.comparePrice,
+                  stockStatus: p.stockStatus, stockQty: p.stockQty,
+                  brandName: p.brandName, image: p.image,
                 }}
               />
             ))}
@@ -294,4 +299,122 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       )}
     </div>
   );
+}
+
+/**
+ * Live product, falling back to the offline mirror.
+ *
+ * The mirror carries everything the page renders except price tiers and
+ * cross-references, which are extras rather than the substance of the page and
+ * are dropped rather than guessed at. Everything returned is normalised to one
+ * shape so the JSX above does not need to know which source it came from.
+ */
+async function loadProduct(slug: string) {
+  try {
+    const product = await prisma.product.findUnique({
+      where: { slug },
+      include: {
+        brand: true,
+        category: true,
+        specs: true,
+        crossReferences: true,
+        priceTiers: { orderBy: { minQty: "asc" } },
+      },
+    });
+    if (!product) return null;
+
+    const relatedRows = await prisma.product.findMany({
+      where: { categoryId: product.categoryId, id: { not: product.id }, isActive: true },
+      include: { brand: true },
+      take: 4,
+    });
+
+    return {
+      offline: false,
+      product: {
+        ...product,
+        price: Number(product.price),
+        comparePrice: product.comparePrice ? Number(product.comparePrice) : null,
+        weightKg: product.weightKg ? Number(product.weightKg) : null,
+        priceTiers: product.priceTiers.map((tier) => ({
+          id: tier.id,
+          minQty: tier.minQty,
+          price: Number(tier.price),
+        })),
+      },
+      related: relatedRows.map((p) => ({
+        id: p.id,
+        sku: p.sku,
+        name: p.name,
+        slug: p.slug,
+        price: Number(p.price),
+        comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
+        stockStatus: p.stockStatus,
+        stockQty: p.stockQty,
+        brandName: p.brand.name,
+        image: parseJsonArray(p.images)[0] ?? null,
+      })),
+    };
+  } catch (err) {
+    console.warn(`[product/${slug}] falling back to the catalogue mirror: ${String(err).slice(0, 200)}`);
+    const m = await mirrorProduct(slug);
+    if (!m) return null;
+
+    return {
+      offline: true,
+      product: {
+        id: m.product.id,
+        sku: m.product.sku,
+        name: m.product.name,
+        slug: m.product.slug,
+        description: m.description,
+        shortDesc: m.product.shortDesc,
+        price: m.product.price,
+        comparePrice: m.product.comparePrice,
+        costPerUnit: "per unit",
+        stockQty: m.product.stockQty,
+        stockStatus: m.product.stockStatus,
+        weightKg: m.weightKg,
+        images: m.images,
+        certifications: m.certifications,
+        datasheetUrl: m.datasheetUrl,
+        categoryId: m.product.categoryId,
+        brand: {
+          name: m.product.brandName,
+          slug: m.product.brandSlug,
+          country: m.brand?.country ?? null,
+        },
+        category: { name: m.categoryName ?? "", slug: m.categorySlug ?? "" },
+        specs: m.specs.map((sp, i) => ({
+          id: `${m.product.id}-${i}`,
+          specKey: sp.specKey,
+          specName: sp.specName,
+          value: sp.value,
+          unit: sp.unit,
+        })),
+        // Not mirrored: both are supplementary, and inventing them would be
+        // worse than omitting them.
+        crossReferences: [] as Array<{
+          id: string;
+          competitorBrand: string;
+          competitorName: string;
+          competitorSku: string;
+          matchType: string;
+        }>,
+        priceTiers: [] as Array<{ id: string; minQty: number; price: number }>,
+      },
+      related: m.related.map((p) => ({
+        id: p.id,
+        sku: p.sku,
+        name: p.name,
+        slug: p.slug,
+        price: p.price,
+        comparePrice: p.comparePrice,
+        stockStatus: p.stockStatus,
+        stockQty: p.stockQty,
+        brandName: p.brandName,
+        image: p.image,
+      })),
+    };
+  }
 }

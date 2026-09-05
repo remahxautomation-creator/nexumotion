@@ -92,6 +92,8 @@ export const dictionaries = {
     "footer.crossRefTool": "Cross-Reference Tool",
     "footer.shipping": "Shipping Info",
     "footer.support": "Support — MENA",
+    "catalog.offline":
+      "Showing a saved copy of the catalogue while our live data is briefly unavailable. Prices and stock may have changed — please confirm on your quote before ordering.",
     "error.title": "This page could not load",
     "error.body":
       "Our catalogue is briefly unavailable. Everything else still works — and you do not have to wait to reach us. Send the manufacturer and part number and we will come back with price and lead time.",
@@ -588,6 +590,8 @@ export const dictionaries = {
     "footer.crossRefTool": "أداة مطابقة الأكواد",
     "footer.shipping": "معلومات الشحن",
     "footer.support": "الدعم — المنطقة",
+    "catalog.offline":
+      "نعرض نسخة محفوظة من الكتالوج ريثما تعود البيانات المباشرة. قد تكون الأسعار والكميات قد تغيرت — يرجى التأكد عند طلب عرض السعر.",
     "error.title": "تعذر تحميل هذه الصفحة",
     "error.body":
       "الكتالوج غير متاح مؤقتًا. بقية الموقع تعمل بشكل طبيعي — ولا حاجة للانتظار للتواصل معنا. أرسل اسم المصنع ورقم القطعة وسنعود إليك بالسعر ومدة التوريد.",

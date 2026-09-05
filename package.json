@@ -10,7 +10,8 @@
     "test": "tsx --test tests/*.test.ts",
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare preview",
-    "cf:deploy": "opennextjs-cloudflare deploy"
+    "cf:deploy": "opennextjs-cloudflare deploy",
+    "mirror": "tsx scripts/build-snapshot.ts && tsx scripts/build-mirror.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

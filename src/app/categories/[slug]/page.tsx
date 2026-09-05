@@ -5,6 +5,8 @@ import FilterSidebar from "@/components/search/FilterSidebar";
 import SaveSearchButton from "@/components/search/SaveSearchButton";
 import { getT } from "@/i18n/server";
 import { parseJsonArray } from "@/lib/utils";
+import { mirrorCategory, type MirrorProduct } from "@/lib/catalog-mirror";
+import OfflineCatalogueNotice from "@/components/catalog/OfflineCatalogueNotice";
 
 export const dynamic = "force-dynamic";
 
@@ -18,10 +20,35 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const sp = await searchParams;
   const { t } = await getT();
 
-  const category = await prisma.category.findUnique({
-    where: { slug },
-    include: { specs: { where: { isFilterable: true }, orderBy: { sortOrder: "asc" } } },
-  });
+  // Live path first. Anything thrown here means the database is unreachable, so
+  // the page is rebuilt from the mirror below rather than failing outright.
+  let category: Awaited<ReturnType<typeof loadCategory>> = null;
+  let offline = false;
+  try {
+    category = await loadCategory(slug);
+  } catch (err) {
+    console.warn(`[category/${slug}] falling back to the catalogue mirror: ${String(err).slice(0, 200)}`);
+    offline = true;
+  }
+
+  if (offline) {
+    const mirrored = await mirrorCategory(slug);
+    if (!mirrored) notFound();
+    return renderCategory({
+      name: mirrored.category.name,
+      description: mirrored.category.description,
+      products: mirrored.products,
+      // Spec filters need the 756 KB specs file, which a listing page should
+      // not pull. Brand and stock filters still work, so the sidebar keeps
+      // those and drops the parametric ones until live data returns.
+      filters: [],
+      brands: [...new Map(mirrored.products.map((p) => [p.brandSlug, { name: p.brandName, slug: p.brandSlug }])).values()]
+        .filter((b) => b.slug)
+        .sort((a, b) => a.name.localeCompare(b.name)),
+      offline: true,
+      t,
+    });
+  }
   if (!category) notFound();
 
   // Build spec filters from query params: spec keys map directly to template keys.
@@ -88,19 +115,66 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     options: parseJsonArray(t.options),
   }));
 
+  return renderCategory({
+    name: category.name,
+    description: category.description,
+    products: products.map((p) => ({
+      id: p.id,
+      sku: p.sku,
+      name: p.name,
+      slug: p.slug,
+      shortDesc: p.shortDesc,
+      price: Number(p.price),
+      comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
+      stockStatus: p.stockStatus,
+      stockQty: p.stockQty,
+      brandName: p.brand.name,
+      brandSlug: p.brand.slug,
+      categoryId: p.categoryId,
+      image: parseJsonArray(p.images)[0] ?? null,
+    })),
+    filters,
+    brands: brandsInCategory,
+    offline: false,
+    t,
+  });
+}
+
+function loadCategory(slug: string) {
+  return prisma.category.findUnique({
+    where: { slug },
+    include: { specs: { where: { isFilterable: true }, orderBy: { sortOrder: "asc" } } },
+  });
+}
+
+type RenderArgs = {
+  name: string;
+  description: string | null;
+  products: MirrorProduct[];
+  filters: Array<{ key: string; name: string; unit: string | null; dataType: string; options: string[] }>;
+  brands: Array<{ name: string; slug: string }>;
+  offline: boolean;
+  // Taken from getT rather than widened to (k: string) => string: the
+  // dictionary keys are a union, and widening would drop the compile-time check
+  // that every key rendered here actually exists.
+  t: Awaited<ReturnType<typeof getT>>["t"];
+};
+
+function renderCategory({ name, description, products, filters, brands, offline, t }: RenderArgs) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-slate-900">{category.name}</h1>
-      <p className="text-sm text-slate-500 mt-1 mb-6">{category.description}</p>
+      {offline && <OfflineCatalogueNotice />}
+      <h1 className="text-2xl font-bold text-slate-900">{name}</h1>
+      <p className="text-sm text-slate-500 mt-1 mb-6">{description}</p>
 
       <div className="flex flex-col lg:flex-row gap-6">
         <aside className="lg:w-64 shrink-0">
-          <FilterSidebar filters={filters} brands={brandsInCategory} />
+          <FilterSidebar filters={filters} brands={brands} />
         </aside>
         <div className="flex-1">
           <div className="flex items-center justify-between mb-4">
             <div className="text-sm text-slate-500">{products.length} {t("home.products")}</div>
-            <SaveSearchButton defaultName={category.name} />
+            <SaveSearchButton defaultName={name} />
           </div>
           {products.length === 0 ? (
             <div className="bg-white rounded-lg border border-slate-200 p-12 text-center text-slate-500">
@@ -113,8 +187,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                   key={p.id}
                   p={{
                     id: p.id, sku: p.sku, name: p.name, slug: p.slug,
-                    price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                    stockStatus: p.stockStatus, stockQty: p.stockQty, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
+                    price: p.price, comparePrice: p.comparePrice,
+                    stockStatus: p.stockStatus, stockQty: p.stockQty,
+                    brandName: p.brandName, image: p.image,
                   }}
                 />
               ))}

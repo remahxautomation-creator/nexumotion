@@ -5,6 +5,8 @@ import { MessageSquareQuote } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
 import { SearchTracker } from "@/components/analytics/Trackers";
 import { parseJsonArray } from "@/lib/utils";
+import { mirrorSearch, type MirrorProduct } from "@/lib/catalog-mirror";
+import OfflineCatalogueNotice from "@/components/catalog/OfflineCatalogueNotice";
 
 export const dynamic = "force-dynamic";
 export async function generateMetadata() {
@@ -20,11 +22,12 @@ export default async function SearchPage({
   const { q } = await searchParams;
   const query = (q ?? "").trim();
 
-  let products: Awaited<ReturnType<typeof searchProducts>> = [];
+  let products: MirrorProduct[] = [];
   let crossMatched = false;
+  let offline = false;
 
-  async function searchProducts(term: string) {
-    return prisma.product.findMany({
+  async function searchLive(term: string) {
+    const rows = await prisma.product.findMany({
       where: {
         isActive: true,
         OR: [
@@ -37,25 +40,65 @@ export default async function SearchPage({
       include: { brand: true },
       take: 48,
     });
+    return rows.map((p) => ({
+      id: p.id,
+      sku: p.sku,
+      name: p.name,
+      slug: p.slug,
+      shortDesc: p.shortDesc,
+      price: Number(p.price),
+      comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
+      stockStatus: p.stockStatus,
+      stockQty: p.stockQty,
+      brandName: p.brand.name,
+      brandSlug: p.brand.slug,
+      categoryId: p.categoryId,
+      image: parseJsonArray(p.images)[0] ?? null,
+    }));
   }
 
   if (query) {
-    products = await searchProducts(query);
+    try {
+      products = await searchLive(query);
 
-    // Cross-reference fallback: search by competitor SKU
-    if (products.length === 0) {
-      const refs = await prisma.crossReference.findMany({
-        where: { competitorSku: { contains: query } },
-        include: { product: { include: { brand: true } } },
-        take: 48,
-      });
-      products = refs.map((r) => r.product);
-      crossMatched = products.length > 0;
+      // Cross-reference fallback: search by competitor SKU
+      if (products.length === 0) {
+        const refs = await prisma.crossReference.findMany({
+          where: { competitorSku: { contains: query } },
+          include: { product: { include: { brand: true } } },
+          take: 48,
+        });
+        products = refs.map((r) => ({
+          id: r.product.id,
+          sku: r.product.sku,
+          name: r.product.name,
+          slug: r.product.slug,
+          shortDesc: r.product.shortDesc,
+          price: Number(r.product.price),
+          comparePrice: r.product.comparePrice ? Number(r.product.comparePrice) : null,
+          stockStatus: r.product.stockStatus,
+          stockQty: r.product.stockQty,
+          brandName: r.product.brand.name,
+          brandSlug: r.product.brand.slug,
+          categoryId: r.product.categoryId,
+          image: parseJsonArray(r.product.images)[0] ?? null,
+        }));
+        crossMatched = products.length > 0;
+      }
+    } catch (err) {
+      // Search is the single most important page to keep answering — a visitor
+      // who cannot search has no way into the catalogue at all.
+      console.warn(`[search] falling back to the catalogue mirror: ${String(err).slice(0, 200)}`);
+      const mirrored = await mirrorSearch(query);
+      products = mirrored.products;
+      crossMatched = mirrored.crossMatched;
+      offline = true;
     }
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      {offline && <OfflineCatalogueNotice />}
       {query && <SearchTracker term={query} results={products.length} />}
       <h1 className="text-2xl font-bold text-slate-900 mb-1">
         {query ? `Results for “${query}”` : "Search Parts"}
@@ -101,8 +144,9 @@ export default async function SearchPage({
               key={p.id}
               p={{
                 id: p.id, sku: p.sku, name: p.name, slug: p.slug,
-                price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                stockStatus: p.stockStatus, stockQty: p.stockQty, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
+                price: p.price, comparePrice: p.comparePrice,
+                stockStatus: p.stockStatus, stockQty: p.stockQty,
+                brandName: p.brandName, image: p.image,
               }}
             />
           ))}
