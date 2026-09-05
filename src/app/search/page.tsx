@@ -24,7 +24,7 @@ export default async function SearchPage({
 
   let products: MirrorProduct[] = [];
   let crossMatched = false;
-  let offline = false;
+  const offline = false;
 
   async function searchLive(term: string) {
     const rows = await prisma.product.findMany({
@@ -58,11 +58,21 @@ export default async function SearchPage({
   }
 
   if (query) {
-    try {
-      products = await searchLive(query);
+    // Mirror first: search scans the catalogue, which is the most expensive
+    // possible thing to ask a database for on every keystroke-driven page load.
+    // In memory over 1,025 indexed rows it is free and immediate.
+    const mirrored = await mirrorSearch(query).catch(() => null);
+    if (mirrored) {
+      products = mirrored.products;
+      crossMatched = mirrored.crossMatched;
+    }
 
-      // Cross-reference fallback: search by competitor SKU
-      if (products.length === 0) {
+    try {
+      if (!mirrored) products = await searchLive(query);
+
+      // Cross-reference fallback: search by competitor SKU. Only reached when
+      // the mirror was unavailable, since it resolves cross-references itself.
+      if (!mirrored && products.length === 0) {
         const refs = await prisma.crossReference.findMany({
           where: { competitorSku: { contains: query } },
           include: { product: { include: { brand: true } } },
@@ -86,13 +96,10 @@ export default async function SearchPage({
         crossMatched = products.length > 0;
       }
     } catch (err) {
-      // Search is the single most important page to keep answering — a visitor
-      // who cannot search has no way into the catalogue at all.
-      console.warn(`[search] falling back to the catalogue mirror: ${String(err).slice(0, 200)}`);
-      const mirrored = await mirrorSearch(query);
-      products = mirrored.products;
-      crossMatched = mirrored.crossMatched;
-      offline = true;
+      // Mirror missing and the database is down: return nothing rather than
+      // failing the page, so the "request this part" path still shows.
+      console.warn(`[search] no mirror and D1 failed: ${String(err).slice(0, 200)}`);
+      products = [];
     }
   }
 

@@ -16,14 +16,33 @@ type BrandView = {
 };
 
 /**
- * Live read, falling back to the offline mirror.
+ * Published catalogue first, database only if it is unavailable.
  *
- * `notFound` has to be distinguishable from "the database is down": a missing
- * brand is a 404, an unreachable database is not. So the live path returns null
- * only for a genuine miss, and a thrown error drops through to the mirror,
- * which answers 404 on its own terms.
+ * The catalogue is published content, not live data: 1,025 products that change
+ * on import, weekly at most. Querying D1 for them on every request is what read
+ * 56 million rows in a day and took the site down. Reading the mirror instead
+ * costs zero database rows and cannot be rate limited, because it is a static
+ * asset.
+ *
+ * D1 stays behind it as the safety net for the window between a catalogue
+ * import and the mirror being regenerated, so a brand that exists in the
+ * database but not yet in the mirror still resolves.
  */
 async function getBrand(slug: string): Promise<{ view: BrandView; offline: boolean } | null> {
+  const mirrored = await mirrorBrand(slug).catch(() => null);
+  if (mirrored) {
+    return {
+      offline: false,
+      view: {
+        name: mirrored.brand.name,
+        country: mirrored.brand.country,
+        description: mirrored.brand.description,
+        productCount: mirrored.productCount,
+        products: mirrored.products,
+      },
+    };
+  }
+
   try {
     const brand = await prisma.brand.findUnique({
       where: { slug },
@@ -64,20 +83,9 @@ async function getBrand(slug: string): Promise<{ view: BrandView; offline: boole
       },
     };
   } catch (err) {
-    console.warn(`[brand/${slug}] falling back to the catalogue mirror: ${String(err).slice(0, 200)}`);
-    const mirrored = await mirrorBrand(slug);
-    if (!mirrored) return null;
-
-    return {
-      offline: true,
-      view: {
-        name: mirrored.brand.name,
-        country: mirrored.brand.country,
-        description: mirrored.brand.description,
-        productCount: mirrored.productCount,
-        products: mirrored.products,
-      },
-    };
+    // Not in the mirror and the database is unreachable: nothing left to try.
+    console.warn(`[brand/${slug}] not in the mirror and D1 failed: ${String(err).slice(0, 200)}`);
+    return null;
   }
 }
 

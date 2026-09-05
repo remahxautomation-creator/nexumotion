@@ -20,31 +20,65 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const sp = await searchParams;
   const { t } = await getT();
 
-  // Live path first. Anything thrown here means the database is unreachable, so
-  // the page is rebuilt from the mirror below rather than failing outright.
+  // Hybrid on purpose. An unfiltered category listing is published content and
+  // comes from the mirror at zero database cost — that is the overwhelming
+  // majority of views. Parametric spec filtering genuinely needs the database,
+  // because matching on specs means joining 14,026 spec rows, which the mirror
+  // deliberately does not carry on the listing path.
+  //
+  // So: filters in the URL means query D1; otherwise serve the mirror.
+  const hasSpecFilter = Object.keys(sp).some(
+    (k) => k !== "brand" && k !== "stock" && typeof sp[k] === "string" && sp[k] !== ""
+  );
+
+  if (!hasSpecFilter) {
+    const mirrored = await mirrorCategory(slug).catch(() => null);
+    if (mirrored) {
+      const brandFilterSlug = typeof sp.brand === "string" ? sp.brand : undefined;
+      const wantInStock = sp.stock === "in";
+
+      // Brand and stock filters are cheap to apply in memory, so they keep
+      // working without touching the database.
+      const filtered = mirrored.products.filter(
+        (p) =>
+          (!brandFilterSlug || p.brandSlug === brandFilterSlug) &&
+          (!wantInStock || p.stockStatus === "IN_STOCK" || p.stockStatus === "LOW_STOCK")
+      );
+
+      return renderCategory({
+        name: mirrored.category.name,
+        description: mirrored.category.description,
+        products: filtered,
+        filters: [],
+        brands: [
+          ...new Map(
+            mirrored.products.map((p) => [p.brandSlug, { name: p.brandName, slug: p.brandSlug }])
+          ).values(),
+        ]
+          .filter((b) => b.slug)
+          .sort((a, b) => a.name.localeCompare(b.name)),
+        offline: false,
+        t,
+      });
+    }
+  }
+
   let category: Awaited<ReturnType<typeof loadCategory>> = null;
-  let offline = false;
   try {
     category = await loadCategory(slug);
   } catch (err) {
-    console.warn(`[category/${slug}] falling back to the catalogue mirror: ${String(err).slice(0, 200)}`);
-    offline = true;
-  }
-
-  if (offline) {
-    const mirrored = await mirrorCategory(slug);
+    console.warn(`[category/${slug}] D1 unavailable: ${String(err).slice(0, 200)}`);
+    // Filters need the database. Without it, fall back to the unfiltered
+    // mirror listing rather than showing an error — a broader result set is a
+    // better answer than none.
+    const mirrored = await mirrorCategory(slug).catch(() => null);
     if (!mirrored) notFound();
     return renderCategory({
       name: mirrored.category.name,
       description: mirrored.category.description,
       products: mirrored.products,
-      // Spec filters need the 756 KB specs file, which a listing page should
-      // not pull. Brand and stock filters still work, so the sidebar keeps
-      // those and drops the parametric ones until live data returns.
       filters: [],
-      brands: [...new Map(mirrored.products.map((p) => [p.brandSlug, { name: p.brandName, slug: p.brandSlug }])).values()]
-        .filter((b) => b.slug)
-        .sort((a, b) => a.name.localeCompare(b.name)),
+      brands: [],
       offline: true,
       t,
     });

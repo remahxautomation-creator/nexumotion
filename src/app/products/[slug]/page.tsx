@@ -310,6 +310,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
  * shape so the JSX above does not need to know which source it came from.
  */
 async function loadProduct(slug: string) {
+  const m = await mirrorProduct(slug).catch(() => null);
+  if (m) {
+    return {
+      offline: false,
+      product: buildMirrorProduct(m),
+      related: m.related.map((p) => ({
+        id: p.id,
+        sku: p.sku,
+        name: p.name,
+        slug: p.slug,
+        price: p.price,
+        comparePrice: p.comparePrice,
+        stockStatus: p.stockStatus,
+        stockQty: p.stockQty,
+        brandName: p.brandName,
+        image: p.image,
+      })),
+    };
+  }
+
   try {
     const product = await prisma.product.findUnique({
       where: { slug },
@@ -356,65 +376,52 @@ async function loadProduct(slug: string) {
       })),
     };
   } catch (err) {
-    console.warn(`[product/${slug}] falling back to the catalogue mirror: ${String(err).slice(0, 200)}`);
-    const m = await mirrorProduct(slug);
-    if (!m) return null;
-
-    return {
-      offline: true,
-      product: {
-        id: m.product.id,
-        sku: m.product.sku,
-        name: m.product.name,
-        slug: m.product.slug,
-        description: m.description,
-        shortDesc: m.product.shortDesc,
-        price: m.product.price,
-        comparePrice: m.product.comparePrice,
-        costPerUnit: "per unit",
-        stockQty: m.product.stockQty,
-        stockStatus: m.product.stockStatus,
-        weightKg: m.weightKg,
-        images: m.images,
-        certifications: m.certifications,
-        datasheetUrl: m.datasheetUrl,
-        categoryId: m.product.categoryId,
-        brand: {
-          name: m.product.brandName,
-          slug: m.product.brandSlug,
-          country: m.brand?.country ?? null,
-        },
-        category: { name: m.categoryName ?? "", slug: m.categorySlug ?? "" },
-        specs: m.specs.map((sp, i) => ({
-          id: `${m.product.id}-${i}`,
-          specKey: sp.specKey,
-          specName: sp.specName,
-          value: sp.value,
-          unit: sp.unit,
-        })),
-        // Not mirrored: both are supplementary, and inventing them would be
-        // worse than omitting them.
-        crossReferences: [] as Array<{
-          id: string;
-          competitorBrand: string;
-          competitorName: string;
-          competitorSku: string;
-          matchType: string;
-        }>,
-        priceTiers: [] as Array<{ id: string; minQty: number; price: number }>,
-      },
-      related: m.related.map((p) => ({
-        id: p.id,
-        sku: p.sku,
-        name: p.name,
-        slug: p.slug,
-        price: p.price,
-        comparePrice: p.comparePrice,
-        stockStatus: p.stockStatus,
-        stockQty: p.stockQty,
-        brandName: p.brandName,
-        image: p.image,
-      })),
-    };
+    console.warn(`[product/${slug}] not in the mirror and D1 failed: ${String(err).slice(0, 200)}`);
+    return null;
   }
+}
+
+/** Normalises a mirror record into the shape the page renders. */
+function buildMirrorProduct(m: NonNullable<Awaited<ReturnType<typeof mirrorProduct>>>) {
+  return {
+    id: m.product.id,
+    sku: m.product.sku,
+    name: m.product.name,
+    slug: m.product.slug,
+    description: m.description,
+    shortDesc: m.product.shortDesc,
+    price: m.product.price,
+    comparePrice: m.product.comparePrice,
+    costPerUnit: "per unit",
+    stockQty: m.product.stockQty,
+    stockStatus: m.product.stockStatus,
+    weightKg: m.weightKg,
+    images: m.images,
+    certifications: m.certifications,
+    datasheetUrl: m.datasheetUrl,
+    categoryId: m.product.categoryId,
+    brand: {
+      name: m.product.brandName,
+      slug: m.product.brandSlug,
+      country: m.brand?.country ?? null,
+    },
+    category: { name: m.categoryName ?? "", slug: m.categorySlug ?? "" },
+    specs: m.specs.map((sp, i) => ({
+      id: `${m.product.id}-${i}`,
+      specKey: sp.specKey,
+      specName: sp.specName,
+      value: sp.value,
+      unit: sp.unit,
+    })),
+    // Not mirrored: both are supplementary, and inventing them would be
+    // worse than omitting them.
+    crossReferences: [] as Array<{
+      id: string;
+      competitorBrand: string;
+      competitorName: string;
+      competitorSku: string;
+      matchType: string;
+    }>,
+    priceTiers: [] as Array<{ id: string; minQty: number; price: number }>,
+  };
 }
