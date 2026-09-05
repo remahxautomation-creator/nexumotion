@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getT } from "@/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { cachedStat } from "@/lib/stats-cache";
+import snapshot from "@/content/catalog-snapshot.json";
 
 export const dynamic = "force-dynamic";
 export async function generateMetadata() {
@@ -15,12 +16,26 @@ export default async function BrandsPage() {
   // A correlated `some` filter plus a product count for each of 276 brands.
   // The listing is identical for every visitor and changes only on catalogue
   // import, so it is cached rather than rebuilt per request.
-  const brands = await cachedStat("brands.listing", () =>
-    prisma.brand.findMany({
-      where: { isActive: true, products: { some: { isActive: true } } },
-      orderBy: { name: "asc" },
-      include: { _count: { select: { products: true } } },
-    })
+  const brands = await cachedStat(
+    "brands.listing",
+    () =>
+      prisma.brand.findMany({
+        where: { isActive: true, products: { some: { isActive: true } } },
+        orderBy: { name: "asc" },
+        // `select`, not `include`: the listing renders four fields, and pulling
+        // whole Brand rows shipped description, website and timestamps for 249
+        // brands to render none of them. It also keeps this shape identical to
+        // the snapshot fallback, so both paths type-check as one thing.
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          country: true,
+          logo: true,
+          _count: { select: { products: true } },
+        },
+      }),
+    { fallback: snapshot.brandsListing }
   );
 
   const grouped = new Map<string, typeof brands>();

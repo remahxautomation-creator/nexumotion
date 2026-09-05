@@ -7,6 +7,7 @@ import { companyFacts } from "@/content/site-content";
 import { getT } from "@/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { cachedStat } from "@/lib/stats-cache";
+import snapshot from "@/content/catalog-snapshot.json";
 
 export const dynamic = "force-dynamic";
 
@@ -20,8 +21,12 @@ export default async function AboutPage() {
   // Two whole-table counts rendered as headline figures. Cached with the rest
   // of the catalogue statistics; they move on import, not on request.
   const [brandCount, categoryCount] = await Promise.all([
-    cachedStat("stats.brandCountAll", () => prisma.brand.count()),
-    cachedStat("stats.categoryCountAll", () => prisma.category.count()),
+    cachedStat("stats.brandCountAll", () => prisma.brand.count(), {
+      fallback: snapshot.stats.brandCountAll,
+    }),
+    cachedStat("stats.categoryCountAll", () => prisma.category.count(), {
+      fallback: snapshot.stats.categoryCountAll,
+    }),
   ]);
 
   const values = [

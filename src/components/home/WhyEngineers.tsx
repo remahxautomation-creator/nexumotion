@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FileText, GitCompareArrows, PackageSearch, ListChecks } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { cachedStat } from "@/lib/stats-cache";
+import snapshot from "@/content/catalog-snapshot.json";
 import { getT } from "@/i18n/server";
 
 /**
@@ -24,17 +25,27 @@ async function getFacts() {
     // page.tsx collapses both to one scan per key per hour — the counts change
     // on catalogue import, which is weekly at best.
     const [products, brands, specs, datasheets, crossRefs] = await Promise.all([
-      cachedStat("stats.activeProductCount", () =>
-        prisma.product.count({ where: { isActive: true } })
+      cachedStat(
+        "stats.activeProductCount",
+        () => prisma.product.count({ where: { isActive: true } }),
+        { fallback: snapshot.stats.activeProductCount }
       ),
-      cachedStat("stats.activeBrandCount", () =>
-        prisma.brand.count({ where: { isActive: true, products: { some: { isActive: true } } } })
+      cachedStat(
+        "stats.activeBrandCount",
+        () => prisma.brand.count({ where: { isActive: true, products: { some: { isActive: true } } } }),
+        { fallback: snapshot.stats.activeBrandCount }
       ),
-      cachedStat("stats.specCount", () => prisma.productSpec.count()),
-      cachedStat("stats.datasheetCount", () =>
-        prisma.product.count({ where: { isActive: true, NOT: { datasheetUrl: null } } })
+      cachedStat("stats.specCount", () => prisma.productSpec.count(), {
+        fallback: snapshot.stats.specCount,
+      }),
+      cachedStat(
+        "stats.datasheetCount",
+        () => prisma.product.count({ where: { isActive: true, NOT: { datasheetUrl: null } } }),
+        { fallback: snapshot.stats.datasheetCount }
       ),
-      cachedStat("stats.crossRefCount", () => prisma.crossReference.count()),
+      cachedStat("stats.crossRefCount", () => prisma.crossReference.count(), {
+        fallback: snapshot.stats.crossRefCount,
+      }),
     ]);
     return { products, brands, specs, datasheets, crossRefs };
   } catch {

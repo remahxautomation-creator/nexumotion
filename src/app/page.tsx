@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Cpu, Zap, Shield, Truck, FileText, Upload } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { cachedStat } from "@/lib/stats-cache";
+import snapshot from "@/content/catalog-snapshot.json";
 import ProductCard from "@/components/product/ProductCard";
 import ControlPanelArt from "@/components/home/ControlPanelArt";
 import Customers from "@/components/home/Customers";
@@ -14,6 +15,18 @@ import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Declared outside the call so the empty fallback can be typed from the query
+ * itself — `include: { brand: true }` widens the row, and a bare `[]` would not
+ * match it.
+ */
+const featuredQuery = () =>
+  prisma.product.findMany({
+    where: { isFeatured: true, isActive: true },
+    take: 8,
+    include: { brand: true },
+  });
+
 export default async function HomePage() {
   const { t } = await getT();
   // Everything except the featured products is a catalogue-wide aggregate that
@@ -24,23 +37,36 @@ export default async function HomePage() {
   // the two components that both need this figure now cost one scan between
   // them per hour instead of one full ProductSpec scan each, per request.
   const [categories, brandCount, featured, specCount] = await Promise.all([
-    cachedStat("home.categories", () =>
-      prisma.category.findMany({
-        orderBy: { sortOrder: "asc" },
-        include: { _count: { select: { products: true } } },
-      })
+    cachedStat(
+      "home.categories",
+      () =>
+        prisma.category.findMany({
+          orderBy: { sortOrder: "asc" },
+          include: { _count: { select: { products: true } } },
+        }),
+      { fallback: snapshot.categories }
     ),
     // A count, not rows: the brand wall fetches its own curated list, and this
     // is only ever rendered as a number. The previous findMany pulled 18 full
     // records to compute a length that was then capped at 18 anyway, so the
     // headline could never exceed "50+" no matter how many brands were stocked.
-    cachedStat("stats.activeBrandCount", () =>
-      prisma.brand.count({
-        where: { isActive: true, products: { some: { isActive: true } } },
-      })
+    cachedStat(
+      "stats.activeBrandCount",
+      () =>
+        prisma.brand.count({
+          where: { isActive: true, products: { some: { isActive: true } } },
+        }),
+      { fallback: snapshot.stats.activeBrandCount }
     ),
-    prisma.product.findMany({ where: { isFeatured: true, isActive: true }, take: 8, include: { brand: true } }),
-    cachedStat("stats.specCount", () => prisma.productSpec.count()),
+    // Featured products are the one live read left on this page. It is a
+    // `take: 8` on an indexed column, so it is cheap — and there are currently
+    // no featured products at all, so an empty fallback loses nothing.
+    cachedStat("home.featured", featuredQuery, {
+      fallback: [] as Awaited<ReturnType<typeof featuredQuery>>,
+    }),
+    cachedStat("stats.specCount", () => prisma.productSpec.count(), {
+      fallback: snapshot.stats.specCount,
+    }),
   ]);
 
   return (

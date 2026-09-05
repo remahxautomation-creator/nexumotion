@@ -1,0 +1,2956 @@
+{
+ "generatedAt": "2026-09-05T13:37:32.427Z",
+ "stats": {
+  "activeProductCount": 1025,
+  "specCount": 14026,
+  "crossRefCount": 0,
+  "datasheetCount": 977,
+  "brandCountAll": 276,
+  "categoryCountAll": 24,
+  "activeBrandCount": 249
+ },
+ "categories": [
+  {
+   "id": "cmtfoi5z50000vb90io6751ks",
+   "name": "PLC & Controllers",
+   "slug": "plc-controllers",
+   "_count": {
+    "products": 28
+   }
+  },
+  {
+   "id": "cmtfoi6020009vb90esof4xtp",
+   "name": "I/O Modules",
+   "slug": "i-o-modules",
+   "_count": {
+    "products": 0
+   }
+  },
+  {
+   "id": "cmtfoi60v000kvb900rjk1wmz",
+   "name": "Drives & VFDs",
+   "slug": "drives-vfds",
+   "_count": {
+    "products": 0
+   }
+  },
+  {
+   "id": "cmtfoi61q000xvb90k51csztq",
+   "name": "HMI & Visualization",
+   "slug": "hmi-visualization",
+   "_count": {
+    "products": 0
+   }
+  },
+  {
+   "id": "cmtfoi62h0018vb90swv860i7",
+   "name": "Servo & Motion",
+   "slug": "servo-motion",
+   "_count": {
+    "products": 72
+   }
+  },
+  {
+   "id": "cmtfoi638001jvb908tbzzel6",
+   "name": "Motor Control",
+   "slug": "motor-control",
+   "_count": {
+    "products": 51
+   }
+  },
+  {
+   "id": "cmtfoi63z001uvb90hg61qvbg",
+   "name": "Sensors & Switches",
+   "slug": "sensors-switches",
+   "_count": {
+    "products": 56
+   }
+  },
+  {
+   "id": "cmtfoi64l0023vb906kk35i95",
+   "name": "Safety",
+   "slug": "safety",
+   "_count": {
+    "products": 20
+   }
+  },
+  {
+   "id": "cmtfoi657002cvb906bi7rx5o",
+   "name": "Power Supplies",
+   "slug": "power-supplies",
+   "_count": {
+    "products": 47
+   }
+  },
+  {
+   "id": "cmtfoi65y002nvb90weiymqb6",
+   "name": "Industrial Networking",
+   "slug": "industrial-networking",
+   "_count": {
+    "products": 26
+   }
+  },
+  {
+   "id": "cmtfoi66l002wvb90jee0qrbk",
+   "name": "Relays & Timers",
+   "slug": "relays-timers",
+   "_count": {
+    "products": 42
+   }
+  },
+  {
+   "id": "cmtfoi67b0037vb900q2yijwo",
+   "name": "Pneumatics",
+   "slug": "pneumatics",
+   "_count": {
+    "products": 153
+   }
+  },
+  {
+   "id": "cmtfoi681003ivb90y341207j",
+   "name": "Hydraulics",
+   "slug": "hydraulics",
+   "_count": {
+    "products": 23
+   }
+  },
+  {
+   "id": "cmtfoi68o003rvb90ifl920nd",
+   "name": "Process Instruments",
+   "slug": "process-instruments",
+   "_count": {
+    "products": 72
+   }
+  },
+  {
+   "id": "cmtfoi69e0042vb90rxp8w2w9",
+   "name": "DCS & SCADA",
+   "slug": "dcs-scada",
+   "_count": {
+    "products": 0
+   }
+  },
+  {
+   "id": "cmtfoi6a2004bvb90yxfvzobi",
+   "name": "Robotics",
+   "slug": "robotics",
+   "_count": {
+    "products": 25
+   }
+  },
+  {
+   "id": "cmtfoi6as004mvb90gpo8bm67",
+   "name": "Cables & Connectors",
+   "slug": "cables-connectors",
+   "_count": {
+    "products": 91
+   }
+  },
+  {
+   "id": "cmtfoi6bi004xvb909bcn7g7t",
+   "name": "Operator Devices",
+   "slug": "operator-devices",
+   "_count": {
+    "products": 55
+   }
+  },
+  {
+   "id": "cmtfoi6c40056vb90w2y9cygx",
+   "name": "Encoders",
+   "slug": "encoders",
+   "_count": {
+    "products": 0
+   }
+  },
+  {
+   "id": "cmtfoi6cq005fvb9069nzabmj",
+   "name": "Temperature Controllers",
+   "slug": "temperature-controllers",
+   "_count": {
+    "products": 0
+   }
+  },
+  {
+   "id": "cmtfoi9580000vbdsit4ya962",
+   "name": "Test & Measurement",
+   "slug": "test-measurement",
+   "_count": {
+    "products": 55
+   }
+  },
+  {
+   "id": "cmtfoi95e0001vbdsg4h0k9ti",
+   "name": "Tools & Workshop",
+   "slug": "tools-workshop",
+   "_count": {
+    "products": 69
+   }
+  },
+  {
+   "id": "cmtfoi95j0002vbdskvx5vshs",
+   "name": "Electronic Components",
+   "slug": "electronic-components",
+   "_count": {
+    "products": 117
+   }
+  },
+  {
+   "id": "cmtfoi95q0003vbds0qq5v4xv",
+   "name": "Enclosures & Cooling",
+   "slug": "enclosures-cooling",
+   "_count": {
+    "products": 23
+   }
+  }
+ ],
+ "brandWall": [
+  {
+   "id": "cmtfoi6dj005qvb906tyrvtjs",
+   "slug": "siemens",
+   "name": "Siemens",
+   "_count": {
+    "products": 30
+   }
+  },
+  {
+   "id": "cmtfoi6du005rvb901j5x7b22",
+   "slug": "schneider-electric",
+   "name": "Schneider Electric",
+   "_count": {
+    "products": 71
+   }
+  },
+  {
+   "id": "cmtfoi6dy005svb90qsie4mw6",
+   "slug": "abb",
+   "name": "ABB",
+   "_count": {
+    "products": 16
+   }
+  },
+  {
+   "id": "cmtfoi6e8005uvb90k97t8t3y",
+   "slug": "allen-bradley",
+   "name": "Allen-Bradley",
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi6ed005vvb9035hyo4x9",
+   "slug": "omron",
+   "name": "Omron",
+   "_count": {
+    "products": 37
+   }
+  },
+  {
+   "id": "cmtfoi6f10060vb901jr13wxj",
+   "slug": "danfoss",
+   "name": "Danfoss",
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6g30067vb90alv9i8yf",
+   "slug": "bosch-rexroth",
+   "name": "Bosch Rexroth",
+   "_count": {
+    "products": 21
+   }
+  },
+  {
+   "id": "cmtfoi6gn006bvb90o07qtx2j",
+   "slug": "ifm-electronic",
+   "name": "IFM Electronic",
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi6gr006cvb90n5xuiso4",
+   "slug": "wago",
+   "name": "WAGO",
+   "_count": {
+    "products": 12
+   }
+  },
+  {
+   "id": "cmtfoi6ha006gvb90f61gpdzg",
+   "slug": "sick",
+   "name": "SICK",
+   "_count": {
+    "products": 7
+   }
+  },
+  {
+   "id": "cmtfoi6hq006jvb90rqw6pjr9",
+   "slug": "phoenix-contact",
+   "name": "Phoenix Contact",
+   "_count": {
+    "products": 14
+   }
+  },
+  {
+   "id": "cmtfoi6hv006kvb90t3gr0qrq",
+   "slug": "pilz",
+   "name": "Pilz",
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi6i0006lvb903hmqggbm",
+   "slug": "festo",
+   "name": "Festo",
+   "_count": {
+    "products": 69
+   }
+  },
+  {
+   "id": "cmtfoi6i5006mvb90s601mjpi",
+   "slug": "smc",
+   "name": "SMC",
+   "_count": {
+    "products": 69
+   }
+  },
+  {
+   "id": "cmtfoi6jx006zvb90gef9u891",
+   "slug": "finder",
+   "name": "Finder",
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi9670006vbds8qaf6a78",
+   "slug": "moxa",
+   "name": "MOXA",
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi96c0007vbds5rhxfsc9",
+   "slug": "te-connectivity",
+   "name": "TE Connectivity",
+   "_count": {
+    "products": 18
+   }
+  },
+  {
+   "id": "cmtfoi96x000bvbdsw3kjdq12",
+   "slug": "eaton",
+   "name": "Eaton",
+   "_count": {
+    "products": 12
+   }
+  },
+  {
+   "id": "cmtfoi97p000hvbdsp9gidavk",
+   "slug": "harting",
+   "name": "HARTING",
+   "_count": {
+    "products": 8
+   }
+  },
+  {
+   "id": "cmtfoi98h000nvbdsa90xdx0x",
+   "slug": "burkert",
+   "name": "Burkert",
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9c1001dvbds80q3dsfn",
+   "slug": "weidm-ller",
+   "name": "Weidmüller",
+   "_count": {
+    "products": 10
+   }
+  },
+  {
+   "id": "cmtfoi9db001lvbdsiyl12doo",
+   "slug": "vishay",
+   "name": "Vishay",
+   "_count": {
+    "products": 16
+   }
+  },
+  {
+   "id": "cmtfoi9fw0023vbdsa3iqymm3",
+   "slug": "norgren",
+   "name": "Norgren",
+   "_count": {
+    "products": 10
+   }
+  },
+  {
+   "id": "cmtfoi9gj0028vbdsje4ljclo",
+   "slug": "amphenol-industrial",
+   "name": "Amphenol Industrial",
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi9gn0029vbdsj6dorkl6",
+   "slug": "fluke",
+   "name": "Fluke",
+   "_count": {
+    "products": 20
+   }
+  },
+  {
+   "id": "cmtfoi9jj002vvbdsqvfkfx28",
+   "slug": "igus",
+   "name": "Igus",
+   "_count": {
+    "products": 7
+   }
+  },
+  {
+   "id": "cmtfoi9ko0034vbds9nftz76d",
+   "slug": "stmicroelectronics",
+   "name": "STMicroelectronics",
+   "_count": {
+    "products": 12
+   }
+  },
+  {
+   "id": "cmtfoi9lt003dvbdsh01gmjpv",
+   "slug": "ebm-papst",
+   "name": "ebm-papst",
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9m6003gvbdshtjkeyg7",
+   "slug": "tdk",
+   "name": "TDK",
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi9n5003ovbdszt91xdwv",
+   "slug": "milwaukee",
+   "name": "Milwaukee",
+   "_count": {
+    "products": 10
+   }
+  },
+  {
+   "id": "cmtfoi9of003yvbdsolijh0gc",
+   "slug": "knipex",
+   "name": "Knipex",
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi9r5004jvbdsgg0l7lc5",
+   "slug": "arduino",
+   "name": "Arduino",
+   "_count": {
+    "products": 18
+   }
+  }
+ ],
+ "brandsListing": [
+  {
+   "id": "cmtfoi9l60038vbds044xagd3",
+   "slug": "aavid-thermalloy",
+   "name": "AAVID THERMALLOY",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi6dy005svb90qsie4mw6",
+   "slug": "abb",
+   "name": "ABB",
+   "country": "Switzerland",
+   "logo": null,
+   "_count": {
+    "products": 16
+   }
+  },
+  {
+   "id": "cmtfoi9ra004kvbdsvde6zise",
+   "slug": "adafruit-industries",
+   "name": "ADAFRUIT INDUSTRIES",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi97f000fvbdsu3dmzmyi",
+   "slug": "apem",
+   "name": "APEM",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9ej001tvbdsynewy9hx",
+   "slug": "auer-signal",
+   "name": "AUER Signal",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9yb0061vbdspsjbcm9f",
+   "slug": "abracon",
+   "name": "Abracon",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9sl004uvbds5iodqb2z",
+   "slug": "accuride",
+   "name": "Accuride",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi99r000xvbdswxuml1vi",
+   "slug": "acim-jouanin",
+   "name": "Acim Jouanin",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9nt003tvbdsyi6q3o6z",
+   "slug": "actuonix",
+   "name": "Actuonix",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9yg0062vbdse5kwvhgu",
+   "slug": "allen-bradley-guardmaster",
+   "name": "Allen Bradley Guardmaster",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6e8005uvb90k97t8t3y",
+   "slug": "allen-bradley",
+   "name": "Allen-Bradley",
+   "country": "USA",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9we005nvbds23u4d5za",
+   "slug": "alpha-wire",
+   "name": "Alpha Wire",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9gj0028vbdsje4ljclo",
+   "slug": "amphenol-industrial",
+   "name": "Amphenol Industrial",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi9hk002gvbdsbow8gv47",
+   "slug": "amprobe",
+   "name": "Amprobe",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9u10055vbdsx7pasbk6",
+   "slug": "analog-devices",
+   "name": "Analog Devices",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9n1003nvbdsx6b9prx9",
+   "slug": "arcol",
+   "name": "Arcol",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 5
+   }
+  },
+  {
+   "id": "cmtfoi9jn002wvbds70n60gcg",
+   "slug": "arducam",
+   "name": "Arducam",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9r5004jvbdsgg0l7lc5",
+   "slug": "arduino",
+   "name": "Arduino",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 18
+   }
+  },
+  {
+   "id": "cmtfoi9cj001gvbds9ofzwrc3",
+   "slug": "assemtech",
+   "name": "Assemtech",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9t4004yvbdsf0xqm80n",
+   "slug": "asus",
+   "name": "Asus",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi6gc0069vb90665a0g3q",
+   "slug": "b-r",
+   "name": "B&R",
+   "country": "Austria",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9p30043vbdsx7xg3zqa",
+   "slug": "beta",
+   "name": "BETA",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9hu002ivbdsk49aso37",
+   "slug": "bk-precision",
+   "name": "BK Precision",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9r1004ivbdsg6tcyqqr",
+   "slug": "bahco",
+   "name": "Bahco",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi6hg006hvb903hvkfamm",
+   "slug": "balluff",
+   "name": "Balluff",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9a50010vbds1e9v6skh",
+   "slug": "baumer",
+   "name": "Baumer",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9up005avbdsbkxp1qgt",
+   "slug": "beagleboard-org",
+   "name": "Beagleboard.org",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9yk0063vbdsjvtfp5r5",
+   "slug": "bernstein-ag",
+   "name": "Bernstein AG",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9no003svbdsd6477pjp",
+   "slug": "bosch",
+   "name": "Bosch",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 5
+   }
+  },
+  {
+   "id": "cmtfoi6g30067vb90alv9i8yf",
+   "slug": "bosch-rexroth",
+   "name": "Bosch Rexroth",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 21
+   }
+  },
+  {
+   "id": "cmtfoi9zz006dvbds3rx1xj6k",
+   "slug": "bourdon",
+   "name": "Bourdon",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9ke0032vbdsrym52l22",
+   "slug": "bourns",
+   "name": "Bourns",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 5
+   }
+  },
+  {
+   "id": "cmtfoi9xo005wvbdsccqnn4vc",
+   "slug": "brainboxes",
+   "name": "Brainboxes",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9lo003cvbdseefudxzp",
+   "slug": "broughton",
+   "name": "Broughton",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9pz004avbdsbo7s3eci",
+   "slug": "bulgin",
+   "name": "Bulgin",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi98h000nvbdsa90xdx0x",
+   "slug": "burkert",
+   "name": "Burkert",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi97k000gvbds2bgmzh2q",
+   "slug": "c-k",
+   "name": "C & K",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9o2003vvbdsh2bmztgv",
+   "slug": "ck",
+   "name": "CK",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 5
+   }
+  },
+  {
+   "id": "cmtfoi9mx003mvbdsrhftqoh6",
+   "slug": "caddock",
+   "name": "Caddock",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi6js006yvb90glrf2x9a",
+   "slug": "carlo-gavazzi",
+   "name": "Carlo Gavazzi",
+   "country": "Switzerland",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9vc005fvbdsscnxrb8r",
+   "slug": "casella-cel",
+   "name": "Casella Cel",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9pl0047vbds5v3axmqr",
+   "slug": "casio",
+   "name": "Casio",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9h7002dvbdsqsgzij8x",
+   "slug": "chauvin-arnoux",
+   "name": "Chauvin Arnoux",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 5
+   }
+  },
+  {
+   "id": "cmtfoi9en001uvbdsjbbvrq0z",
+   "slug": "clifford-snell",
+   "name": "Clifford & Snell",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9j9002tvbdsu8lxjxxc",
+   "slug": "comark",
+   "name": "Comark",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9aa0011vbdsk85qba7d",
+   "slug": "contactum",
+   "name": "Contactum",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9an0014vbdse75wjv5n",
+   "slug": "cosel",
+   "name": "Cosel",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6k80071vb90h5zevgg2",
+   "slug": "crouzet",
+   "name": "Crouzet",
+   "country": "France",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi6kc0072vb90byrmniqo",
+   "slug": "crydom",
+   "name": "Crydom",
+   "country": "USA",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9xk005vvbdsu09whj2a",
+   "slug": "d-link",
+   "name": "D-Link",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9k50030vbds2y67ailh",
+   "slug": "dfrobot",
+   "name": "DFRobot",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi6f10060vb901jr13wxj",
+   "slug": "danfoss",
+   "name": "Danfoss",
+   "country": "Denmark",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9hg002fvbdsgmtkxuv3",
+   "slug": "dewalt",
+   "name": "DeWALT",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi98z000rvbdsdq5hwryl",
+   "slug": "delta-electronics",
+   "name": "Delta Electronics",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi9ih002nvbdslqhglayc",
+   "slug": "digilent",
+   "name": "Digilent",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9j0002rvbdsdnx3e7zz",
+   "slug": "digitron",
+   "name": "Digitron",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9m2003fvbds74dx0845",
+   "slug": "dimplex",
+   "name": "Dimplex",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9ky0036vbdsx0orac7x",
+   "slug": "diodeszetex",
+   "name": "DiodesZetex",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9nj003rvbds2gy0lzjh",
+   "slug": "dremel",
+   "name": "Dremel",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9je002uvbdsxeifrwit",
+   "slug": "druck",
+   "name": "Druck",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9lb0039vbds8yqf16jf",
+   "slug": "e-tec",
+   "name": "E-TEC",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi982000kvbdsp87qfbkv",
+   "slug": "eao",
+   "name": "EAO",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi98b000mvbdsvge2iu19",
+   "slug": "emerson-asco",
+   "name": "EMERSON ? ASCO",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9g10024vbdsxm1htgew",
+   "slug": "emerson-aventics",
+   "name": "EMERSON ? AVENTICS",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi99m000wvbds0omfc5mm",
+   "slug": "entes",
+   "name": "ENTES",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9pb0045vbds71mo7jvn",
+   "slug": "epic",
+   "name": "EPIC",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi96x000bvbdsw3kjdq12",
+   "slug": "eaton",
+   "name": "Eaton",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 12
+   }
+  },
+  {
+   "id": "cmtfoi99w000yvbdsziued8yx",
+   "slug": "eliwell",
+   "name": "Eliwell",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6gi006avb90k8jzo3lh",
+   "slug": "endress-hauser",
+   "name": "Endress+Hauser",
+   "country": "Switzerland",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9ro004nvbds4e9rf66h",
+   "slug": "enerpac",
+   "name": "Enerpac",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi9pp0048vbds2kdot3ha",
+   "slug": "entrelec",
+   "name": "Entrelec",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9ae0012vbdsej8hlwef",
+   "slug": "europa",
+   "name": "Europa",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi99h000vvbds84dcsv9y",
+   "slug": "eurotherm",
+   "name": "Eurotherm",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9nx003uvbdspr9xkmw4",
+   "slug": "ewellix-makers-in-motion",
+   "name": "Ewellix Makers in Motion",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9xs005xvbds4ilp1kf8",
+   "slug": "ewon",
+   "name": "Ewon",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9xf005uvbdsm9hrbo3r",
+   "slug": "exsys",
+   "name": "Exsys",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9j5002svbds2zcgzi27",
+   "slug": "extech",
+   "name": "Extech",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9ot0041vbdsn0sj0vum",
+   "slug": "facom",
+   "name": "Facom",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9ms003lvbdsx8lmc3cr",
+   "slug": "fair-rite",
+   "name": "Fair-Rite",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi6i0006lvb903hmqggbm",
+   "slug": "festo",
+   "name": "Festo",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 69
+   }
+  },
+  {
+   "id": "cmtfoi9rk004mvbdspskv0uwu",
+   "slug": "fibox",
+   "name": "Fibox",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6jx006zvb90gef9u891",
+   "slug": "finder",
+   "name": "Finder",
+   "country": "Italy",
+   "logo": null,
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi9gn0029vbdsj6dorkl6",
+   "slug": "fluke",
+   "name": "Fluke",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 20
+   }
+  },
+  {
+   "id": "cmtfoi9wk005ovbds4wgkcmiy",
+   "slug": "gic",
+   "name": "GIC",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9vl005hvbdsmk8stcc7",
+   "slug": "georg-fischer",
+   "name": "Georg Fischer",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi97p000hvbdsp9gidavk",
+   "slug": "harting",
+   "name": "HARTING",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 8
+   }
+  },
+  {
+   "id": "cmtfoi9ze0069vbdsni7wd7qa",
+   "slug": "hazet",
+   "name": "HAZET",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi99d000uvbdsl4c01y16",
+   "slug": "hobut",
+   "name": "HOBUT",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9dh001mvbds9ql667l2",
+   "slug": "hamamatsu-photonics",
+   "name": "Hamamatsu Photonics",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9uy005cvbds7fjrpmce",
+   "slug": "hanna-instruments",
+   "name": "Hanna Instruments",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9pg0046vbdsv8d18l3c",
+   "slug": "hellermanntyton",
+   "name": "HellermannTyton",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9fr0022vbds68rvnlk7",
+   "slug": "herga",
+   "name": "Herga",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9rz004pvbds6vfysjc6",
+   "slug": "hi-force",
+   "name": "Hi-Force",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9q7004cvbdsomr74di6",
+   "slug": "hirschmann",
+   "name": "Hirschmann",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9hb002evbdsnbg3cdjn",
+   "slug": "hirschmann-test-measurement",
+   "name": "Hirschmann Test & Measurement",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi6en005xvb90qtrorg6s",
+   "slug": "honeywell",
+   "name": "Honeywell",
+   "country": "USA",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi96n0009vbdsd0qsdpov",
+   "slug": "hongfa-europe-gmbh",
+   "name": "Hongfa Europe GMBH",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9z90068vbdso3w4fvm0",
+   "slug": "icy-box",
+   "name": "ICY BOX",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9co001hvbdsa83mvu8m",
+   "slug": "idem",
+   "name": "IDEM",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 7
+   }
+  },
+  {
+   "id": "cmtfoi6gn006bvb90o07qtx2j",
+   "slug": "ifm-electronic",
+   "name": "IFM Electronic",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi9sp004vvbdsk57z217j",
+   "slug": "iko-nippon-thompson",
+   "name": "IKO Nippon Thompson",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi987000lvbds8q0lj5hv",
+   "slug": "itw-switches",
+   "name": "ITW Switches",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9l20037vbds1zg21jso",
+   "slug": "ixys",
+   "name": "IXYS",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9ok003zvbds14pi43ri",
+   "slug": "ideal-industries",
+   "name": "Ideal Industries",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi96h0008vbds132b9vzx",
+   "slug": "idec",
+   "name": "Idec",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9jj002vvbdsqvfkfx28",
+   "slug": "igus",
+   "name": "Igus",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 7
+   }
+  },
+  {
+   "id": "cmtfoi9ut005bvbdse72ancxn",
+   "slug": "instruments-direct",
+   "name": "Instruments Direct",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9mj003jvbdsuwm2294h",
+   "slug": "kemet",
+   "name": "KEMET",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9ir002pvbdshlin0n1e",
+   "slug": "kimo",
+   "name": "KIMO",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9fn0021vbdscnzq4ue2",
+   "slug": "knitter-switch",
+   "name": "KNITTER-SWITCH",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9w0005kvbdsyxftbdu0",
+   "slug": "kabeltronik",
+   "name": "Kabeltronik",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9630005vbdsqsxcny1u",
+   "slug": "keithley",
+   "name": "Keithley",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9vg005gvbds6ghrwsm8",
+   "slug": "kestrel",
+   "name": "Kestrel",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9i3002kvbdsapu8la39",
+   "slug": "keysight",
+   "name": "Keysight +",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9i8002lvbdsq0l8ipig",
+   "slug": "keysight-technologies",
+   "name": "Keysight Technologies",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9rf004lvbds4i4ol0rc",
+   "slug": "kitronik",
+   "name": "Kitronik",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9e3001qvbds8gfcre9y",
+   "slug": "klaxon",
+   "name": "Klaxon",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9op0040vbdsqob6lzg9",
+   "slug": "klein-tools",
+   "name": "Klein Tools",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9of003yvbdsolijh0gc",
+   "slug": "knipex",
+   "name": "Knipex",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi976000dvbdsy4mmabkz",
+   "slug": "kraus-naimer",
+   "name": "Kraus & Naimer",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi998000tvbdsy85igd2i",
+   "slug": "lkmelectronic",
+   "name": "LKMelectronic",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9q3004bvbdsl6a79u75",
+   "slug": "lapp",
+   "name": "Lapp",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9a0000zvbdsns24dqwr",
+   "slug": "lascar",
+   "name": "Lascar",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi9ga0026vbdsl3c9zgwl",
+   "slug": "legrand",
+   "name": "Legrand",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9wu005qvbdsycr3xd3y",
+   "slug": "legris",
+   "name": "Legris",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9z30067vbdsu4berivw",
+   "slug": "lexar",
+   "name": "Lexar",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi97a000evbdsjku207m5",
+   "slug": "lorlin",
+   "name": "Lorlin",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9t8004zvbdsscvlbqoz",
+   "slug": "m5stack",
+   "name": "M5Stack",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9aj0013vbds4p3szzvr",
+   "slug": "mean-well",
+   "name": "MEAN WELL",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi9oy0042vbdsj5diid91",
+   "slug": "mecatraction",
+   "name": "MECATRACTION",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9ge0027vbdsiscd4b8y",
+   "slug": "mennekes",
+   "name": "MENNEKES",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9670006vbds8qaf6a78",
+   "slug": "moxa",
+   "name": "MOXA",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi9na003pvbdsnuxrhll6",
+   "slug": "makita",
+   "name": "Makita",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 5
+   }
+  },
+  {
+   "id": "cmtfoi9gx002bvbdsie4a6s9w",
+   "slug": "martindale",
+   "name": "Martindale",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9as0015vbds8t21lbkk",
+   "slug": "mascot",
+   "name": "Mascot",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9g50025vbdsc8067s6f",
+   "slug": "masterplug",
+   "name": "Masterplug",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9tm0052vbdsd5yhcovs",
+   "slug": "microchip",
+   "name": "Microchip",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9ts0053vbdsq3dc7s3d",
+   "slug": "mikroelektronika",
+   "name": "MikroElektronika",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9n5003ovbdszt91xdwv",
+   "slug": "milwaukee",
+   "name": "Milwaukee",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 10
+   }
+  },
+  {
+   "id": "cmtfoi9ob003xvbdsa1zscqcj",
+   "slug": "molex",
+   "name": "Molex",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 5
+   }
+  },
+  {
+   "id": "cmtfoi9mb003hvbdsz1cbttep",
+   "slug": "murata",
+   "name": "Murata",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9o7003wvbdsj6b9pfxs",
+   "slug": "nemiq",
+   "name": "NEMIQ",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9s3004qvbdstsy60zot",
+   "slug": "neutral",
+   "name": "NEUTRAL",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi97t000ivbds0fnl3qdw",
+   "slug": "nkk-switches",
+   "name": "NKK Switches",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9sg004tvbdsk8wjy40s",
+   "slug": "nsk",
+   "name": "NSK",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9ds001ovbdsngatqgmj",
+   "slug": "nve",
+   "name": "NVE",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9sz004xvbds59zn2uma",
+   "slug": "nvidia",
+   "name": "NVIDIA",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9xa005tvbds50drp589",
+   "slug": "netgear",
+   "name": "Netgear",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9k90031vbdsr7jv9i5t",
+   "slug": "norcomp",
+   "name": "Norcomp",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9fw0023vbdsa3iqymm3",
+   "slug": "norgren",
+   "name": "Norgren",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 10
+   }
+  },
+  {
+   "id": "cmtfoi9tw0054vbds11thmi50",
+   "slug": "okdo",
+   "name": "Okdo",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6ed005vvb9035hyo4x9",
+   "slug": "omron",
+   "name": "Omron",
+   "country": "Japan",
+   "logo": null,
+   "_count": {
+    "products": 37
+   }
+  },
+  {
+   "id": "cmtfoi9k1002zvbds1d3fjdhr",
+   "slug": "onrobot",
+   "name": "OnRobot",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9dm001nvbdsg72rektp",
+   "slug": "optek",
+   "name": "Optek",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9wp005pvbdsll4k6ilk",
+   "slug": "pr-electronics",
+   "name": "PR Electronics",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9zk006avbdsnwz7t6np",
+   "slug": "prevost",
+   "name": "PREVOST",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9bw001cvbdsc74ozflo",
+   "slug": "panasonic",
+   "name": "Panasonic",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9e8001rvbds9roctgtl",
+   "slug": "patlite",
+   "name": "Patlite",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9hp002hvbdsgcgzeip1",
+   "slug": "peaktech",
+   "name": "PeakTech",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi98l000ovbds6hrfjhyt",
+   "slug": "pegler-yorkshire",
+   "name": "Pegler Yorkshire",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9dz001pvbdsl8pyegfb",
+   "slug": "pfannenberg",
+   "name": "Pfannenberg",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi6hq006jvb90rqw6pjr9",
+   "slug": "phoenix-contact",
+   "name": "Phoenix Contact",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 14
+   }
+  },
+  {
+   "id": "cmtfoi9ex001wvbdsxpqgthjt",
+   "slug": "pico-technology",
+   "name": "Pico Technology",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 7
+   }
+  },
+  {
+   "id": "cmtfoi6hv006kvb90t3gr0qrq",
+   "slug": "pilz",
+   "name": "Pilz",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9uk0059vbds1461fdj5",
+   "slug": "polyhex",
+   "name": "Polyhex",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9td0050vbdssfp8p96j",
+   "slug": "quectel",
+   "name": "Quectel",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi97y000jvbdsnisd2vxr",
+   "slug": "rafi",
+   "name": "RAFI",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9uf0058vbdsz9yolk9l",
+   "slug": "radxa",
+   "name": "Radxa",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9qm004fvbdsbb3hyrtz",
+   "slug": "ragni",
+   "name": "Ragni",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6iz006svb9009iy1l1r",
+   "slug": "red-lion",
+   "name": "Red Lion",
+   "country": "USA",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9cd001fvbdsht9qyz4i",
+   "slug": "releco",
+   "name": "Releco",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9jw002yvbdso0dsrgsl",
+   "slug": "robotiq",
+   "name": "Robotiq",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9y60060vbdsl2u5trky",
+   "slug": "robustel",
+   "name": "Robustel",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9im002ovbds7u2ccy8m",
+   "slug": "rohde-schwarz",
+   "name": "Rohde & Schwarz",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9w9005mvbdsv91chmbn",
+   "slug": "roline",
+   "name": "Roline",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9vq005ivbdsuisfdsek",
+   "slug": "rotronic-instruments",
+   "name": "Rotronic Instruments",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9s7004rvbdshyugbi4w",
+   "slug": "schaeffler",
+   "name": "SCHAEFFLER",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6ha006gvb90f61gpdzg",
+   "slug": "sick",
+   "name": "SICK",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 7
+   }
+  },
+  {
+   "id": "cmtfoi9lk003bvbdsrvbkssla",
+   "slug": "sip",
+   "name": "SIP",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi9ru004ovbdsbf273uxs",
+   "slug": "skf",
+   "name": "SKF",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi6i5006mvb90s601mjpi",
+   "slug": "smc",
+   "name": "SMC",
+   "country": "Japan",
+   "logo": null,
+   "_count": {
+    "products": 69
+   }
+  },
+  {
+   "id": "cmtfoi9sv004wvbds8vj8vcyw",
+   "slug": "snr",
+   "name": "SNR",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9ko0034vbds9nftz76d",
+   "slug": "stmicroelectronics",
+   "name": "STMicroelectronics",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 12
+   }
+  },
+  {
+   "id": "cmtfoi9f6001yvbdsacq337li",
+   "slug": "saia-burgess",
+   "name": "Saia-Burgess",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9yz0066vbdsjyprzqtc",
+   "slug": "sandisk",
+   "name": "Sandisk",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9cu001ivbdsk0mqok8a",
+   "slug": "schmersal",
+   "name": "Schmersal",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi6du005rvb901j5x7b22",
+   "slug": "schneider-electric",
+   "name": "Schneider Electric",
+   "country": "France",
+   "logo": null,
+   "_count": {
+    "products": 71
+   }
+  },
+  {
+   "id": "cmtfoi9mo003kvbdsj9ijlgb0",
+   "slug": "schurter",
+   "name": "Schurter",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9yu0065vbdsqyg09ngc",
+   "slug": "seagate",
+   "name": "Seagate",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9gs002avbds22vx199q",
+   "slug": "seaward",
+   "name": "Seaward",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9es001vvbds3uatld6x",
+   "slug": "seeed-studio",
+   "name": "Seeed Studio",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9u60056vbdsikpb88da",
+   "slug": "seeit",
+   "name": "Seeit",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9vv005jvbdsoiuvwt3x",
+   "slug": "sefram",
+   "name": "Sefram",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9v3005dvbds6qqw1k1c",
+   "slug": "sensirion",
+   "name": "Sensirion",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi98p000pvbdslkwjgmbx",
+   "slug": "sferaco",
+   "name": "Sferaco",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6dj005qvb906tyrvtjs",
+   "slug": "siemens",
+   "name": "Siemens",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 30
+   }
+  },
+  {
+   "id": "cmtfoi993000svbdsf9lvsawh",
+   "slug": "sifam-tinsley",
+   "name": "Sifam Tinsley",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi971000cvbdsbps2ae3e",
+   "slug": "socomec",
+   "name": "Socomec",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9ub0057vbdsh7ke8as9",
+   "slug": "sparkfun",
+   "name": "Sparkfun",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9bi0019vbdsq3yvlb0r",
+   "slug": "sprint-electric",
+   "name": "Sprint Electric",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9qr004gvbds1mmuh62t",
+   "slug": "stanley",
+   "name": "Stanley",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9bd0018vbdsml6wcrud",
+   "slug": "startech-com",
+   "name": "StarTech.com",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9kj0033vbdsbyle64yk",
+   "slug": "starpower",
+   "name": "Starpower",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9p70044vbdskeywdi6o",
+   "slug": "staubli",
+   "name": "Staubli",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9nf003qvbdsqf9z1478",
+   "slug": "steinel",
+   "name": "Steinel",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9zv006cvbdsio4hs1zf",
+   "slug": "sundstrom",
+   "name": "Sundstrom",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9f2001xvbdslqu3fz5r",
+   "slug": "sure24",
+   "name": "Sure24",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9qw004hvbds8i103ejn",
+   "slug": "swann-morton",
+   "name": "Swann-Morton",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9ti0051vbdsdl6ix69e",
+   "slug": "synaptics-astra-machina",
+   "name": "Synaptics® Astra Machina",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9m6003gvbdshtjkeyg7",
+   "slug": "tdk",
+   "name": "TDK",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 9
+   }
+  },
+  {
+   "id": "cmtfoi96c0007vbds5rhxfsc9",
+   "slug": "te-connectivity",
+   "name": "TE Connectivity",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 18
+   }
+  },
+  {
+   "id": "cmtfoi9sc004svbdsm7ywak11",
+   "slug": "thk",
+   "name": "THK",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9xy005yvbds35ssy9nk",
+   "slug": "tp-link",
+   "name": "TP-Link",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9b30016vbdsqd5uy0h3",
+   "slug": "tracopower",
+   "name": "TRACOPOWER",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9qh004evbdsjk8cd5ns",
+   "slug": "true",
+   "name": "TRUE",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9hy002jvbdslbi1pqei",
+   "slug": "tektronix",
+   "name": "Tektronix",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi96s000avbdsx2kqkiyn",
+   "slug": "tele",
+   "name": "Tele",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9fi0020vbds6crzy7ss",
+   "slug": "teledyne",
+   "name": "Teledyne",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9ic002mvbdscysthi9v",
+   "slug": "teledyne-lecroy",
+   "name": "Teledyne LeCroy",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9bn001avbdsbrhsoxs3",
+   "slug": "telemecanique-sensors",
+   "name": "Telemecanique Sensors",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 10
+   }
+  },
+  {
+   "id": "cmtfoi9wz005rvbds0t7bqqh8",
+   "slug": "teltonika",
+   "name": "Teltonika",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9iv002qvbdsz3lqd7br",
+   "slug": "testo",
+   "name": "Testo",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi9y2005zvbdstdt7zrf2",
+   "slug": "tosi",
+   "name": "Tosi",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9x5005svbdsuhgkqs06",
+   "slug": "trendnet",
+   "name": "Trendnet",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9qb004dvbdsnbvan8vm",
+   "slug": "unilite",
+   "name": "Unilite",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9ks0035vbdsb0soezjc",
+   "slug": "united-automation",
+   "name": "United Automation",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9jr002xvbdsfy40x1g8",
+   "slug": "velleman-components",
+   "name": "Velleman Components",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9yo0064vbds472rbkjt",
+   "slug": "verbatim",
+   "name": "Verbatim",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9db001lvbdsiyl12doo",
+   "slug": "vishay",
+   "name": "Vishay",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 16
+   }
+  },
+  {
+   "id": "cmtfoi9v7005evbds3bc5tmdp",
+   "slug": "vogel",
+   "name": "Vogel",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9b90017vbdsjg74vts7",
+   "slug": "vox-power",
+   "name": "Vox Power",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6gr006cvb90n5xuiso4",
+   "slug": "wago",
+   "name": "WAGO",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 12
+   }
+  },
+  {
+   "id": "cmtfoi9br001bvbdsskq2w0v7",
+   "slug": "wika",
+   "name": "WIKA",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi95x0004vbdsb9h0m4l8",
+   "slug": "wachendorff",
+   "name": "Wachendorff",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi98v000qvbdslp6duo8q",
+   "slug": "watts",
+   "name": "Watts",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9lg003avbds27pl6q0i",
+   "slug": "ween-semiconductors-co-ltd",
+   "name": "WeEn Semiconductors Co., Ltd",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9c1001dvbds80q3dsfn",
+   "slug": "weidm-ller",
+   "name": "Weidmüller",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 10
+   }
+  },
+  {
+   "id": "cmtfoi9zq006bvbdsxld6idqx",
+   "slug": "welding-star",
+   "name": "Welding Star",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9ed001svbdsqi9qr0dp",
+   "slug": "werma",
+   "name": "Werma",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9h1002cvbdscztro28i",
+   "slug": "wiha",
+   "name": "Wiha",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9mf003ivbdss25per4a",
+   "slug": "wurth-elektronik",
+   "name": "Wurth Elektronik",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 4
+   }
+  },
+  {
+   "id": "cmtfoi9fc001zvbdsd4h9lzkj",
+   "slug": "zf",
+   "name": "ZF",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 3
+   }
+  },
+  {
+   "id": "cmtfoi9d5001kvbdsx2ji8wjo",
+   "slug": "ams-osram",
+   "name": "ams OSRAM",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9pu0049vbdszj2sygd7",
+   "slug": "binder",
+   "name": "binder",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 7
+   }
+  },
+  {
+   "id": "cmtfoi9w5005lvbdsjby393ls",
+   "slug": "brennenstuhl",
+   "name": "brennenstuhl",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9lt003dvbdsh01gmjpv",
+   "slug": "ebm-papst",
+   "name": "ebm-papst",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi9c7001evbdsqbevzepm",
+   "slug": "i-autoc",
+   "name": "i-Autoc",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 2
+   }
+  },
+  {
+   "id": "cmtfoi9lx003evbdsydg9ju9q",
+   "slug": "nvent-hoffman",
+   "name": "nVent HOFFMAN",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  },
+  {
+   "id": "cmtfoi9d0001jvbdsc8zj6bdm",
+   "slug": "onsemi",
+   "name": "onsemi",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 6
+   }
+  }
+ ]
+}

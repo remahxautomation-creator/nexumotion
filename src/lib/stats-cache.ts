@@ -42,6 +42,15 @@ const store = new Map<string, Entry>();
 export const STATS_TTL_MS = 60 * 60 * 1000;
 
 /**
+ * How long a snapshot fallback is trusted before the database is tried again.
+ *
+ * Short on purpose. The fallback exists to survive an outage, not to replace
+ * the database, so once the outage clears the site should return to live data
+ * within a minute rather than an hour.
+ */
+const FALLBACK_TTL_MS = 60 * 1000;
+
+/**
  * Returns a cached value, or computes and caches it.
  *
  * Deliberately does NOT share in-flight promises between requests. Workers
@@ -51,19 +60,39 @@ export const STATS_TTL_MS = 60 * 60 * 1000;
  * stored, so a few concurrent misses may duplicate a query. That is a far
  * cheaper problem than the one being solved.
  *
- * Failures are not cached: a query that throws propagates to the caller and the
- * next request retries. Callers that must not fail the page keep their own
- * try/catch, as WhyEngineers does.
+ * `fallback` is what makes a database outage survivable. Without it, a failed
+ * query throws out of a server component and Next renders a 500 for the whole
+ * page — which is exactly what happened when D1's daily read limit was hit: the
+ * home page, brand index and about page all went down together, while the pages
+ * that touch no data stayed up. With a fallback the page still renders, from
+ * the committed snapshot in src/content/catalog-snapshot.json.
+ *
+ * If no fallback is given the error propagates, unchanged from before. Callers
+ * that must not fail the page either pass one or keep their own try/catch, as
+ * WhyEngineers does.
  */
 export async function cachedStat<T>(
   key: string,
   compute: () => Promise<T>,
-  ttlMs: number = STATS_TTL_MS
+  options: { ttlMs?: number; fallback?: T } = {}
 ): Promise<T> {
+  const { ttlMs = STATS_TTL_MS, fallback } = options;
+
   const hit = store.get(key);
   if (hit && hit.expires > Date.now()) return hit.value as T;
 
-  const value = await compute();
-  store.set(key, { value, expires: Date.now() + ttlMs });
-  return value;
+  try {
+    const value = await compute();
+    store.set(key, { value, expires: Date.now() + ttlMs });
+    return value;
+  } catch (err) {
+    if (fallback === undefined) throw err;
+    console.warn(
+      `[stats] "${key}" fell back to the catalogue snapshot: ${String(err).slice(0, 200)}`
+    );
+    // Cached briefly so an outage does not mean re-attempting a failing query on
+    // every single request, while still recovering quickly once it passes.
+    store.set(key, { value: fallback, expires: Date.now() + FALLBACK_TTL_MS });
+    return fallback;
+  }
 }

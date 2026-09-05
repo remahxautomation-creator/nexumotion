@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { cachedStat } from "@/lib/stats-cache";
+import snapshot from "@/content/catalog-snapshot.json";
 import { featuredBrands } from "@/content/site-content";
 import { getT } from "@/i18n/server";
 
@@ -34,21 +35,24 @@ export default async function BrandWall() {
   // visitors and changes only on catalogue import, so it is cached alongside
   // the other catalogue statistics — see src/lib/stats-cache.ts for why this is
   // an in-isolate Map rather than the KV layer that was reverted.
-  const rows = await cachedStat("home.brandWall", () =>
-    prisma.brand.findMany({
-      where: {
-        slug: { in: slugs },
-        isActive: true,
-        // The gate that stops dead links.
-        products: { some: { isActive: true } },
-      },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        _count: { select: { products: { where: { isActive: true } } } },
-      },
-    })
+  const rows = await cachedStat(
+    "home.brandWall",
+    () =>
+      prisma.brand.findMany({
+        where: {
+          slug: { in: slugs },
+          isActive: true,
+          // The gate that stops dead links.
+          products: { some: { isActive: true } },
+        },
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          _count: { select: { products: { where: { isActive: true } } } },
+        },
+      }),
+    { fallback: snapshot.brandWall }
   );
 
   if (!rows.length) return null;
