@@ -6,6 +6,7 @@ import ControlPanelArt from "@/components/home/ControlPanelArt";
 import { companyFacts } from "@/content/site-content";
 import { getT } from "@/i18n/server";
 import { prisma } from "@/lib/prisma";
+import { cachedStat } from "@/lib/stats-cache";
 
 export const dynamic = "force-dynamic";
 
@@ -16,9 +17,11 @@ export async function generateMetadata() {
 
 export default async function AboutPage() {
   const { t } = await getT();
+  // Two whole-table counts rendered as headline figures. Cached with the rest
+  // of the catalogue statistics; they move on import, not on request.
   const [brandCount, categoryCount] = await Promise.all([
-    prisma.brand.count(),
-    prisma.category.count(),
+    cachedStat("stats.brandCountAll", () => prisma.brand.count()),
+    cachedStat("stats.categoryCountAll", () => prisma.category.count()),
   ]);
 
   const values = [

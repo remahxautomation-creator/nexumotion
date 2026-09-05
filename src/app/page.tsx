@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Cpu, Zap, Shield, Truck, FileText, Upload } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { cachedStat } from "@/lib/stats-cache";
 import ProductCard from "@/components/product/ProductCard";
 import ControlPanelArt from "@/components/home/ControlPanelArt";
 import Customers from "@/components/home/Customers";
@@ -15,17 +16,31 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const { t } = await getT();
+  // Everything except the featured products is a catalogue-wide aggregate that
+  // changes on import, not on request. Left uncached these were the single
+  // largest source of D1 row reads on the site — see src/lib/stats-cache.ts.
+  //
+  // `home.specCount` is deliberately the same cache key WhyEngineers uses, so
+  // the two components that both need this figure now cost one scan between
+  // them per hour instead of one full ProductSpec scan each, per request.
   const [categories, brandCount, featured, specCount] = await Promise.all([
-    prisma.category.findMany({ orderBy: { sortOrder: "asc" }, include: { _count: { select: { products: true } } } }),
+    cachedStat("home.categories", () =>
+      prisma.category.findMany({
+        orderBy: { sortOrder: "asc" },
+        include: { _count: { select: { products: true } } },
+      })
+    ),
     // A count, not rows: the brand wall fetches its own curated list, and this
     // is only ever rendered as a number. The previous findMany pulled 18 full
     // records to compute a length that was then capped at 18 anyway, so the
     // headline could never exceed "50+" no matter how many brands were stocked.
-    prisma.brand.count({
-      where: { isActive: true, products: { some: { isActive: true } } },
-    }),
+    cachedStat("stats.activeBrandCount", () =>
+      prisma.brand.count({
+        where: { isActive: true, products: { some: { isActive: true } } },
+      })
+    ),
     prisma.product.findMany({ where: { isFeatured: true, isActive: true }, take: 8, include: { brand: true } }),
-    prisma.productSpec.count(),
+    cachedStat("stats.specCount", () => prisma.productSpec.count()),
   ]);
 
   return (

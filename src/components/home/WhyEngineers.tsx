@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FileText, GitCompareArrows, PackageSearch, ListChecks } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { cachedStat } from "@/lib/stats-cache";
 import { getT } from "@/i18n/server";
 
 /**
@@ -17,12 +18,23 @@ import { getT } from "@/i18n/server";
  */
 async function getFacts() {
   try {
+    // Five whole-table counts. Uncached, this block alone examined ~15,300 rows
+    // every time the home page rendered, and `specs` repeated the same
+    // ProductSpec scan page.tsx had just done. Sharing the cache keys with
+    // page.tsx collapses both to one scan per key per hour — the counts change
+    // on catalogue import, which is weekly at best.
     const [products, brands, specs, datasheets, crossRefs] = await Promise.all([
-      prisma.product.count({ where: { isActive: true } }),
-      prisma.brand.count({ where: { isActive: true, products: { some: { isActive: true } } } }),
-      prisma.productSpec.count(),
-      prisma.product.count({ where: { isActive: true, NOT: { datasheetUrl: null } } }),
-      prisma.crossReference.count(),
+      cachedStat("stats.activeProductCount", () =>
+        prisma.product.count({ where: { isActive: true } })
+      ),
+      cachedStat("stats.activeBrandCount", () =>
+        prisma.brand.count({ where: { isActive: true, products: { some: { isActive: true } } } })
+      ),
+      cachedStat("stats.specCount", () => prisma.productSpec.count()),
+      cachedStat("stats.datasheetCount", () =>
+        prisma.product.count({ where: { isActive: true, NOT: { datasheetUrl: null } } })
+      ),
+      cachedStat("stats.crossRefCount", () => prisma.crossReference.count()),
     ]);
     return { products, brands, specs, datasheets, crossRefs };
   } catch {
