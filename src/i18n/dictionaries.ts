@@ -92,6 +92,13 @@ export const dictionaries = {
     "footer.crossRefTool": "Cross-Reference Tool",
     "footer.shipping": "Shipping Info",
     "footer.support": "Support — MENA",
+    "error.title": "This page could not load",
+    "error.body":
+      "Our catalogue is briefly unavailable. Everything else still works — and you do not have to wait to reach us. Send the manufacturer and part number and we will come back with price and lead time.",
+    "error.inquiryCta": "Request a part instead",
+    "error.retry": "Try again",
+    "error.home": "Back to home",
+    "error.contact": "Or reach us directly:",
     "footer.location": "Egypt",
     "footer.hours": "Sun–Thu, 9:00–17:00 (Cairo)",
     "footer.rights":
@@ -581,6 +588,13 @@ export const dictionaries = {
     "footer.crossRefTool": "أداة مطابقة الأكواد",
     "footer.shipping": "معلومات الشحن",
     "footer.support": "الدعم — المنطقة",
+    "error.title": "تعذر تحميل هذه الصفحة",
+    "error.body":
+      "الكتالوج غير متاح مؤقتًا. بقية الموقع تعمل بشكل طبيعي — ولا حاجة للانتظار للتواصل معنا. أرسل اسم المصنع ورقم القطعة وسنعود إليك بالسعر ومدة التوريد.",
+    "error.inquiryCta": "اطلب قطعة بدلاً من ذلك",
+    "error.retry": "أعد المحاولة",
+    "error.home": "العودة للرئيسية",
+    "error.contact": "أو تواصل معنا مباشرة:",
     "footer.location": "مصر",
     "footer.hours": "الأحد–الخميس، ٩:٠٠–١٧:٠٠ (القاهرة)",
     "footer.rights":
