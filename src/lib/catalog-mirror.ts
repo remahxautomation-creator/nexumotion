@@ -15,10 +15,17 @@
  * are loaded lazily and independently: a search reads listing.json only and
  * never pays for the 756 KB of specs that only product detail needs.
  *
- * This is a fallback, not a cache. Nothing here is consulted while the database
- * is answering — every caller tries Prisma first. It is deliberately read-only
- * and has no notion of stock movement or price changes since the mirror was
- * generated, which is why callers surface it as degraded rather than normal.
+ * This is the primary read path for catalogue browsing, not a fallback. It
+ * began as one — consulted only when Prisma threw — but that left the site
+ * paying for 1,025 rarely-changing products on every request, which is what
+ * exhausted the read limit in the first place. Callers now read the mirror
+ * first and drop to D1 only when a slug is missing from it, which happens in
+ * the window between a catalogue import and the next `npm run mirror`.
+ *
+ * It is read-only and has no notion of stock or price movement since it was
+ * generated. That is acceptable because the catalogue is published content —
+ * every line is BACKORDER and quoted by inquiry — but it is the reason order
+ * placement re-reads stock from D1 rather than trusting anything here.
  *
  * Regenerate with `npx tsx scripts/build-mirror.ts` after any catalogue import.
  */
