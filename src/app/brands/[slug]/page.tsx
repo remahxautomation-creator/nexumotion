@@ -117,18 +117,7 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
           {view.products.map((p) => (
             <ProductCard
               key={p.id}
-              p={{
-                id: p.id,
-                sku: p.sku,
-                name: p.name,
-                slug: p.slug,
-                price: p.price,
-                comparePrice: p.comparePrice,
-                stockStatus: p.stockStatus,
-                stockQty: p.stockQty,
-                brandName: p.brandName,
-                image: p.image,
-              }}
+              p={p}
             />
           ))}
         </div>

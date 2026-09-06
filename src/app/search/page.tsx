@@ -149,12 +149,7 @@ export default async function SearchPage({
           {products.map((p) => (
             <ProductCard
               key={p.id}
-              p={{
-                id: p.id, sku: p.sku, name: p.name, slug: p.slug,
-                price: p.price, comparePrice: p.comparePrice,
-                stockStatus: p.stockStatus, stockQty: p.stockQty,
-                brandName: p.brandName, image: p.image,
-              }}
+              p={p}
             />
           ))}
         </div>

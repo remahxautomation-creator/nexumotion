@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { parseQuery, describeParse, type ParsedQuery } from "@/lib/spec-parser";
 import { extractFilters, aiEnabled } from "@/lib/ai";
+import { isRateLimited, clientIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
@@ -9,6 +10,21 @@ export async function POST(req: NextRequest) {
 
   if (!query || query.length < 2 || query.length > 500) {
     return NextResponse.json({ error: "Enter a requirement to search for" }, { status: 400 });
+  }
+
+  // This is the only public endpoint that spends money per call: it hits a paid
+  // AI API and runs three unbounded catalogue queries. Every other public POST
+  // in this app is already limited; this one was missed. 20/hour is well above
+  // what a person exploring the catalogue does and well below what a script
+  // needs to be worth running.
+  //
+  // Checked after validation so a malformed body is rejected without consuming
+  // anyone's allowance.
+  if (isRateLimited(`assistant:ip:${clientIp(req)}`, 20, 60 * 60 * 1000)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment and try again." },
+      { status: 429 }
+    );
   }
 
   const [categories, brandRows, specTemplates] = await Promise.all([

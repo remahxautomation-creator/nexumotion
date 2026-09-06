@@ -121,7 +121,6 @@ function b64(input: string): string {
  * subjects are left alone so the common case stays readable in logs.
  */
 function encodeHeader(value: string): string {
-  // eslint-disable-next-line no-control-regex
   return /^[\x20-\x7E]*$/.test(value) ? value : `=?UTF-8?B?${b64(value)}?=`;
 }
 
