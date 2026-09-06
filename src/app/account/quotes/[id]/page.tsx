@@ -5,9 +5,11 @@ import { auth } from "@/lib/auth";
 import { formatPrice } from "@/lib/utils";
 import AcceptQuote from "@/components/quotes/AcceptQuote";
 import { getT } from "@/i18n/server";
+import { privatePage } from "@/lib/seo";
+
+export const metadata = privatePage("Quote");
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Quote" };
 
 export default async function QuoteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();

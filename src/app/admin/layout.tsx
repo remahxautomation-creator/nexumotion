@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { privatePage } from "@/lib/seo";
 import { LayoutDashboard, PackageSearch, Boxes, PlusCircle, Upload, BarChart3, FileText, Inbox } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { getT } from "@/i18n/server";
 
-export const metadata = { title: "Admin" };
+export const metadata = privatePage("Admin");
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();

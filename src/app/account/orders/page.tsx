@@ -4,11 +4,12 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { formatPrice } from "@/lib/utils";
 import { getT } from "@/i18n/server";
+import { noIndex } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export async function generateMetadata() {
   const { t } = await getT();
-  return { title: t("meta.orders") };
+  return { title: t("meta.orders"), robots: noIndex };
 }
 
 const STATUS_STYLES: Record<string, string> = {

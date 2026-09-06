@@ -5,11 +5,12 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import DeleteSavedSearch from "@/components/search/DeleteSavedSearch";
 import { getT } from "@/i18n/server";
+import { noIndex } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export async function generateMetadata() {
   const { t } = await getT();
-  return { title: t("meta.savedSearches") };
+  return { title: t("meta.savedSearches"), robots: noIndex };
 }
 
 export default async function SavedSearchesPage() {

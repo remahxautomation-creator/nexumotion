@@ -6,9 +6,10 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { formatPrice } from "@/lib/utils";
 import { getT } from "@/i18n/server";
+import { privatePage } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Order Confirmation" };
+export const metadata = privatePage("Order Confirmation");
 
 export default async function OrderPage({
   params,

@@ -5,11 +5,12 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import NewProjectForm from "@/components/projects/NewProjectForm";
 import { getT } from "@/i18n/server";
+import { noIndex } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export async function generateMetadata() {
   const { t } = await getT();
-  return { title: t("meta.projects") };
+  return { title: t("meta.projects"), robots: noIndex };
 }
 
 export default async function ProjectsPage() {

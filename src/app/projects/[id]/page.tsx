@@ -7,9 +7,11 @@ import ProjectItemRow from "@/components/projects/ProjectItemRow";
 import BomImport from "@/components/projects/BomImport";
 import ProjectActions from "@/components/projects/ProjectActions";
 import { getT } from "@/i18n/server";
+import { privatePage } from "@/lib/seo";
+
+export const metadata = privatePage("Project");
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Project" };
 
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();

@@ -4,11 +4,12 @@ import { FileText } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { getT } from "@/i18n/server";
+import { noIndex } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export async function generateMetadata() {
   const { t } = await getT();
-  return { title: t("meta.quotes") };
+  return { title: t("meta.quotes"), robots: noIndex };
 }
 
 const BADGE: Record<string, string> = {
