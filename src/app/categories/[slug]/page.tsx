@@ -5,7 +5,7 @@ import FilterSidebar from "@/components/search/FilterSidebar";
 import SaveSearchButton from "@/components/search/SaveSearchButton";
 import { getT } from "@/i18n/server";
 import { parseJsonArray } from "@/lib/utils";
-import { mirrorCategory, type MirrorProduct } from "@/lib/catalog-mirror";
+import { mirrorCategoryFiltered, type MirrorProduct } from "@/lib/catalog-mirror";
 import OfflineCatalogueNotice from "@/components/catalog/OfflineCatalogueNotice";
 
 export const dynamic = "force-dynamic";
@@ -20,47 +20,34 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const sp = await searchParams;
   const { t } = await getT();
 
-  // Hybrid on purpose. An unfiltered category listing is published content and
-  // comes from the mirror at zero database cost — that is the overwhelming
-  // majority of views. Parametric spec filtering genuinely needs the database,
-  // because matching on specs means joining 14,026 spec rows, which the mirror
-  // deliberately does not carry on the listing path.
-  //
-  // So: filters in the URL means query D1; otherwise serve the mirror.
-  const hasSpecFilter = Object.keys(sp).some(
-    (k) => k !== "brand" && k !== "stock" && typeof sp[k] === "string" && sp[k] !== ""
-  );
+  // Every filter now runs against the mirror. Spec filtering used to fall
+  // through to D1, on the reasoning that matching specs meant joining 14,026
+  // rows — but that left a filtered category as the one catalogue page the read
+  // limit could still take down, and worse, the mirror path passed no filter
+  // definitions at all, so the spec controls silently disappeared from every
+  // category page. The index is precomputed at build time now, which turns a
+  // filter into a set intersection and puts the controls back.
+  const urlSpecs: Record<string, string> = {};
+  for (const [k, v] of Object.entries(sp)) {
+    if (k !== "brand" && k !== "stock" && typeof v === "string" && v !== "") urlSpecs[k] = v;
+  }
 
-  if (!hasSpecFilter) {
-    const mirrored = await mirrorCategory(slug).catch(() => null);
-    if (mirrored) {
-      const brandFilterSlug = typeof sp.brand === "string" ? sp.brand : undefined;
-      const wantInStock = sp.stock === "in";
+  const mirrored = await mirrorCategoryFiltered(slug, {
+    brandSlug: typeof sp.brand === "string" ? sp.brand : undefined,
+    inStockOnly: sp.stock === "in",
+    specs: urlSpecs,
+  }).catch(() => null);
 
-      // Brand and stock filters are cheap to apply in memory, so they keep
-      // working without touching the database.
-      const filtered = mirrored.products.filter(
-        (p) =>
-          (!brandFilterSlug || p.brandSlug === brandFilterSlug) &&
-          (!wantInStock || p.stockStatus === "IN_STOCK" || p.stockStatus === "LOW_STOCK")
-      );
-
-      return renderCategory({
-        name: mirrored.category.name,
-        description: mirrored.category.description,
-        products: filtered,
-        filters: [],
-        brands: [
-          ...new Map(
-            mirrored.products.map((p) => [p.brandSlug, { name: p.brandName, slug: p.brandSlug }])
-          ).values(),
-        ]
-          .filter((b) => b.slug)
-          .sort((a, b) => a.name.localeCompare(b.name)),
-        offline: false,
-        t,
-      });
-    }
+  if (mirrored) {
+    return renderCategory({
+      name: mirrored.category.name,
+      description: mirrored.category.description,
+      products: mirrored.products,
+      filters: mirrored.filters,
+      brands: mirrored.brands,
+      offline: false,
+      t,
+    });
   }
 
   let category: Awaited<ReturnType<typeof loadCategory>> = null;
@@ -71,14 +58,14 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     // Filters need the database. Without it, fall back to the unfiltered
     // mirror listing rather than showing an error — a broader result set is a
     // better answer than none.
-    const mirrored = await mirrorCategory(slug).catch(() => null);
-    if (!mirrored) notFound();
+    const fallback = await mirrorCategoryFiltered(slug, {}).catch(() => null);
+    if (!fallback) notFound();
     return renderCategory({
-      name: mirrored.category.name,
-      description: mirrored.category.description,
-      products: mirrored.products,
-      filters: [],
-      brands: [],
+      name: fallback.category.name,
+      description: fallback.category.description,
+      products: fallback.products,
+      filters: fallback.filters,
+      brands: fallback.brands,
       offline: true,
       t,
     });

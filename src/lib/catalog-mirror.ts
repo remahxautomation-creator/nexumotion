@@ -40,12 +40,27 @@ type RawBrand = { id: string; slug: string; name: string; country: string | null
 type RawCategory = { id: string; slug: string; name: string; description: string | null };
 type RawCrossRef = { k: string; i: string };
 
+export type MirrorFilter = {
+  key: string;
+  name: string;
+  unit: string | null;
+  dataType: string;
+  options: string[];
+};
+
 type ListingFile = {
   generatedAt: string;
   brands: RawBrand[];
   categories: RawCategory[];
   products: RawProduct[];
   crossRefs: RawCrossRef[];
+  filtersByCategory: Record<string, MirrorFilter[]>;
+};
+
+/** categoryId -> specKey -> value -> product ids. */
+type SpecIndexFile = {
+  generatedAt: string;
+  specIndex: Record<string, Record<string, Record<string, string[]>>>;
 };
 type DetailFile = {
   generatedAt: string;
@@ -135,6 +150,7 @@ type ListingIndex = {
   categoriesBySlug: Map<string, RawCategory>;
   categoriesById: Map<string, RawCategory>;
   crossRefs: RawCrossRef[];
+  filtersByCategory: Record<string, MirrorFilter[]>;
 };
 
 let index: ListingIndex | null = null;
@@ -195,6 +211,7 @@ async function getIndex(): Promise<ListingIndex> {
     categoriesBySlug: new Map(file.categories.map((c) => [c.slug, c])),
     categoriesById: new Map(file.categories.map((c) => [c.id, c])),
     crossRefs: file.crossRefs,
+    filtersByCategory: file.filtersByCategory ?? {},
   };
   return index;
 }
@@ -368,6 +385,66 @@ export async function mirrorBrandsByNames(
     if (wanted.has(b.name)) out.push({ id: b.id, slug: b.slug, name: b.name });
   }
   return out;
+}
+
+/**
+ * A category listing with brand, stock and parametric spec filters applied.
+ *
+ * Spec filtering used to be the one catalogue path still going to the database,
+ * on the reasoning that matching specs meant joining 14,026 rows. Precomputing
+ * the index at build time removes that: `spec-index.json` maps
+ * category -> key -> value -> product ids, so a filter is a set intersection.
+ *
+ * The index is only fetched when a spec filter is actually present, so the
+ * common unfiltered view never pays for it.
+ */
+export async function mirrorCategoryFiltered(
+  slug: string,
+  opts: { brandSlug?: string; inStockOnly?: boolean; specs?: Record<string, string> }
+): Promise<{
+  category: RawCategory;
+  products: MirrorProduct[];
+  filters: MirrorFilter[];
+  brands: Array<{ name: string; slug: string }>;
+} | null> {
+  const idx = await getIndex();
+  const category = idx.categoriesBySlug.get(slug);
+  if (!category) return null;
+
+  const inCategory = idx.byCategoryId.get(category.id) ?? [];
+
+  // Brands offered by the facet come from the unfiltered set, so narrowing by
+  // one brand does not remove every other brand from the control.
+  const brands = [
+    ...new Map(inCategory.map((p) => [p.brandSlug, { name: p.brandName, slug: p.brandSlug }])).values(),
+  ]
+    .filter((b) => b.slug)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  let products = inCategory;
+
+  const specEntries = Object.entries(opts.specs ?? {}).filter(([, v]) => v !== "");
+  if (specEntries.length > 0) {
+    const { specIndex } = await loadFile<SpecIndexFile>("spec-index.json");
+    const forCategory = specIndex[category.id] ?? {};
+    for (const [key, value] of specEntries) {
+      const ids = new Set(forCategory[key]?.[value] ?? []);
+      products = products.filter((p) => ids.has(p.id));
+      if (products.length === 0) break;
+    }
+  }
+
+  if (opts.brandSlug) products = products.filter((p) => p.brandSlug === opts.brandSlug);
+  if (opts.inStockOnly) {
+    products = products.filter((p) => p.stockStatus === "IN_STOCK" || p.stockStatus === "LOW_STOCK");
+  }
+
+  return {
+    category,
+    products: products.slice(0, 60),
+    filters: idx.filtersByCategory[category.id] ?? [],
+    brands,
+  };
 }
 
 /**

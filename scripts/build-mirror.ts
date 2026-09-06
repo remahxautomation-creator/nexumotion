@@ -141,10 +141,74 @@ const specs = all<{
   return acc;
 }, {});
 
+// ── Filter definitions and a value index, per category ──────────────────────
+//
+// Two things the listing path needs but the raw spec dump cannot cheaply give:
+// the filter controls a category offers, and which products match a chosen
+// value. Precomputing both here keeps filtering off the database entirely —
+// previously a filtered category view was the one catalogue page still issuing
+// a 14,026-row spec join per request.
+//
+// Only filterable, visible templates are included, and only values that at
+// least one product actually has, so the UI cannot offer a filter that returns
+// nothing.
+const templates = all<{
+  categoryId: string;
+  key: string;
+  name: string;
+  unit: string | null;
+  dataType: string;
+  options: string | null;
+  sortOrder: number;
+}>(
+  `SELECT categoryId, key, name, unit, dataType, options, sortOrder
+     FROM SpecTemplate
+    WHERE isFilterable=1 AND isVisible=1
+    ORDER BY sortOrder ASC`
+);
+
+const specRows = all<{ productId: string; specKey: string; value: string | null }>(
+  `SELECT productId, specKey, value FROM ProductSpec WHERE value IS NOT NULL AND value <> ''`
+);
+
+const productCategory = new Map<string, string | null>(
+  all<{ id: string; categoryId: string | null }>(
+    `SELECT id, categoryId FROM Product WHERE isActive=1`
+  ).map((p) => [p.id, p.categoryId])
+);
+
+// categoryId -> specKey -> value -> [productId]
+const specIndex: Record<string, Record<string, Record<string, string[]>>> = {};
+for (const r of specRows) {
+  const catId = productCategory.get(r.productId);
+  if (!catId || !r.value) continue;
+  ((specIndex[catId] ||= {})[r.specKey] ||= {})[r.value] ||= [];
+  specIndex[catId][r.specKey][r.value].push(r.productId);
+}
+
+const filtersByCategory: Record<
+  string,
+  Array<{ key: string; name: string; unit: string | null; dataType: string; options: string[] }>
+> = {};
+for (const tpl of templates) {
+  const present = specIndex[tpl.categoryId]?.[tpl.key];
+  if (!present) continue;
+  const options = Object.keys(present).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  if (options.length === 0) continue;
+  (filtersByCategory[tpl.categoryId] ||= []).push({
+    key: tpl.key,
+    name: tpl.name,
+    unit: tpl.unit,
+    dataType: tpl.dataType,
+    options,
+  });
+}
+
 const generatedAt = new Date().toISOString();
 
 const files: Array<[string, unknown]> = [
-  ["listing.json", { generatedAt, brands, categories, products, crossRefs }],
+  ["listing.json", { generatedAt, brands, categories, products, crossRefs, filtersByCategory }],
+  ["spec-index.json", { generatedAt, specIndex }],
   ["detail.json", { generatedAt, detail }],
   ["specs.json", { generatedAt, specs }],
 ];
