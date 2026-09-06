@@ -130,6 +130,7 @@ type ListingIndex = {
   byBrandSlug: Map<string, MirrorProduct[]>;
   byCategoryId: Map<string, MirrorProduct[]>;
   bySlug: Map<string, MirrorProduct>;
+  bySku: Map<string, MirrorProduct>;
   brandsBySlug: Map<string, RawBrand>;
   categoriesBySlug: Map<string, RawCategory>;
   categoriesById: Map<string, RawCategory>;
@@ -166,9 +167,11 @@ async function getIndex(): Promise<ListingIndex> {
   const byBrandSlug = new Map<string, MirrorProduct[]>();
   const byCategoryId = new Map<string, MirrorProduct[]>();
   const bySlug = new Map<string, MirrorProduct>();
+  const bySku = new Map<string, MirrorProduct>();
 
   for (const p of products) {
     bySlug.set(p.slug, p);
+    bySku.set(p.sku, p);
     if (p.brandSlug) {
       const list = byBrandSlug.get(p.brandSlug);
       if (list) list.push(p);
@@ -187,6 +190,7 @@ async function getIndex(): Promise<ListingIndex> {
     byBrandSlug,
     byCategoryId,
     bySlug,
+    bySku,
     brandsBySlug: new Map(file.brands.map((b) => [b.slug, b])),
     categoriesBySlug: new Map(file.categories.map((c) => [c.slug, c])),
     categoriesById: new Map(file.categories.map((c) => [c.id, c])),
@@ -321,6 +325,69 @@ export async function mirrorProduct(slug: string): Promise<{
     specs,
     related,
   };
+}
+
+/**
+ * Categories by slug, with their product counts — for the systems pages, which
+ * show the handful of categories that make up a given system.
+ *
+ * The count here is of *active* products, where the live query counted every
+ * product regardless. That is a deliberate difference, not an oversight: the
+ * number is rendered next to a link into the category listing, and that listing
+ * only shows active lines. Counting inactive ones made the label disagree with
+ * the page it led to.
+ */
+export async function mirrorCategoriesBySlugs(
+  slugs: string[]
+): Promise<Array<{ id: string; slug: string; name: string; _count: { products: number } }>> {
+  const idx = await getIndex();
+  return slugs
+    .map((slug) => idx.categoriesBySlug.get(slug))
+    .filter((c): c is RawCategory => c !== undefined)
+    .map((c) => ({
+      id: c.id,
+      slug: c.slug,
+      name: c.name,
+      _count: { products: idx.byCategoryId.get(c.id)?.length ?? 0 },
+    }));
+}
+
+/**
+ * Brands by exact name.
+ *
+ * Systems reference their brands by display name rather than slug, matching the
+ * live `where: { name: { in: [...] } }`, so the lookup is by name here too.
+ */
+export async function mirrorBrandsByNames(
+  names: string[]
+): Promise<Array<{ id: string; slug: string; name: string }>> {
+  const idx = await getIndex();
+  const wanted = new Set(names);
+  const out: Array<{ id: string; slug: string; name: string }> = [];
+  for (const b of idx.brandsBySlug.values()) {
+    if (wanted.has(b.name)) out.push({ id: b.id, slug: b.slug, name: b.name });
+  }
+  return out;
+}
+
+/**
+ * One product by exact SKU, for the inquiry form's prefill.
+ *
+ * This is the path a visitor takes from an out-of-stock product or an empty
+ * search result — the two moments where someone has told us exactly what they
+ * want and we have nothing to sell them. It is the most valuable link on the
+ * site, so it must not depend on the database being reachable.
+ */
+export async function mirrorProductBySku(sku: string): Promise<{
+  sku: string;
+  name: string;
+  slug: string;
+  brand: { name: string };
+} | null> {
+  const idx = await getIndex();
+  const p = idx.bySku.get(sku);
+  if (!p) return null;
+  return { sku: p.sku, name: p.name, slug: p.slug, brand: { name: p.brandName } };
 }
 
 /** When the mirror was generated, for the staleness notice pages show. */

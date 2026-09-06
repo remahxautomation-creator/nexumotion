@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PackageSearch, Clock, ShieldCheck } from "lucide-react";
 import PartInquiryForm from "@/components/inquiry/PartInquiryForm";
 import { prisma } from "@/lib/prisma";
+import { mirrorProductBySku } from "@/lib/catalog-mirror";
 import { getT } from "@/i18n/server";
 import { contact } from "@/content/site-content";
 import { telHref, mailHref } from "@/lib/contact";
@@ -26,6 +27,24 @@ export async function generateMetadata(): Promise<Metadata> {
  * fields. An unknown SKU is not an error: that is exactly the "we do not carry
  * this" case, and the form simply opens with the value prefilled and editable.
  */
+/** Prefill for the form: mirror first, database only for very new SKUs. */
+async function loadPrefill(sku: string) {
+  const mirrored = await mirrorProductBySku(sku).catch(() => null);
+  if (mirrored) return mirrored;
+
+  try {
+    return await prisma.product.findUnique({
+      where: { sku },
+      select: { sku: true, name: true, slug: true, brand: { select: { name: true } } },
+    });
+  } catch (err) {
+    // The form still works — it just opens without the part details filled in,
+    // and the SKU the visitor arrived with is passed through regardless.
+    console.warn(`[inquiry] prefill unavailable for ${sku}: ${String(err).slice(0, 160)}`);
+    return null;
+  }
+}
+
 export default async function InquiryPage({
   searchParams,
 }: {
@@ -34,12 +53,10 @@ export default async function InquiryPage({
   const { sku = "" } = await searchParams;
   const { t } = await getT();
 
-  const product = sku
-    ? await prisma.product.findUnique({
-        where: { sku },
-        select: { sku: true, name: true, slug: true, brand: { select: { name: true } } },
-      })
-    : null;
+  // Mirror first. This page is where an out-of-stock product and an empty
+  // search result both lead, so a database problem must never break it — the
+  // visitor has already told us the part number they want.
+  const product = sku ? await loadPrefill(sku) : null;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
