@@ -4,6 +4,7 @@ import {
 } from "lucide-react";
 import ControlPanelArt from "@/components/home/ControlPanelArt";
 import { companyFacts } from "@/content/site-content";
+import LocationMap from "@/components/layout/LocationMap";
 import { getT } from "@/i18n/server";
 import { prisma } from "@/lib/prisma";
 import { cachedStat } from "@/lib/stats-cache";
@@ -133,6 +134,9 @@ export default async function AboutPage() {
           <Link href="/brands" className="text-[#0A6286] font-medium">{t("home.brands.all")}</Link>
         </div>
       </section>
+
+      {/* Where we are */}
+      <LocationMap />
 
       {/* CTA */}
       <section className="surface-inverse">

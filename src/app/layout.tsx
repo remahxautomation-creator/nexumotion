@@ -12,6 +12,7 @@ import SiteGuide from "@/components/chat/SiteGuide";
 import ContactDock from "@/components/chat/ContactDock";
 import GoogleTag from "@/components/analytics/GoogleTag";
 import GoogleTagManager from "@/components/analytics/GoogleTagManager";
+import LocalBusinessSchema from "@/components/seo/LocalBusinessSchema";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
@@ -98,6 +99,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           rtl ? "font-arabic" : ""
         } min-h-screen flex flex-col antialiased`}
       >
+        {/* Emitted on every page rather than just /about: Google may crawl any
+            URL first, and the business identity should be discoverable wherever
+            it lands. It is a static string, so the cost is bytes, not work. */}
+        <LocalBusinessSchema siteUrl={process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexumotion.com"} />
         <GoogleTagManager />
         <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
         <I18nProvider locale={locale}>

@@ -182,6 +182,43 @@ export const contact = {
   whatsappGreeting: "Hello, I'd like to ask about a part.",
 };
 
+/**
+ * Where the business physically is.
+ *
+ * 10th of Ramadan is Egypt's principal industrial city, which is worth stating
+ * plainly to this audience: a buyer specifying a VFD cares whether their
+ * supplier sits inside the industrial belt or across the country from it.
+ *
+ * Coordinates are the source of truth and drive both the embedded map and the
+ * LocalBusiness structured data, so the pin and the schema can never disagree.
+ * They came from the Google Maps link supplied by the owner.
+ *
+ * The address stops at city and governorate deliberately. Those are certain;
+ * a street line reverse-geocoded from a dropped pin is not, and publishing a
+ * wrong street address is worse than publishing none — it also has to match
+ * the Google Business Profile exactly, or the listing's verification and local
+ * ranking suffer. Add `street` here once the registered address is confirmed
+ * and both the map card and the schema will pick it up.
+ */
+export const location = {
+  lat: 30.2984627,
+  lng: 31.7469096,
+  street: null as string | null,
+  city: { en: "10th of Ramadan City", ar: "مدينة العاشر من رمضان" },
+  governorate: { en: "Sharqia Governorate", ar: "محافظة الشرقية" },
+  country: { en: "Egypt", ar: "مصر" },
+  countryCode: "EG",
+  /** The pin the owner supplied, for the "open in Google Maps" link. */
+  mapsUrl: "https://www.google.com/maps/@30.2984627,31.7469096,16z",
+};
+
+/** "10th of Ramadan City, Sharqia Governorate, Egypt" in either language. */
+export function formatAddress(lang: "en" | "ar"): string {
+  return [location.street, location.city[lang], location.governorate[lang], location.country[lang]]
+    .filter(Boolean)
+    .join(lang === "ar" ? "، " : ", ");
+}
+
 // ── Featured brands ─────────────────────────────────────────────────────────
 // The manufacturers shown on the home page, in this order. Curated rather than
 // "top 18 by product count", because the wall is a statement about what the
