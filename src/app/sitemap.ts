@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { systems } from "@/content/systems";
+import { mirrorSitemapEntries } from "@/lib/catalog-mirror";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -9,7 +10,18 @@ const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 // container, CI). Prerendering it there fails the whole build.
 export const dynamic = "force-dynamic";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+/**
+ * Catalogue URLs for the sitemap.
+ *
+ * Read from the mirror. This used to query D1 with no fallback, so when the
+ * read limit was hit the sitemap silently degraded to an empty document — a
+ * 200 response listing zero URLs, which is the worst possible failure mode
+ * because nothing looks broken while Google is told the site has no pages.
+ */
+async function catalogueUrls() {
+  const mirrored = await mirrorSitemapEntries().catch(() => null);
+  if (mirrored) return mirrored;
+
   const [products, categories, brands] = await Promise.all([
     prisma.product.findMany({
       where: { isActive: true },
@@ -19,6 +31,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     prisma.category.findMany({ where: { isActive: true }, select: { slug: true } }),
     prisma.brand.findMany({ where: { isActive: true }, select: { slug: true } }),
   ]);
+  return { products, categories, brands };
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const { products, categories, brands } = await catalogueUrls();
 
   return [
     { url: BASE, changeFrequency: "daily", priority: 1 },

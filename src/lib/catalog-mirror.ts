@@ -467,6 +467,30 @@ export async function mirrorProductBySku(sku: string): Promise<{
   return { sku: p.sku, name: p.name, slug: p.slug, brand: { name: p.brandName } };
 }
 
+/**
+ * Every catalogue URL, for the sitemap.
+ *
+ * `lastModified` is the mirror's generation time rather than each product's own
+ * updatedAt, which the mirror does not carry. That is the honest value: it is
+ * when this data was last published, and publishing is what changes the page a
+ * crawler sees.
+ */
+export async function mirrorSitemapEntries(): Promise<{
+  products: Array<{ slug: string; updatedAt: Date }>;
+  categories: Array<{ slug: string }>;
+  brands: Array<{ slug: string }>;
+}> {
+  const idx = await getIndex();
+  const publishedAt = new Date(idx.generatedAt);
+  return {
+    products: idx.products.map((p) => ({ slug: p.slug, updatedAt: publishedAt })),
+    categories: [...idx.categoriesBySlug.keys()].map((slug) => ({ slug })),
+    // Only brands that have products — a sitemap entry for an empty brand page
+    // spends crawl budget on a page with nothing to index.
+    brands: [...idx.byBrandSlug.keys()].map((slug) => ({ slug })),
+  };
+}
+
 /** When the mirror was generated, for the staleness notice pages show. */
 export async function mirrorGeneratedAt(): Promise<string> {
   return (await getIndex()).generatedAt;
