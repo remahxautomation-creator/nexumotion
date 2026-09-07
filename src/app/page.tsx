@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { cachedStat } from "@/lib/stats-cache";
 import snapshot from "@/content/catalog-snapshot.json";
 import ProductCard from "@/components/product/ProductCard";
-import ControlPanelArt from "@/components/home/ControlPanelArt";
+import HeroCollage, { HeroBrandStrip } from "@/components/home/HeroCollage";
 import Customers from "@/components/home/Customers";
 import Testimonials from "@/components/home/Testimonials";
 import WhyEngineers from "@/components/home/WhyEngineers";
@@ -113,10 +113,16 @@ export default async function HomePage() {
                 </div>
               ))}
             </dl>
+
+            {/* Phones get the brand strip only — see HeroBrandStrip for why. */}
+            <HeroBrandStrip className="mt-8 md:hidden" />
           </div>
 
-          <div className="hidden lg:block">
-            <ControlPanelArt className="w-full h-auto drop-shadow-2xl" />
+          {/* Shown on tablet and up rather than desktop only. The previous
+              `hidden lg:block` meant phone visitors — the majority here, and
+              where the paid traffic lands — saw a hero with no imagery at all. */}
+          <div className="hidden md:block">
+            <HeroCollage className="drop-shadow-2xl" />
           </div>
         </div>
       </section>
