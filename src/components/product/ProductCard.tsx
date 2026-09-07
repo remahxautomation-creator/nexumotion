@@ -18,6 +18,9 @@ export type ProductCardData = {
   stockStatus: string;
   stockQty: number;
   brandName: string;
+  /** Optional: lets the placeholder show the manufacturer's logo. MirrorProduct
+   *  already carries it, so mirror-sourced call sites pass it for free. */
+  brandSlug?: string;
   categoryName?: string;
   image?: string | null;
 };
@@ -28,7 +31,14 @@ export default function ProductCard({ p }: { p: ProductCardData }) {
   return (
     <div className="bg-white rounded-lg border border-slate-200 hover:border-[#0A6286] hover:shadow-md transition-all flex flex-col">
       <Link href={`/products/${p.slug}`} className="p-4 flex-1">
-        <ProductImage src={p.image} alt={p.name} className="h-28 rounded-md mb-3" />
+        <ProductImage
+          src={p.image}
+          alt={p.name}
+          brandName={p.brandName}
+          brandSlug={p.brandSlug}
+          sku={p.sku}
+          className="h-28 rounded-md mb-3"
+        />
         <div className="sku text-slate-500 mb-1">{p.sku}</div>
         <div className="text-sm font-medium text-slate-900 line-clamp-2 mb-1">{p.name}</div>
         <div className="text-xs text-slate-500">{p.brandName}</div>

@@ -110,6 +110,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <ProductImage
               src={images[0]}
               alt={product.name}
+              brandName={product.brand.name}
+              brandSlug={product.brand.slug}
+              sku={product.sku}
               className="h-72"
               sizes="(max-width: 1024px) 100vw, 33vw"
               priority
