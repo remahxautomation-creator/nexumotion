@@ -14,7 +14,7 @@ export const dictionaries = {
 
     "home.hero.title": "Industrial Automation Parts for the MENA Region",
     "home.hero.subtitle":
-      "50+ brands. 5,000+ SKUs. Parametric search, cross-referencing, and BOM ordering — built for engineers, not marketers.",
+      "240+ brands. 14,000+ searchable specs. Parametric search, cross-referencing, and BOM ordering — built for engineers, not marketers.",
     "home.hero.searchCta": "Search Parts",
     "home.hero.brandsCta": "Browse Brands",
     "home.trust.authentic": "Authenticity guaranteed",
@@ -29,7 +29,7 @@ export const dictionaries = {
     "home.featured.title": "Featured Products",
     "home.brands.subtitle": "Genuine parts from the manufacturers we represent.",
     "home.brands.title": "Top Brands",
-    "home.brands.all": "All 50 brands",
+    "home.brands.all": "All brands",
     "home.products": "products",
 
     "product.addToCart": "Add to Cart",
@@ -82,7 +82,7 @@ export const dictionaries = {
     "filters.noMatch": "No products match the selected filters.",
 
     "footer.tagline":
-      "Genuine industrial automation parts for Egypt, the Middle East, and Africa. 50+ brands. 5,000+ SKUs. Engineer-first service.",
+      "Genuine industrial automation parts for Egypt, the Middle East, and Africa. 240+ brands, fully specified. Engineer-first service.",
     "footer.shop": "Shop",
     "footer.allBrands": "All Brands",
     "footer.searchParts": "Search Parts",
@@ -517,7 +517,7 @@ export const dictionaries = {
 
     "home.hero.title": "قطع أتمتة صناعية لمنطقة الشرق الأوسط وشمال أفريقيا",
     "home.hero.subtitle":
-      "أكثر من ٥٠ ماركة وأكثر من ٥٠٠٠ صنف. بحث بالمواصفات، ومطابقة أكواد المنافسين، وطلب قوائم المواد — مصمم للمهندسين.",
+      "أكثر من ٢٤٠ ماركة وأكثر من ١٤٬٠٠٠ مواصفة قابلة للبحث. بحث بالمواصفات، ومطابقة أكواد المنافسين، وطلب قوائم المواد — مصمم للمهندسين.",
     "home.hero.searchCta": "ابحث عن قطعة",
     "home.hero.brandsCta": "تصفح الماركات",
     "home.trust.authentic": "ضمان الأصالة",
@@ -532,7 +532,7 @@ export const dictionaries = {
     "home.featured.title": "منتجات مميزة",
     "home.brands.subtitle": "قطع أصلية من الشركات المصنّعة التي نمثّلها.",
     "home.brands.title": "أشهر الماركات",
-    "home.brands.all": "كل الماركات الـ٥٠",
+    "home.brands.all": "كل الماركات",
     "home.products": "منتج",
 
     "product.addToCart": "أضف إلى السلة",
@@ -585,7 +585,7 @@ export const dictionaries = {
     "filters.noMatch": "لا توجد منتجات مطابقة للفلاتر المختارة.",
 
     "footer.tagline":
-      "قطع أتمتة صناعية أصلية لمصر والشرق الأوسط وأفريقيا. أكثر من ٥٠ ماركة وأكثر من ٥٠٠٠ صنف. خدمة تفهم المهندس.",
+      "قطع أتمتة صناعية أصلية لمصر والشرق الأوسط وأفريقيا. أكثر من ٢٤٠ ماركة موصّفة بالكامل. خدمة تفهم المهندس.",
     "footer.shop": "تسوق",
     "footer.allBrands": "كل الماركات",
     "footer.searchParts": "ابحث عن قطع",
