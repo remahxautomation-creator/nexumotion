@@ -491,6 +491,23 @@ export async function mirrorSitemapEntries(): Promise<{
   };
 }
 
+/**
+ * The datasheet URL for a SKU, for /datasheet/[sku].
+ *
+ * Reads the mirror so a customer-facing download link does not depend on the
+ * database being reachable — the same reasoning as every other catalogue path.
+ * Needs both files: listing.json to turn the SKU into a product id, detail.json
+ * for the URL itself.
+ */
+export async function mirrorDatasheetUrl(sku: string): Promise<string | null> {
+  const idx = await getIndex();
+  const product = idx.bySku.get(sku);
+  if (!product) return null;
+
+  const { detail } = await loadFile<DetailFile>("detail.json");
+  return detail[product.id]?.ds ?? null;
+}
+
 /** When the mirror was generated, for the staleness notice pages show. */
 export async function mirrorGeneratedAt(): Promise<string> {
   return (await getIndex()).generatedAt;
