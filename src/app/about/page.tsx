@@ -6,8 +6,6 @@ import ControlPanelArt from "@/components/home/ControlPanelArt";
 import { companyFacts } from "@/content/site-content";
 import LocationMap from "@/components/layout/LocationMap";
 import { getT } from "@/i18n/server";
-import { prisma } from "@/lib/prisma";
-import { cachedStat } from "@/lib/stats-cache";
 import snapshot from "@/content/catalog-snapshot.json";
 
 export const dynamic = "force-dynamic";
@@ -19,16 +17,17 @@ export async function generateMetadata() {
 
 export default async function AboutPage() {
   const { t } = await getT();
-  // Two whole-table counts rendered as headline figures. Cached with the rest
-  // of the catalogue statistics; they move on import, not on request.
-  const [brandCount, categoryCount] = await Promise.all([
-    cachedStat("stats.brandCountAll", () => prisma.brand.count(), {
-      fallback: snapshot.stats.brandCountAll,
-    }),
-    cachedStat("stats.categoryCountAll", () => prisma.category.count(), {
-      fallback: snapshot.stats.categoryCountAll,
-    }),
-  ]);
+  // Read from the published snapshot, never the database.
+  //
+  // This used to be cachedStat() with the snapshot as a fallback, which left
+  // D1 as the primary. Combined with a per-isolate cache that meant every
+  // isolate recomputed it hourly — and `activeBrandCount` is a correlated
+  // subquery that reads ~120,000 rows per run. It was 91% of all D1 reads,
+  // 48 million rows a day, a week after the catalogue itself had moved to the
+  // mirror. Same principle as the mirror now applies here: published data is
+  // primary, and `npm run mirror` after an import is what refreshes it.
+  const brandCount = snapshot.stats.brandCountAll;
+  const categoryCount = snapshot.stats.categoryCountAll;
 
   const values = [
     { icon: Cpu, title: t("about.values.specs"), body: t("about.values.specsBody") },

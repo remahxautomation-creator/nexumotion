@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { FileText, GitCompareArrows, PackageSearch, ListChecks } from "lucide-react";
-import { prisma } from "@/lib/prisma";
-import { cachedStat } from "@/lib/stats-cache";
 import snapshot from "@/content/catalog-snapshot.json";
 import { getT } from "@/i18n/server";
 
@@ -11,53 +9,35 @@ import { getT } from "@/i18n/server";
  * The testimonials are still placeholder text, and inventing quotes to fill
  * the gap would be false advertising — so this makes the same argument out of
  * things that are actually true and checkable. Every number below is counted
- * from the catalogue at request time rather than typed in, so it cannot drift
- * into being a false claim as the data changes.
- *
- * Counts degrade to null rather than throwing: this sits on the home page, and
- * a database blip should cost a statistic, not the whole page.
+ * from the catalogue by `npm run mirror` rather than typed in, so it cannot
+ * drift into being a false claim as the data changes.
  */
-async function getFacts() {
-  try {
-    // Five whole-table counts. Uncached, this block alone examined ~15,300 rows
-    // every time the home page rendered, and `specs` repeated the same
-    // ProductSpec scan page.tsx had just done. Sharing the cache keys with
-    // page.tsx collapses both to one scan per key per hour — the counts change
-    // on catalogue import, which is weekly at best.
-    const [products, brands, specs, datasheets, crossRefs] = await Promise.all([
-      cachedStat(
-        "stats.activeProductCount",
-        () => prisma.product.count({ where: { isActive: true } }),
-        { fallback: snapshot.stats.activeProductCount }
-      ),
-      cachedStat(
-        "stats.activeBrandCount",
-        () => prisma.brand.count({ where: { isActive: true, products: { some: { isActive: true } } } }),
-        { fallback: snapshot.stats.activeBrandCount }
-      ),
-      cachedStat("stats.specCount", () => prisma.productSpec.count(), {
-        fallback: snapshot.stats.specCount,
-      }),
-      cachedStat(
-        "stats.datasheetCount",
-        () => prisma.product.count({ where: { isActive: true, NOT: { datasheetUrl: null } } }),
-        { fallback: snapshot.stats.datasheetCount }
-      ),
-      cachedStat("stats.crossRefCount", () => prisma.crossReference.count(), {
-        fallback: snapshot.stats.crossRefCount,
-      }),
-    ]);
-    return { products, brands, specs, datasheets, crossRefs };
-  } catch {
-    return null;
-  }
+
+/**
+ * Catalogue facts, from the published snapshot.
+ *
+ * Previously five whole-table counts through cachedStat() with the snapshot
+ * as a fallback, which left D1 as the primary and — with a per-isolate cache —
+ * had every isolate recomputing them hourly. `activeBrandCount` alone reads
+ * ~120,000 rows per run and was 91% of all D1 reads. The snapshot holds exactly
+ * these numbers; `npm run mirror` after an import is what refreshes them.
+ */
+function getFacts() {
+  const s = snapshot.stats;
+  return {
+    products: s.activeProductCount,
+    brands: s.activeBrandCount,
+    specs: s.specCount,
+    datasheets: s.datasheetCount,
+    crossRefs: s.crossRefCount,
+  };
 }
 
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 export default async function WhyEngineers() {
   const { t } = await getT();
-  const f = await getFacts();
+  const f = getFacts();
 
   const cards = [
     {

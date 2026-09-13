@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { prisma } from "@/lib/prisma";
-import { cachedStat } from "@/lib/stats-cache";
 import snapshot from "@/content/catalog-snapshot.json";
 import { featuredBrands } from "@/content/site-content";
 import { getT } from "@/i18n/server";
@@ -30,30 +28,16 @@ export default async function BrandWall() {
 
   const slugs = featuredBrands.map((b) => b.slug);
 
-  // A correlated `some` filter plus a per-brand count over Product, for every
-  // brand in the curated list, on every render. The result is the same for all
-  // visitors and changes only on catalogue import, so it is cached alongside
-  // the other catalogue statistics — see src/lib/stats-cache.ts for why this is
-  // an in-isolate Map rather than the KV layer that was reverted.
-  const rows = await cachedStat(
-    "home.brandWall",
-    () =>
-      prisma.brand.findMany({
-        where: {
-          slug: { in: slugs },
-          isActive: true,
-          // The gate that stops dead links.
-          products: { some: { isActive: true } },
-        },
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          _count: { select: { products: { where: { isActive: true } } } },
-        },
-      }),
-    { fallback: snapshot.brandWall }
-  );
+  // Read from the published snapshot, never the database.
+  //
+  // This used to be cachedStat() with the snapshot as a fallback, which left
+  // D1 as the primary. Combined with a per-isolate cache that meant every
+  // isolate recomputed it hourly — and `activeBrandCount` is a correlated
+  // subquery that reads ~120,000 rows per run. It was 91% of all D1 reads,
+  // 48 million rows a day, a week after the catalogue itself had moved to the
+  // mirror. Same principle as the mirror now applies here: published data is
+  // primary, and `npm run mirror` after an import is what refreshes it.
+  const rows = snapshot.brandWall;
 
   if (!rows.length) return null;
 

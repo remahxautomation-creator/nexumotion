@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { getT } from "@/i18n/server";
-import { prisma } from "@/lib/prisma";
-import { cachedStat } from "@/lib/stats-cache";
 import snapshot from "@/content/catalog-snapshot.json";
 
 export const dynamic = "force-dynamic";
@@ -16,27 +14,16 @@ export default async function BrandsPage() {
   // A correlated `some` filter plus a product count for each of 276 brands.
   // The listing is identical for every visitor and changes only on catalogue
   // import, so it is cached rather than rebuilt per request.
-  const brands = await cachedStat(
-    "brands.listing",
-    () =>
-      prisma.brand.findMany({
-        where: { isActive: true, products: { some: { isActive: true } } },
-        orderBy: { name: "asc" },
-        // `select`, not `include`: the listing renders four fields, and pulling
-        // whole Brand rows shipped description, website and timestamps for 249
-        // brands to render none of them. It also keeps this shape identical to
-        // the snapshot fallback, so both paths type-check as one thing.
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          country: true,
-          logo: true,
-          _count: { select: { products: true } },
-        },
-      }),
-    { fallback: snapshot.brandsListing }
-  );
+  // Read from the published snapshot, never the database.
+  //
+  // This used to be cachedStat() with the snapshot as a fallback, which left
+  // D1 as the primary. Combined with a per-isolate cache that meant every
+  // isolate recomputed it hourly — and `activeBrandCount` is a correlated
+  // subquery that reads ~120,000 rows per run. It was 91% of all D1 reads,
+  // 48 million rows a day, a week after the catalogue itself had moved to the
+  // mirror. Same principle as the mirror now applies here: published data is
+  // primary, and `npm run mirror` after an import is what refreshes it.
+  const brands = snapshot.brandsListing;
 
   const grouped = new Map<string, typeof brands>();
   for (const b of brands) {

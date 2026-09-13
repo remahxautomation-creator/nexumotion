@@ -4,7 +4,7 @@ import "./globals.css";
 import TopBar from "@/components/layout/TopBar";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { prisma } from "@/lib/prisma";
+import snapshot from "@/content/catalog-snapshot.json";
 import { getLocale } from "@/i18n/server";
 import { isRtl } from "@/i18n/dictionaries";
 import { I18nProvider } from "@/i18n/client";
@@ -63,27 +63,21 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Categories for the header mega-menu.
+ * Categories for the header mega-menu, from the published snapshot.
  *
- * Every page renders through this layout, including statically prerendered
- * ones like /_not-found — and the build runs where no database is reachable.
- * A failure here must degrade to an empty menu rather than fail the build, or
- * take the whole site down if the database is briefly unavailable.
+ * Every page renders through this layout, so this used to be a D1 query on
+ * every single request — and the build runs where no database is reachable,
+ * which is why it needed a try/catch. Categories change on import, not on
+ * request, so the snapshot answers both problems: no per-request read, and
+ * nothing that can fail at build time. It is already in sortOrder.
  */
-async function getNavCategories() {
-  try {
-    return await prisma.category.findMany({
-      where: { isActive: true },
-      orderBy: { sortOrder: "asc" },
-      select: { id: true, name: true, slug: true },
-    });
-  } catch {
-    return [];
-  }
+function getNavCategories() {
+  return snapshot.categories.map(({ id, name, slug }) => ({ id, name, slug }));
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [categories, locale] = await Promise.all([getNavCategories(), getLocale()]);
+  const categories = getNavCategories();
+  const locale = await getLocale();
 
   const rtl = isRtl(locale);
 

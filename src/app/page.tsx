@@ -29,45 +29,24 @@ const featuredQuery = () =>
 
 export default async function HomePage() {
   const { t } = await getT();
-  // Everything except the featured products is a catalogue-wide aggregate that
-  // changes on import, not on request. Left uncached these were the single
-  // largest source of D1 row reads on the site — see src/lib/stats-cache.ts.
+  // Every figure here comes from the published snapshot, never the database.
   //
-  // `home.specCount` is deliberately the same cache key WhyEngineers uses, so
-  // the two components that both need this figure now cost one scan between
-  // them per hour instead of one full ProductSpec scan each, per request.
-  const [categories, brandCount, featured, specCount] = await Promise.all([
-    cachedStat(
-      "home.categories",
-      () =>
-        prisma.category.findMany({
-          orderBy: { sortOrder: "asc" },
-          include: { _count: { select: { products: true } } },
-        }),
-      { fallback: snapshot.categories }
-    ),
-    // A count, not rows: the brand wall fetches its own curated list, and this
-    // is only ever rendered as a number. The previous findMany pulled 18 full
-    // records to compute a length that was then capped at 18 anyway, so the
-    // headline could never exceed "50+" no matter how many brands were stocked.
-    cachedStat(
-      "stats.activeBrandCount",
-      () =>
-        prisma.brand.count({
-          where: { isActive: true, products: { some: { isActive: true } } },
-        }),
-      { fallback: snapshot.stats.activeBrandCount }
-    ),
-    // Featured products are the one live read left on this page. It is a
-    // `take: 8` on an indexed column, so it is cheap — and there are currently
-    // no featured products at all, so an empty fallback loses nothing.
-    cachedStat("home.featured", featuredQuery, {
-      fallback: [] as Awaited<ReturnType<typeof featuredQuery>>,
-    }),
-    cachedStat("stats.specCount", () => prisma.productSpec.count(), {
-      fallback: snapshot.stats.specCount,
-    }),
-  ]);
+  // These used to be cachedStat() calls with the snapshot as a fallback, which
+  // left D1 as the primary. With a per-isolate cache, every isolate recomputed
+  // them hourly — and `activeBrandCount` is a correlated subquery reading
+  // ~120,000 rows per run. That one query was 91% of all D1 reads, 48 million
+  // rows a day, a week after the catalogue itself had moved to the mirror.
+  // Published data is primary now; `npm run mirror` after an import refreshes it.
+  const categories = snapshot.categories;
+  const brandCount = snapshot.stats.activeBrandCount;
+  const specCount = snapshot.stats.specCount;
+
+  // The one live read left on the page. `take: 8` on an indexed column is
+  // cheap, and there are currently no featured products at all, so an empty
+  // result costs nothing.
+  const featured = await cachedStat("home.featured", featuredQuery, {
+    fallback: [] as Awaited<ReturnType<typeof featuredQuery>>,
+  });
 
   return (
     <div>
