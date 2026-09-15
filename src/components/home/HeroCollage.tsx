@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Cpu, Gauge, Radio, ShieldCheck, Wind, Zap } from "lucide-react";
+import { Cpu, Gauge, Radio, ShieldCheck, Timer, Zap } from "lucide-react";
 import { featuredBrands } from "@/content/site-content";
 import ControlPanelArt from "./ControlPanelArt";
 
@@ -14,11 +14,11 @@ import ControlPanelArt from "./ControlPanelArt";
  *   Parts   — ControlPanelArt, the existing drawn panel illustration.
  *   Systems — lucide icons matching the eight systems pages.
  *
- * Deliberately no product photography. 412 catalogue rows do carry image URLs,
- * but every one points at uk.rs-online.com — a distributor's own photography.
- * Publishing those on a commercial site is a copyright problem, so they are not
- * used here and should not be used until the business has its own photographs.
- * The moment real photos exist, this component is the place to swap them in.
+ * Deliberately no product photography, because the business has none of its
+ * own yet. The catalogue used to carry 412 image URLs, all pointing at a
+ * competing distributor's photographs; those were removed rather than
+ * published. The moment real photos exist, this component is the place to
+ * swap them in.
  *
  * Everything renders as inline SVG, CSS and local files, so the hero costs no
  * external requests and cannot break when a third-party image host changes.
@@ -26,14 +26,17 @@ import ControlPanelArt from "./ControlPanelArt";
  * the largest contentful paint, and LCP feeds Quality Score.
  */
 
-/** The eight systems, as icons. Mirrors src/content/systems.ts. */
+/**
+ * What the catalogue covers, as badges. Kept to categories the business still
+ * trades in after the 2026-09-15 pruning — Pneumatics was here and is gone.
+ */
 const SYSTEM_ICONS = [
   { Icon: Cpu, label: "PLC & control" },
-  { Icon: Zap, label: "Drives & VFDs" },
+  { Icon: Zap, label: "Motor control & drives" },
+  { Icon: Gauge, label: "Servo & motion" },
   { Icon: ShieldCheck, label: "Machine safety" },
+  { Icon: Timer, label: "Relays & timers" },
   { Icon: Radio, label: "Networking & IIoT" },
-  { Icon: Gauge, label: "Instrumentation" },
-  { Icon: Wind, label: "Pneumatics" },
 ];
 
 /**
