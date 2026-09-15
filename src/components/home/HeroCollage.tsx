@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Cpu, Gauge, Radio, ShieldCheck, Timer, Zap } from "lucide-react";
 import { featuredBrands } from "@/content/site-content";
-import ControlPanelArt from "./ControlPanelArt";
+import PartsBoardArt from "./PartsBoardArt";
 
 /**
  * Hero artwork: brands, parts and systems in one banner.
@@ -11,7 +11,8 @@ import ControlPanelArt from "./ControlPanelArt";
  *   Brands  — the manufacturer logo SVGs already in public/brands, the same
  *             files the brand wall uses. Showing them as a stockist is the
  *             normal, defensible use.
- *   Parts   — ControlPanelArt, the existing drawn panel illustration.
+ *   Parts   — PartsBoardArt: eight real catalogue products, drawn as their
+ *             component type and labelled with real brand and part number.
  *   Systems — lucide icons matching the eight systems pages.
  *
  * Deliberately no product photography, because the business has none of its
@@ -78,9 +79,9 @@ export default function HeroCollage({ className = "" }: { className?: string }) 
 
   return (
     <div className={`relative ${className}`} aria-hidden>
-      {/* Panel illustration, sitting behind the collage as the anchor image. */}
+      {/* Real parts on a panel, sitting behind the collage as the anchor image. */}
       <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-white/5 backdrop-blur-sm">
-        <ControlPanelArt className="w-full h-auto" />
+        <PartsBoardArt className="w-full h-auto" />
 
         {/* System badges along the bottom of the panel. These name what the
             business actually does, rather than decorating with abstract shapes. */}
