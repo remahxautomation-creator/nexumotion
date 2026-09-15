@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   // gets the same fallback. A title is not worth a 500.
   let product;
   try {
-    product = await prisma.product.findUnique({
-      where: { slug },
+    product = await prisma.product.findFirst({
+      where: { slug, isActive: true },
       include: { brand: true, category: true },
     });
   } catch {
@@ -334,8 +334,8 @@ async function loadProduct(slug: string) {
   }
 
   try {
-    const product = await prisma.product.findUnique({
-      where: { slug },
+    const product = await prisma.product.findFirst({
+      where: { slug, isActive: true },
       include: {
         brand: true,
         category: true,

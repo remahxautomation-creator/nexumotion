@@ -44,8 +44,12 @@ async function getBrand(slug: string): Promise<{ view: BrandView; offline: boole
   }
 
   try {
-    const brand = await prisma.brand.findUnique({
-      where: { slug },
+    // findFirst rather than findUnique so isActive can be part of the lookup.
+    // Brands removed from the catalogue are soft-deleted, and without this a
+    // removed brand still resolved from D1 and rendered as an empty page
+    // instead of a 404.
+    const brand = await prisma.brand.findFirst({
+      where: { slug, isActive: true },
       include: {
         products: {
           where: { isActive: true },

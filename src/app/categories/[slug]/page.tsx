@@ -162,8 +162,10 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 }
 
 function loadCategory(slug: string) {
-  return prisma.category.findUnique({
-    where: { slug },
+  // findFirst so isActive is honoured — removed categories are soft-deleted
+  // and must 404 rather than render an empty listing.
+  return prisma.category.findFirst({
+    where: { slug, isActive: true },
     include: { specs: { where: { isFilterable: true }, orderBy: { sortOrder: "asc" } } },
   });
 }

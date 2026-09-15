@@ -35,13 +35,20 @@ const all = <T>(sql: string): T[] => db.prepare(sql).all() as T[];
 
 const stats = {
   activeProductCount: one<{ c: number }>("SELECT COUNT(*) c FROM Product WHERE isActive=1").c,
-  specCount: one<{ c: number }>("SELECT COUNT(*) c FROM ProductSpec").c,
-  crossRefCount: one<{ c: number }>("SELECT COUNT(*) c FROM CrossReference").c,
+  // Joined to Product so soft-deleted lines do not inflate the figure. Before
+  // the catalogue was pruned nothing was inactive and the bare count was
+  // accidentally right; it would now report 14,026 against a real 2,244.
+  specCount: one<{ c: number }>(
+    "SELECT COUNT(*) c FROM ProductSpec s JOIN Product p ON p.id=s.productId WHERE p.isActive=1"
+  ).c,
+  crossRefCount: one<{ c: number }>(
+    "SELECT COUNT(*) c FROM CrossReference r JOIN Product p ON p.id=r.productId WHERE p.isActive=1"
+  ).c,
   datasheetCount: one<{ c: number }>(
     "SELECT COUNT(*) c FROM Product WHERE isActive=1 AND datasheetUrl IS NOT NULL"
   ).c,
-  brandCountAll: one<{ c: number }>("SELECT COUNT(*) c FROM Brand").c,
-  categoryCountAll: one<{ c: number }>("SELECT COUNT(*) c FROM Category").c,
+  brandCountAll: one<{ c: number }>("SELECT COUNT(*) c FROM Brand WHERE isActive=1").c,
+  categoryCountAll: one<{ c: number }>("SELECT COUNT(*) c FROM Category WHERE isActive=1").c,
   activeBrandCount: one<{ c: number }>(
     `SELECT COUNT(*) c FROM Brand b WHERE b.isActive=1
        AND EXISTS (SELECT 1 FROM Product p WHERE p.brandId=b.id AND p.isActive=1)`
@@ -50,7 +57,7 @@ const stats = {
 
 const categories = all<{ id: string; name: string; slug: string; count: number }>(
   `SELECT c.id, c.name, c.slug,
-          (SELECT COUNT(*) FROM Product p WHERE p.categoryId=c.id) AS count
+          (SELECT COUNT(*) FROM Product p WHERE p.categoryId=c.id AND p.isActive=1) AS count
      FROM Category c
     WHERE c.isActive=1
     ORDER BY c.sortOrder ASC`
@@ -78,7 +85,7 @@ const brandsListing = all<{
   count: number;
 }>(
   `SELECT b.id, b.slug, b.name, b.country, b.logo,
-          (SELECT COUNT(*) FROM Product p WHERE p.brandId=b.id) AS count
+          (SELECT COUNT(*) FROM Product p WHERE p.brandId=b.id AND p.isActive=1) AS count
      FROM Brand b
     WHERE b.isActive=1
       AND EXISTS (SELECT 1 FROM Product p WHERE p.brandId=b.id AND p.isActive=1)

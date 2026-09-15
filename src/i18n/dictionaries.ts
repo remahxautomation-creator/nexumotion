@@ -14,7 +14,7 @@ export const dictionaries = {
 
     "home.hero.title": "Industrial Automation Parts for the MENA Region",
     "home.hero.subtitle":
-      "240+ brands. 14,000+ searchable specs. Parametric search, cross-referencing, and BOM ordering — built for engineers, not marketers.",
+      "Siemens, Schneider, Omron, ABB, Festo and more — every part with full specs, datasheets and cross-references. Built for engineers, not marketers.",
     "home.hero.searchCta": "Search Parts",
     "home.hero.brandsCta": "Browse Brands",
     "home.trust.authentic": "Authenticity guaranteed",
@@ -82,7 +82,7 @@ export const dictionaries = {
     "filters.noMatch": "No products match the selected filters.",
 
     "footer.tagline":
-      "Genuine industrial automation parts for Egypt, the Middle East, and Africa. 240+ brands, fully specified. Engineer-first service.",
+      "Genuine industrial automation parts for Egypt, the Middle East, and Africa, from the manufacturers engineers actually specify. Engineer-first service.",
     "footer.shop": "Shop",
     "footer.allBrands": "All Brands",
     "footer.searchParts": "Search Parts",
@@ -517,7 +517,7 @@ export const dictionaries = {
 
     "home.hero.title": "قطع أتمتة صناعية لمنطقة الشرق الأوسط وشمال أفريقيا",
     "home.hero.subtitle":
-      "أكثر من ٢٤٠ ماركة وأكثر من ١٤٬٠٠٠ مواصفة قابلة للبحث. بحث بالمواصفات، ومطابقة أكواد المنافسين، وطلب قوائم المواد — مصمم للمهندسين.",
+      "سيمنز وشنايدر وأومرون وABB وفستو وغيرها — كل قطعة بمواصفاتها الكاملة وورقة بياناتها ومطابقة أكوادها. مصمم للمهندسين، لا للتسويق.",
     "home.hero.searchCta": "ابحث عن قطعة",
     "home.hero.brandsCta": "تصفح الماركات",
     "home.trust.authentic": "ضمان الأصالة",
@@ -585,7 +585,7 @@ export const dictionaries = {
     "filters.noMatch": "لا توجد منتجات مطابقة للفلاتر المختارة.",
 
     "footer.tagline":
-      "قطع أتمتة صناعية أصلية لمصر والشرق الأوسط وأفريقيا. أكثر من ٢٤٠ ماركة موصّفة بالكامل. خدمة تفهم المهندس.",
+      "قطع أتمتة صناعية أصلية لمصر والشرق الأوسط وأفريقيا، من الشركات المصنّعة التي يعتمدها المهندسون فعلاً. خدمة تفهم المهندس.",
     "footer.shop": "تسوق",
     "footer.allBrands": "كل الماركات",
     "footer.searchParts": "ابحث عن قطع",

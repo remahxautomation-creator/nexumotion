@@ -239,43 +239,23 @@ export function formatAddress(lang: "en" | "ar"): string {
 export type FeaturedBrand = { slug: string; logo?: string };
 
 export const featuredBrands: FeaturedBrand[] = [
+  // The catalogue was pruned to these manufacturers on 2026-09-15. Anything
+  // listed here that has no active products drops out of the wall automatically
+  // (see BrandWall), so Mitsubishi Electric and Autonics are kept in the list
+  // ready for the day they are stocked.
   { slug: "siemens", logo: "/brands/siemens.svg" },
-  { slug: "abb", logo: "/brands/abb.svg" },
   { slug: "schneider-electric", logo: "/brands/schneider-electric.svg" },
-  { slug: "danfoss", logo: "/brands/danfoss.svg" },
+  { slug: "abb", logo: "/brands/abb.svg" },
   { slug: "omron", logo: "/brands/omron.svg" },
-  { slug: "burkert", logo: "/brands/burkert.svg" },
+  { slug: "festo", logo: "/brands/festo.svg" },
+  { slug: "eaton", logo: "/brands/eaton.svg" },
   { slug: "sick", logo: "/brands/sick.svg" },
   { slug: "pilz", logo: "/brands/pilz.svg" },
-  { slug: "pepperl-fuchs", logo: "/brands/pepperl-fuchs.svg" },
-  { slug: "weidm-ller", logo: "/brands/weidm-ller.svg" }, // slug generated before the umlaut was handled; see note in BrandWall
-  { slug: "norgren" }, // no logo on Wikimedia Commons — renders as a wordmark
   { slug: "allen-bradley", logo: "/brands/allen-bradley.svg" },
+  { slug: "danfoss", logo: "/brands/danfoss.svg" },
+  { slug: "delta-electronics" },
   { slug: "mitsubishi-electric", logo: "/brands/mitsubishi-electric.svg" },
-  { slug: "ebm-papst", logo: "/brands/ebm-papst.svg" },
-  { slug: "ifm-electronic", logo: "/brands/ifm-electronic.svg" },
-  { slug: "festo", logo: "/brands/festo.svg" },
-
-  // Second pass — the largest brands in the catalogue that were missing from
-  // the wall. SMC carries more products than any of the names above.
-  { slug: "smc", logo: "/brands/smc.svg" },
-  { slug: "bosch-rexroth", logo: "/brands/bosch-rexroth.svg" },
-  { slug: "phoenix-contact", logo: "/brands/phoenix-contact.svg" },
-  { slug: "eaton", logo: "/brands/eaton.svg" },
-  { slug: "wago", logo: "/brands/wago.svg" },
-  { slug: "te-connectivity", logo: "/brands/te-connectivity.svg" },
-  { slug: "harting" }, // no logo on Commons
-  { slug: "moxa" }, // no logo on Commons
-  { slug: "finder" }, // no logo on Commons
-  { slug: "igus", logo: "/brands/igus.svg" },
-  { slug: "amphenol-industrial", logo: "/brands/amphenol-industrial.svg" },
-  { slug: "fluke", logo: "/brands/fluke.svg" },
-  { slug: "vishay", logo: "/brands/vishay.svg" },
-  { slug: "stmicroelectronics", logo: "/brands/stmicroelectronics.svg" },
-  { slug: "tdk", logo: "/brands/tdk.svg" },
-  { slug: "arduino", logo: "/brands/arduino.svg" },
-  { slug: "knipex", logo: "/brands/knipex.svg" },
-  { slug: "milwaukee", logo: "/brands/milwaukee.svg" },
+  { slug: "autonics" },
 ];
 
 // ── Social profiles ─────────────────────────────────────────────────────────
