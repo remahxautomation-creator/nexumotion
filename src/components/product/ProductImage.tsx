@@ -126,7 +126,11 @@ export default function ProductImage({
         onError={() => setFailed(true)}
         // Industrial parts are shot on white; contain avoids cropping the part.
         className="object-contain p-2"
-        unoptimized={false}
+        // Images are pre-optimised to WebP by scripts/ingest-product-images.ts
+        // and served straight from the assets binding. Routing them through
+        // /_next/image would need an image loader the Cloudflare free tier does
+        // not provide, and every product photo would 4xx.
+        unoptimized
       />
     </div>
   );

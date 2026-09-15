@@ -57,3 +57,10 @@ import-templates/
 prisma/local.db
 prisma/local.db-journal
 d1-seed.sql
+
+# Product ingestion. Raw photographs are dropped here and never committed —
+# the optimised WebP output in public/products/ is what ships. The .d1-sync.sql
+# files are generated per run and applied to production, then disposable.
+import-images/*
+!import-images/README.md
+import-templates/.d1-sync.sql

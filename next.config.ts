@@ -32,12 +32,10 @@ const nextConfig: NextConfig = {
   // through next/image means the browser requests /_next/image on our own
   // origin — the source host never appears in a customer-facing URL, and the
   // optimiser caches each asset so repeat views don't hit their servers.
-  // Replace these hosts once the images are mirrored or licensed directly.
+  // No remote image hosts. Product photos are ingested into public/products/
+  // by scripts/ingest-product-images.ts and served as local static assets;
+  // the third-party CDN patterns that used to be here are gone with the data.
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "uk.rs-online.com" },
-      { protocol: "https", hostname: "*.rs-online.com" },
-    ],
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },
   async headers() {

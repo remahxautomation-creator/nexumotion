@@ -11,7 +11,11 @@
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare deploy",
-    "mirror": "tsx scripts/build-snapshot.ts && tsx scripts/build-mirror.ts"
+    "mirror": "tsx scripts/build-snapshot.ts && tsx scripts/build-mirror.ts",
+    "catalog:publish": "tsx scripts/build-mirror.ts && tsx scripts/build-snapshot.ts",
+    "catalog:import": "tsx scripts/import-products.ts",
+    "catalog:images": "tsx scripts/ingest-product-images.ts",
+    "catalog:check-datasheets": "tsx scripts/check-datasheet-liveness.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
