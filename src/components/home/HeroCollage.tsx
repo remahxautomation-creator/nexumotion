@@ -1,30 +1,30 @@
 import Image from "next/image";
 import { Cpu, Gauge, Radio, ShieldCheck, Timer, Zap } from "lucide-react";
 import { featuredBrands } from "@/content/site-content";
-import PartsBoardArt from "./PartsBoardArt";
 
 /**
- * Hero artwork: brands, parts and systems in one banner.
+ * Hero artwork: a photographic bench of automation components, with the real
+ * brand logos beneath it.
  *
- * Three honest sources, and nothing else:
+ * The bench image is AI-generated to a deliberate brief: generic, unbranded
+ * components — no logos, no labels, no packaging, no stock room. That is the
+ * line that keeps it honest. Three alternatives were considered and rejected:
  *
- *   Brands  — the manufacturer logo SVGs already in public/brands, the same
- *             files the brand wall uses. Showing them as a stockist is the
- *             normal, defensible use.
- *   Parts   — PartsBoardArt: eight real catalogue products, drawn as their
- *             component type and labelled with real brand and part number.
- *   Systems — lucide icons matching the eight systems pages.
+ *   - A manufacturer's own marketing photograph. Copyrighted, the same problem
+ *     as the 412 distributor photos removed from the catalogue.
+ *   - AI images that render real brand marks on invented products. Trademark
+ *     misuse, and the marks come out garbled ("Zanfoss") on close inspection.
+ *   - An AI warehouse full of boxed stock. Every listed part is backorder, so
+ *     that would misrepresent the business on its own ads landing page.
  *
- * Deliberately no product photography, because the business has none of its
- * own yet. The catalogue used to carry 412 image URLs, all pointing at a
- * competing distributor's photographs; those were removed rather than
- * published. The moment real photos exist, this component is the place to
- * swap them in.
+ * So the photo supplies atmosphere only, and says nothing false because it
+ * names nothing. The brand identity is carried by the logo strip below it,
+ * which is real. The category badges over the image name what the business
+ * actually stocks.
  *
- * Everything renders as inline SVG, CSS and local files, so the hero costs no
- * external requests and cannot break when a third-party image host changes.
- * That matters on a page that is also a paid-ads landing page: hero imagery is
- * the largest contentful paint, and LCP feeds Quality Score.
+ * Served as WebP with a JPEG fallback, 54 KB at 1024px, with fetchPriority
+ * high: this is the largest contentful paint on the page that paid traffic
+ * lands on, and LCP feeds Quality Score.
  */
 
 /**
@@ -79,9 +79,26 @@ export default function HeroCollage({ className = "" }: { className?: string }) 
 
   return (
     <div className={`relative ${className}`} aria-hidden>
-      {/* Real parts on a panel, sitting behind the collage as the anchor image. */}
-      <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-white/5 backdrop-blur-sm">
-        <PartsBoardArt className="w-full h-auto" />
+      {/* The bench photograph, with the badges over its lower edge. Explicit
+          dimensions so the slot is reserved before the image arrives — this is
+          the LCP element and must not shift the layout. */}
+      <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-[#0f172a] aspect-[1024/572]">
+        <picture>
+          <source
+            type="image/webp"
+            srcSet="/hero/bench-640.webp 640w, /hero/bench.webp 1024w"
+            sizes="(max-width: 1024px) 50vw, 620px"
+          />
+          <img
+            src="/hero/bench.jpg"
+            alt=""
+            width={1024}
+            height={572}
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </picture>
 
         {/* System badges along the bottom of the panel. These name what the
             business actually does, rather than decorating with abstract shapes. */}
