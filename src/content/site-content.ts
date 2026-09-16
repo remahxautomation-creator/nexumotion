@@ -266,7 +266,7 @@ export type SocialLink = { id: "linkedin" | "instagram" | "facebook" | "tiktok";
 
 export const social: SocialLink[] = [
   { id: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/company/nexumotion/" },
-  { id: "instagram", label: "Instagram", href: "https://www.instagram.com/nexumotion/" },
+  { id: "instagram", label: "Instagram", href: "https://www.instagram.com/nexu.motion/" },
   {
     id: "facebook",
     label: "Facebook",
