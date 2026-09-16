@@ -110,6 +110,9 @@ export const dictionaries = {
     "footer.hours": "Sun–Thu, 9:00–17:00 (Cairo)",
     "footer.rights":
       "NexuMotion — Authenticity guaranteed. CE · UL · ISO 9001 certified suppliers.",
+    "footer.privacy": "Privacy policy",
+    "footer.terms": "Terms & conditions",
+    "legal.updated": "Last updated",
 
     // ── Common ──────────────────────────────────────────────────────────
     "common.back": "Back",
@@ -613,6 +616,9 @@ export const dictionaries = {
     "footer.hours": "الأحد–الخميس، ٩:٠٠–١٧:٠٠ (القاهرة)",
     "footer.rights":
       "نيكسو موشن — ضمان الأصالة. موردون معتمدون CE · UL · ISO 9001.",
+    "footer.privacy": "سياسة الخصوصية",
+    "footer.terms": "الشروط والأحكام",
+    "legal.updated": "آخر تحديث",
 
     // ── Common ──────────────────────────────────────────────────────────
     "common.back": "رجوع",

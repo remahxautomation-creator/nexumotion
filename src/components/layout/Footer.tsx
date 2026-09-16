@@ -41,6 +41,8 @@ export default async function Footer() {
             <li><span className="text-slate-500">{t("footer.datasheets")}</span></li>
             <li><span className="text-slate-500">{t("footer.crossRefTool")}</span></li>
             <li><span className="text-slate-500">{t("footer.shipping")}</span></li>
+            <li><Link href="/privacy" className="hover:text-white">{t("footer.privacy")}</Link></li>
+            <li><Link href="/terms" className="hover:text-white">{t("footer.terms")}</Link></li>
           </ul>
         </div>
         <div>
