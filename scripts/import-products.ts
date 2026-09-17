@@ -14,6 +14,8 @@
  *   Specs:     any column named  spec:<key> (<unit>)  or  spec:<key>
  *              e.g. spec:power_kw (kW), spec:ip_rating — the key becomes the
  *              spec's filter key and the header text its display name.
+ *   specs:     optional JSON object column {"Display name": "value"} — for
+ *              feeds whose spec set varies per product.
  *
  * Brand and category are matched by name and must already exist and be
  * active. A row naming an unknown brand is rejected rather than creating one
@@ -105,6 +107,17 @@ async function main() {
     if (!category) problems.push(`unknown or inactive category "${r.category}"`);
     const price = Number(r.price);
     if (!Number.isFinite(price) || price < 0) problems.push(`bad price "${r.price}"`);
+    // Optional `specs` column: a JSON object of {"Display name": "value"} for
+    // feeds whose spec set varies per product (a converter from a distributor
+    // export, say) and would need hundreds of spec: columns otherwise.
+    let jsonSpecs: Record<string, unknown> = {};
+    if (r.specs) {
+      try {
+        jsonSpecs = JSON.parse(r.specs);
+      } catch {
+        problems.push("specs column is not valid JSON");
+      }
+    }
 
     if (problems.length) {
       console.log(`  ✗ ${sku || "(no sku)"}  — ${problems.join("; ")}`);
@@ -121,6 +134,11 @@ async function main() {
     const specs = specMeta
       .map((m) => ({ specKey: m.key, specName: m.name, value: r[m.col], unit: m.unit }))
       .filter((s) => s.value);
+    for (const [name, value] of Object.entries(jsonSpecs)) {
+      const v = String(value ?? "").trim();
+      if (!v) continue;
+      specs.push({ specKey: slugify(name).replace(/-/g, "_"), specName: name, value: v, unit: null });
+    }
 
     const data = {
       name: r.name,
@@ -143,7 +161,13 @@ async function main() {
       isActive: true,
     };
 
-    const existing = await prisma.product.findUnique({ where: { sku }, select: { id: true } });
+    // Match on SKU first, then on slug: "G2R-1-T DC24" and "G2R-1-T-DC24" are
+    // the same part written two ways by two distributors, and both slugify to
+    // the same URL. Updating the existing row keeps the URL and its spec
+    // history rather than failing on the unique slug.
+    const existing =
+      (await prisma.product.findUnique({ where: { sku }, select: { id: true } })) ??
+      (await prisma.product.findUnique({ where: { slug: data.slug }, select: { id: true } }));
 
     if (COMMIT) {
       const product = existing
@@ -171,13 +195,15 @@ async function main() {
         isActive: "1", isFeatured: "0", isDiscontinued: "0",
         createdAt: "CURRENT_TIMESTAMP", updatedAt: "CURRENT_TIMESTAMP",
       };
-      if (existing) {
-        const sets = Object.entries(cols).filter(([k]) => !["id", "sku", "images", "createdAt", "isFeatured", "isDiscontinued"].includes(k))
-          .map(([k, v]) => `${k}=${v}`).join(", ");
-        sql.push(`UPDATE Product SET ${sets} WHERE id=${q(id)};`);
-      } else {
-        sql.push(`INSERT INTO Product (${Object.keys(cols).join(",")}) VALUES (${Object.values(cols).join(",")});`);
-      }
+      // Always an upsert on id. A plain UPDATE would silently touch zero rows
+      // if a previous local run was never synced to production — the import
+      // would look complete locally and be missing on the site.
+      const sets = Object.entries(cols).filter(([k]) => !["id", "sku", "images", "createdAt", "isFeatured", "isDiscontinued"].includes(k))
+        .map(([k]) => `${k}=excluded.${k}`).join(", ");
+      sql.push(
+        `INSERT INTO Product (${Object.keys(cols).join(",")}) VALUES (${Object.values(cols).join(",")}) ` +
+          `ON CONFLICT(id) DO UPDATE SET ${sets};`
+      );
       sql.push(`DELETE FROM ProductSpec WHERE productId=${q(id)};`);
       for (const s of specs) {
         const num = Number.isFinite(Number(s.value)) ? String(Number(s.value)) : "NULL";

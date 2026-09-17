@@ -1,10 +1,10 @@
 {
- "generatedAt": "2026-09-15T12:18:52.160Z",
+ "generatedAt": "2026-09-17T16:15:25.987Z",
  "stats": {
-  "activeProductCount": 148,
-  "specCount": 2244,
+  "activeProductCount": 1492,
+  "specCount": 17332,
   "crossRefCount": 0,
-  "datasheetCount": 147,
+  "datasheetCount": 1439,
   "brandCountAll": 13,
   "categoryCountAll": 14,
   "activeBrandCount": 11
@@ -15,7 +15,7 @@
    "name": "PLC & Controllers",
    "slug": "plc-controllers",
    "_count": {
-    "products": 18
+    "products": 134
    }
   },
   {
@@ -23,7 +23,7 @@
    "name": "I/O Modules",
    "slug": "i-o-modules",
    "_count": {
-    "products": 0
+    "products": 91
    }
   },
   {
@@ -31,7 +31,7 @@
    "name": "Drives & VFDs",
    "slug": "drives-vfds",
    "_count": {
-    "products": 0
+    "products": 81
    }
   },
   {
@@ -39,7 +39,7 @@
    "name": "HMI & Visualization",
    "slug": "hmi-visualization",
    "_count": {
-    "products": 0
+    "products": 79
    }
   },
   {
@@ -47,7 +47,7 @@
    "name": "Servo & Motion",
    "slug": "servo-motion",
    "_count": {
-    "products": 40
+    "products": 107
    }
   },
   {
@@ -55,7 +55,7 @@
    "name": "Motor Control",
    "slug": "motor-control",
    "_count": {
-    "products": 42
+    "products": 149
    }
   },
   {
@@ -63,7 +63,7 @@
    "name": "Sensors & Switches",
    "slug": "sensors-switches",
    "_count": {
-    "products": 18
+    "products": 146
    }
   },
   {
@@ -71,7 +71,7 @@
    "name": "Safety",
    "slug": "safety",
    "_count": {
-    "products": 6
+    "products": 100
    }
   },
   {
@@ -79,7 +79,7 @@
    "name": "Power Supplies",
    "slug": "power-supplies",
    "_count": {
-    "products": 4
+    "products": 105
    }
   },
   {
@@ -87,7 +87,7 @@
    "name": "Industrial Networking",
    "slug": "industrial-networking",
    "_count": {
-    "products": 1
+    "products": 67
    }
   },
   {
@@ -95,7 +95,7 @@
    "name": "Relays & Timers",
    "slug": "relays-timers",
    "_count": {
-    "products": 17
+    "products": 101
    }
   },
   {
@@ -103,7 +103,7 @@
    "name": "Cables & Connectors",
    "slug": "cables-connectors",
    "_count": {
-    "products": 2
+    "products": 157
    }
   },
   {
@@ -111,7 +111,7 @@
    "name": "Encoders",
    "slug": "encoders",
    "_count": {
-    "products": 0
+    "products": 40
    }
   },
   {
@@ -119,7 +119,7 @@
    "name": "Temperature Controllers",
    "slug": "temperature-controllers",
    "_count": {
-    "products": 0
+    "products": 135
    }
   }
  ],
@@ -129,7 +129,7 @@
    "slug": "siemens",
    "name": "Siemens",
    "_count": {
-    "products": 27
+    "products": 253
    }
   },
   {
@@ -137,7 +137,7 @@
    "slug": "schneider-electric",
    "name": "Schneider Electric",
    "_count": {
-    "products": 42
+    "products": 287
    }
   },
   {
@@ -145,7 +145,7 @@
    "slug": "abb",
    "name": "ABB",
    "_count": {
-    "products": 12
+    "products": 103
    }
   },
   {
@@ -161,7 +161,7 @@
    "slug": "omron",
    "name": "Omron",
    "_count": {
-    "products": 27
+    "products": 287
    }
   },
   {
@@ -177,7 +177,7 @@
    "slug": "sick",
    "name": "SICK",
    "_count": {
-    "products": 5
+    "products": 153
    }
   },
   {
@@ -193,7 +193,7 @@
    "slug": "festo",
    "name": "Festo",
    "_count": {
-    "products": 18
+    "products": 168
    }
   },
   {
@@ -201,7 +201,7 @@
    "slug": "eaton",
    "name": "Eaton",
    "_count": {
-    "products": 9
+    "products": 182
    }
   },
   {
@@ -209,7 +209,7 @@
    "slug": "delta-electronics",
    "name": "Delta Electronics",
    "_count": {
-    "products": 4
+    "products": 55
    }
   }
  ],
@@ -221,7 +221,7 @@
    "country": "Switzerland",
    "logo": null,
    "_count": {
-    "products": 12
+    "products": 103
    }
   },
   {
@@ -251,7 +251,7 @@
    "country": "—",
    "logo": null,
    "_count": {
-    "products": 4
+    "products": 55
    }
   },
   {
@@ -261,7 +261,7 @@
    "country": "—",
    "logo": null,
    "_count": {
-    "products": 9
+    "products": 182
    }
   },
   {
@@ -271,7 +271,7 @@
    "country": "Germany",
    "logo": null,
    "_count": {
-    "products": 18
+    "products": 168
    }
   },
   {
@@ -281,7 +281,7 @@
    "country": "Japan",
    "logo": null,
    "_count": {
-    "products": 27
+    "products": 287
    }
   },
   {
@@ -301,7 +301,7 @@
    "country": "Germany",
    "logo": null,
    "_count": {
-    "products": 5
+    "products": 153
    }
   },
   {
@@ -311,7 +311,7 @@
    "country": "France",
    "logo": null,
    "_count": {
-    "products": 42
+    "products": 287
    }
   },
   {
@@ -321,7 +321,7 @@
    "country": "Germany",
    "logo": null,
    "_count": {
-    "products": 27
+    "products": 253
    }
   }
  ]
