@@ -18,3 +18,25 @@ export const mailHref = `mailto:${contact.email}`;
 export const whatsAppHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
   contact.whatsappGreeting
 )}`;
+
+/**
+ * WhatsApp link that opens a chat with the part already written into the
+ * message, so the buyer never has to type a part number by hand. Bilingual:
+ * the message follows the site language the buyer is reading in.
+ *
+ * The URL is included because WhatsApp on the recipient side renders it as a
+ * preview card with the product photo, which is the fastest way for whoever
+ * answers to see what is being asked about.
+ */
+export function whatsAppOrderHref(
+  p: { sku: string; name: string; brand: string; price?: number | null; url: string },
+  lang: "en" | "ar",
+  qty = 1
+): string {
+  const price = p.price && p.price > 0 ? ` — USD ${p.price.toFixed(2)}` : "";
+  const text =
+    lang === "ar"
+      ? `مرحباً، أود طلب هذه القطعة:\n\n${p.brand} ${p.sku}\n${p.name}${price}\nالكمية: ${qty}\n\n${p.url}\n\nمن فضلكم أفيدوني بالسعر ومدة التوريد.`
+      : `Hello, I'd like to order this part:\n\n${p.brand} ${p.sku}\n${p.name}${price}\nQty: ${qty}\n\n${p.url}\n\nPlease confirm price and lead time.`;
+  return `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(text)}`;
+}

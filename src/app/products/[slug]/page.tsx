@@ -8,6 +8,7 @@ import { unitWeightKg } from "@/lib/pricing";
 import { getT } from "@/i18n/server";
 import AddToCartButton from "@/components/product/AddToCartButton";
 import InquireButton from "@/components/product/InquireButton";
+import WhatsAppOrderButton from "@/components/product/WhatsAppOrderButton";
 import ProductImage from "@/components/product/ProductImage";
 import ProductCard from "@/components/product/ProductCard";
 import { mirrorProduct } from "@/lib/catalog-mirror";
@@ -185,6 +186,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 </p>
               </>
             )}
+            <WhatsAppOrderButton
+              product={{
+                sku: product.sku, name: product.name, brand: product.brand.name,
+                price: Number(product.price),
+                url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexumotion.com"}/products/${product.slug}`,
+              }}
+            />
           </div>
           {product.priceTiers.length > 0 && (
             <div className="mt-4 pt-4 border-t border-slate-100">
