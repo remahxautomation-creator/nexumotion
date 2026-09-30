@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/product/ProductCard";
 import { parseJsonArray } from "@/lib/utils";
 import { mirrorBrand, type MirrorProduct } from "@/lib/catalog-mirror";
+import ListingSchema from "@/components/seo/ListingSchema";
 import OfflineCatalogueNotice from "@/components/catalog/OfflineCatalogueNotice";
 
 export const dynamic = "force-dynamic";
@@ -103,6 +104,11 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {offline && <OfflineCatalogueNotice />}
+      <ListingSchema
+        siteUrl={process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexumotion.com"}
+        kind="brands" name={view.name} slug={slug}
+        products={view.products} total={view.productCount}
+      />
 
       <div className="bg-white rounded-lg border border-slate-200 p-6 mb-8">
         <h1 className="text-2xl font-bold text-slate-900">{view.name}</h1>

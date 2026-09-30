@@ -69,25 +69,64 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     product.category.slug
   );
 
+  // Structured data. An assistant asked "who sells <part number> in Egypt"
+  // reads this, not the layout: the part number under both `sku` and `mpn`
+  // (buyers quote the manufacturer's number, not ours), the photo, the price,
+  // and every specification as an additionalProperty so a question about a
+  // rating can be answered from the markup without parsing the table.
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexumotion.com";
+  const productUrl = `${siteUrl}/products/${product.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
-    sku: product.sku,
-    name: product.name,
-    description: product.description ?? product.shortDesc ?? undefined,
-    brand: { "@type": "Brand", name: product.brand.name },
-    category: product.category.name,
-    offers: {
-      "@type": "Offer",
-      price: Number(product.price),
-      priceCurrency: "USD",
-      availability:
-        product.stockStatus === "OUT_OF_STOCK"
-          ? "https://schema.org/OutOfStock"
-          : product.stockStatus === "BACKORDER"
-          ? "https://schema.org/BackOrder"
-          : "https://schema.org/InStock",
-    },
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": `${productUrl}#product`,
+        sku: product.sku,
+        mpn: product.sku,
+        name: product.name,
+        url: productUrl,
+        description: product.description ?? product.shortDesc ?? undefined,
+        image: images.map((i) => `${siteUrl}${i}`),
+        brand: { "@type": "Brand", name: product.brand.name },
+        category: product.category.name,
+        ...(certs.length ? { hasCertification: certs } : {}),
+        ...(product.weightKg
+          ? { weight: { "@type": "QuantitativeValue", value: Number(product.weightKg), unitCode: "KGM" } }
+          : {}),
+        additionalProperty: product.specs.map((s) => ({
+          "@type": "PropertyValue",
+          name: s.specName,
+          value: s.unit ? `${s.value} ${s.unit}` : s.value,
+        })),
+        offers: {
+          "@type": "Offer",
+          url: productUrl,
+          price: Number(product.price),
+          priceCurrency: "USD",
+          itemCondition: "https://schema.org/NewCondition",
+          availability:
+            product.stockStatus === "OUT_OF_STOCK"
+              ? "https://schema.org/OutOfStock"
+              : product.stockStatus === "BACKORDER"
+              ? "https://schema.org/BackOrder"
+              : "https://schema.org/InStock",
+          seller: { "@id": `${siteUrl}/#organization` },
+          areaServed: ["EG", "SA", "AE", "KW", "QA", "OM", "BH"],
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+          {
+            "@type": "ListItem", position: 2, name: product.category.name,
+            item: `${siteUrl}/categories/${product.category.slug}`,
+          },
+          { "@type": "ListItem", position: 3, name: product.sku, item: productUrl },
+        ],
+      },
+    ],
   };
 
   return (

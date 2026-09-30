@@ -7,6 +7,7 @@ import { getT } from "@/i18n/server";
 import { parseJsonArray } from "@/lib/utils";
 import { mirrorCategoryFiltered, type MirrorProduct } from "@/lib/catalog-mirror";
 import OfflineCatalogueNotice from "@/components/catalog/OfflineCatalogueNotice";
+import ListingSchema from "@/components/seo/ListingSchema";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   if (mirrored) {
     return renderCategory({
+      slug,
       name: mirrored.category.name,
       description: mirrored.category.description,
       products: mirrored.products,
@@ -61,6 +63,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     const fallback = await mirrorCategoryFiltered(slug, {}).catch(() => null);
     if (!fallback) notFound();
     return renderCategory({
+      slug,
       name: fallback.category.name,
       description: fallback.category.description,
       products: fallback.products,
@@ -137,6 +140,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   }));
 
   return renderCategory({
+      slug,
     name: category.name,
     description: category.description,
     products: products.map((p) => ({
@@ -172,6 +176,7 @@ function loadCategory(slug: string) {
 
 type RenderArgs = {
   name: string;
+  slug: string;
   description: string | null;
   products: MirrorProduct[];
   filters: Array<{ key: string; name: string; unit: string | null; dataType: string; options: string[] }>;
@@ -183,10 +188,14 @@ type RenderArgs = {
   t: Awaited<ReturnType<typeof getT>>["t"];
 };
 
-function renderCategory({ name, description, products, filters, brands, offline, t }: RenderArgs) {
+function renderCategory({ name, slug, description, products, filters, brands, offline, t }: RenderArgs) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {offline && <OfflineCatalogueNotice />}
+      <ListingSchema
+        siteUrl={process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexumotion.com"}
+        kind="categories" name={name} slug={slug} products={products} total={products.length}
+      />
       <h1 className="text-2xl font-bold text-slate-900">{name}</h1>
       <p className="text-sm text-slate-500 mt-1 mb-6">{description}</p>
 
