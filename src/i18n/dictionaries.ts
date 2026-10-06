@@ -110,6 +110,11 @@ export const dictionaries = {
     "footer.hours": "Sun–Thu, 9:00–17:00 (Cairo)",
     "footer.rights":
       "NexuMotion — Authenticity guaranteed. CE · UL · ISO 9001 certified suppliers.",
+    "cookies.title": "Cookies.",
+    "cookies.body": "We use essential cookies to run the site, and analytics and advertising cookies only if you agree. You can change this at any time.",
+    "cookies.accept": "Accept",
+    "cookies.reject": "Reject",
+    "cookies.settings": "Cookie settings",
     "footer.privacy": "Privacy policy",
     "footer.terms": "Terms & conditions",
     "legal.updated": "Last updated",
@@ -618,6 +623,11 @@ export const dictionaries = {
     "footer.hours": "الأحد–الخميس، ٩:٠٠–١٧:٠٠ (القاهرة)",
     "footer.rights":
       "نيكسو موشن — ضمان الأصالة. موردون معتمدون CE · UL · ISO 9001.",
+    "cookies.title": "ملفات تعريف الارتباط.",
+    "cookies.body": "نستخدم ملفات ضرورية لتشغيل الموقع، وملفات للتحليلات والإعلانات فقط إذا وافقت. يمكنك تغيير ذلك في أي وقت.",
+    "cookies.accept": "موافق",
+    "cookies.reject": "رفض",
+    "cookies.settings": "إعدادات ملفات تعريف الارتباط",
     "footer.privacy": "سياسة الخصوصية",
     "footer.terms": "الشروط والأحكام",
     "legal.updated": "آخر تحديث",

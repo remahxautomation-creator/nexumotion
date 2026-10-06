@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import SocialLinks from "@/components/layout/SocialLinks";
+import { CookieSettingsLink } from "@/components/layout/CookieBanner";
 import { contact } from "@/content/site-content";
 import { telHref, mailHref } from "@/lib/contact";
 import { getT } from "@/i18n/server";
@@ -43,6 +44,7 @@ export default async function Footer() {
             <li><span className="text-slate-500">{t("footer.shipping")}</span></li>
             <li><Link href="/privacy" className="hover:text-white">{t("footer.privacy")}</Link></li>
             <li><Link href="/terms" className="hover:text-white">{t("footer.terms")}</Link></li>
+            <li><CookieSettingsLink label={t("cookies.settings")} /></li>
           </ul>
         </div>
         <div>

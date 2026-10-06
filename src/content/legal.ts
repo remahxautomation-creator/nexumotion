@@ -16,7 +16,7 @@ import { contact, formatAddress } from "@/content/site-content";
 export type LegalSection = { heading: string; paragraphs: string[]; bullets?: string[] };
 export type LegalDoc = { title: string; intro: string; sections: LegalSection[] };
 
-export const LEGAL_UPDATED = "2026-09-16";
+export const LEGAL_UPDATED = "2026-10-06";
 
 const EMAIL = contact.email;
 const PHONE = contact.phone;
@@ -57,7 +57,9 @@ export const privacy: Record<"en" | "ar", LegalDoc> = {
       {
         heading: "4. Cookies and analytics",
         paragraphs: [
-          "The site sets a cookie to remember your language choice and, if you sign in, a session cookie. We use Google Analytics 4 and Google Ads conversion tracking to understand how visitors reach the site and whether an advertisement led to an enquiry. These set Google cookies and send your IP address and page activity to Google, which may process it outside Egypt under its own privacy policy. You can block these cookies in your browser without losing any function of the site.",
+          "The site sets two strictly necessary cookies: one remembering your language choice, and — only if you sign in — a session cookie. Neither is optional, because the site cannot work without them, and neither is shared with anyone.",
+          "Analytics and advertising cookies are different. We use Google Analytics 4 and Google Ads conversion tracking to understand how visitors reach the site and whether an advertisement led to an enquiry. These identify your browser across visits and send your IP address and page activity to Google, which may process it outside Egypt under its own privacy policy.",
+          "These are switched off until you accept them. On your first visit a bar asks; nothing analytical or advertising-related is stored before you answer, and rejecting costs you no functionality. Your answer is kept in a cookie named nx-consent for six months. To change it, use “Cookie settings” at the bottom of any page, or clear this site’s data in your browser.",
         ],
       },
       {
@@ -148,7 +150,9 @@ export const privacy: Record<"en" | "ar", LegalDoc> = {
       {
         heading: "4. ملفات تعريف الارتباط والتحليلات",
         paragraphs: [
-          "يضع الموقع ملف تعريف ارتباط لتذكّر اللغة التي اخترتها، وملف جلسة عند تسجيل الدخول. نستخدم Google Analytics 4 وتتبع تحويلات Google Ads لفهم كيف يصل الزوار إلى الموقع وما إذا كان إعلان ما قد أدى إلى استفسار. تضع هذه الأدوات ملفات تعريف ارتباط من Google وترسل عنوان IP ونشاط الصفحات إلى Google، التي قد تعالجها خارج مصر وفق سياسة الخصوصية الخاصة بها. يمكنك حظر هذه الملفات من متصفحك دون فقدان أي وظيفة في الموقع.",
+          "يضع الموقع ملفَّي تعريف ارتباط ضروريين فقط: واحد لتذكّر اللغة التي اخترتها، وآخر للجلسة عند تسجيل الدخول فقط. وكلاهما لا غنى عنه لعمل الموقع ولا يُشارَك مع أي جهة.",
+          "أما ملفات التحليلات والإعلانات فمختلفة. نستخدم Google Analytics 4 وتتبع تحويلات Google Ads لفهم كيف يصل الزوار إلى الموقع وما إذا كان إعلان ما قد أدى إلى استفسار. وهذه تتعرّف على متصفحك عبر الزيارات وترسل عنوان IP ونشاط الصفحات إلى Google، التي قد تعالجها خارج مصر وفق سياسة الخصوصية الخاصة بها.",
+          "وهذه معطَّلة حتى توافق عليها. في زيارتك الأولى يظهر شريط يسألك؛ ولا يُخزَّن أي شيء يتعلق بالتحليلات أو الإعلانات قبل إجابتك، ولا يفقدك الرفض أي وظيفة. تُحفَظ إجابتك في ملف باسم nx-consent لمدة ستة أشهر. ولتغييرها استخدم «إعدادات ملفات تعريف الارتباط» أسفل أي صفحة، أو امسح بيانات هذا الموقع من متصفحك.",
         ],
       },
       {

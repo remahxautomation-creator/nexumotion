@@ -14,6 +14,8 @@ import GoogleTag from "@/components/analytics/GoogleTag";
 import GoogleTagManager from "@/components/analytics/GoogleTagManager";
 import LocalBusinessSchema from "@/components/seo/LocalBusinessSchema";
 import WebSiteSchema from "@/components/seo/WebSiteSchema";
+import CookieBanner from "@/components/layout/CookieBanner";
+import { CONSENT_BOOTSTRAP } from "@/lib/consent";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
@@ -99,6 +101,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             it lands. It is a static string, so the cost is bytes, not work. */}
         <LocalBusinessSchema siteUrl={process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexumotion.com"} />
         <WebSiteSchema siteUrl={process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexumotion.com"} />
+        {/* Consent defaults must be set before any Google tag loads, or the
+            first page view writes cookies nobody agreed to. */}
+        <script dangerouslySetInnerHTML={{ __html: CONSENT_BOOTSTRAP }} />
         <GoogleTagManager />
         <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
         <I18nProvider locale={locale}>
@@ -108,6 +113,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Footer />
           <SiteGuide />
           <ContactDock />
+          <CookieBanner />
           <GoogleTag />
         </I18nProvider>
       </body>
