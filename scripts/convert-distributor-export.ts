@@ -13,9 +13,11 @@
  *            copying it is the same problem as copying their photographs.
  *            The product page shows the name, specs and datasheet instead.
  *   dropped  image_url — distributor photography, see ingest-product-images.ts.
- *   dropped  stock — we do not hold the distributor's stock. Everything imports
- *            as backorder, which is honest; the admin can raise stockQty for
- *            parts actually on the shelf.
+ *   dropped  stock — the distributor's own on-hand figure says nothing about
+ *            what we can supply. Rows import at DEFAULT_STOCK_QTY so they are
+ *            sellable on arrival; the admin sets a real figure per SKU once
+ *            one exists. Importing at 0 would silently flip the whole
+ *            catalogue back to backorder on the next run.
  *   skipped  rows marked Obsolete. Listing a part the manufacturer has ended
  *            invites enquiries we cannot fulfil.
  *
@@ -27,6 +29,9 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { parseCsv } from "../src/lib/csv";
 
 const GBP_USD = Number(process.env.GBP_USD ?? "1.28");
+
+/** Imported rows are available to order; see the note above. */
+const DEFAULT_STOCK_QTY = Number(process.env.STOCK_QTY ?? "25");
 
 const [src, out] = process.argv.slice(2);
 if (!src || !out) {
@@ -71,7 +76,7 @@ for (const r of rows) {
   const shortDesc = r.name.length > 140 ? r.name.slice(0, 137) + "…" : r.name;
 
   lines.push([
-    sku, r.name, r.brand, r.scope, String(price), "0", shortDesc, r.pdf_sheet, JSON.stringify(specs),
+    sku, r.name, r.brand, r.scope, String(price), String(DEFAULT_STOCK_QTY), shortDesc, r.pdf_sheet, JSON.stringify(specs),
   ].map(csvCell).join(","));
 }
 

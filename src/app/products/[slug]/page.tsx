@@ -207,7 +207,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
           )}
           <div className={`inline-block mt-3 text-xs font-semibold px-2.5 py-1 rounded-full ${stock.className}`}>
-            {stock.label}{product.stockQty > 0 ? ` — ${product.stockQty} units` : ""}
+            {/* The status only. The quantity behind it is a sourcing figure,
+                not a shelf count, and publishing it would make a far more
+                specific claim than "available" — which is all a buyer needs
+                before they ask for a price. Admin still sees the number. */}
+            {t(stock.labelKey)}
           </div>
           <div className="mt-4">
             {isPurchasable(product) ? (
