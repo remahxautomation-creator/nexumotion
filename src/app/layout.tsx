@@ -15,6 +15,7 @@ import GoogleTagManager from "@/components/analytics/GoogleTagManager";
 import LocalBusinessSchema from "@/components/seo/LocalBusinessSchema";
 import WebSiteSchema from "@/components/seo/WebSiteSchema";
 import CookieBanner from "@/components/layout/CookieBanner";
+import ContactClickTracker from "@/components/analytics/ContactClickTracker";
 import { CONSENT_BOOTSTRAP } from "@/lib/consent";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -114,6 +115,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <SiteGuide />
           <ContactDock />
           <CookieBanner />
+          <ContactClickTracker />
           <GoogleTag />
         </I18nProvider>
       </body>

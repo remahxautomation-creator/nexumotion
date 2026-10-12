@@ -52,6 +52,21 @@ export const ADS_CONVERSION_LABEL: string | null = "c1usCI7jtd8cEMags7xE";
 export const ADS_ID = "AW-18380279878";
 
 /**
+ * Conversion actions for the two ways a buyer contacts us without a form.
+ *
+ * Most enquiries in this market never touch the inquiry page — the buyer taps
+ * WhatsApp or the phone number and asks there. Those were invisible to Ads,
+ * so both campaigns were optimising on the minority of leads that happen to
+ * arrive by form. These make the majority countable.
+ *
+ * A click is not a conversation, so neither is as strong a signal as a
+ * submitted form. They are separate actions in the Ads account precisely so
+ * their value can be set independently of the form conversion.
+ */
+export const ADS_WHATSAPP_LABEL = "vQhFCLrWhZodEMags7xE";
+export const ADS_PHONE_LABEL = "pyvDCL3WhZodEMags7xE";
+
+/**
  * Pushes to dataLayer, which both GTM and gtag.js read.
  *
  * Never throws. If analytics is blocked, absent, or broken, the caller carries
@@ -114,15 +129,39 @@ export function trackLead(params: {
   // needs the label that identifies WHICH conversion action this is. Until
   // that label is filled in above, this is deliberately inert rather than
   // firing a malformed conversion that shows up as unattributed.
-  if (ADS_CONVERSION_LABEL) {
-    try {
-      window.gtag?.("event", "conversion", {
-        send_to: `${ADS_ID}/${ADS_CONVERSION_LABEL}`,
-      });
-    } catch {
-      /* ignore */
-    }
+  if (ADS_CONVERSION_LABEL) sendAdsConversion(ADS_CONVERSION_LABEL);
+}
+
+/**
+ * Google Ads counts conversions from its own event, not from dataLayer, and
+ * needs the label identifying WHICH action this is.
+ *
+ * Never throws: an ad blocker leaves `gtag` undefined, and instrumentation
+ * must not take a WhatsApp link down with it.
+ */
+function sendAdsConversion(label: string, params: Record<string, unknown> = {}): void {
+  try {
+    window.gtag?.("event", "conversion", { send_to: `${ADS_ID}/${label}`, ...params });
+  } catch {
+    /* ignore */
   }
+}
+
+/**
+ * A click on a WhatsApp or phone link, anywhere on the site.
+ *
+ * Value is sent per the Ads account's configuration for these two actions.
+ * EGP rather than USD: the catalogue prices in dollars, but these actions were
+ * created with the account's own currency, and a mismatch is reported at
+ * Google's conversion rate rather than rejected — which would quietly distort
+ * every bid decision that reads it.
+ */
+export function trackContactClick(channel: "whatsapp" | "phone", context?: string): void {
+  push({ event: "contact_click", contact_channel: channel, contact_context: context });
+  sendAdsConversion(channel === "whatsapp" ? ADS_WHATSAPP_LABEL : ADS_PHONE_LABEL, {
+    value: 1.0,
+    currency: "EGP",
+  });
 }
 
 export function trackAddToCart(item: AnalyticsItem): void {
