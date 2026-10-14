@@ -17,7 +17,8 @@ import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
  *
  * It waits DELAY_MS rather than firing on load. Google counts an interstitial
  * that covers the content on arrival against the page on mobile, and the ads
- * land here. A visitor who leaves inside fifteen seconds never sees it.
+ * land here, so the delay is the thing keeping this on the right side of that
+ * line — shortening it further trades ranking for reach.
  *
  * Dismissal is remembered, so it asks once and then stops asking.
  *
@@ -27,7 +28,7 @@ import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
  * to keep in step.
  */
 
-const DELAY_MS = 15_000;
+const DELAY_MS = 5_000;
 const DISMISS_KEY = "nx-lead-popup";
 /** Long enough not to nag, short enough that a returning buyer is asked again. */
 const DISMISS_DAYS = 30;
