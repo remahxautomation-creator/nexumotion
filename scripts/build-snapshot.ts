@@ -99,7 +99,55 @@ const brandsListing = all<{
   _count: { products: b.count },
 }));
 
-const snapshot = { generatedAt: new Date().toISOString(), stats, categories, brandWall, brandsListing };
+/**
+ * Featured products, published rather than queried.
+ *
+ * The home page used to fetch these from D1 on every cold isolate. That meant
+ * loading Prisma's WASM engine and the D1 adapter before a single byte of the
+ * page could render — enough, on its own, to exceed the Worker CPU limit and
+ * return Cloudflare error 1102 to the visitor. It was paying that price to
+ * fetch an empty list, because nothing is currently flagged as featured.
+ *
+ * Carrying the rows here costs a few hundred bytes in a file the Worker
+ * already has in memory, and the home page stops touching the database at all.
+ * Flag a product with isFeatured and re-run `npm run catalog:publish`.
+ */
+const featured = all<{
+  id: string; sku: string; name: string; slug: string;
+  price: number; comparePrice: number | null;
+  stockStatus: string; stockQty: number; images: string | null;
+  brandName: string; brandSlug: string;
+}>(
+  `SELECT p.id, p.sku, p.name, p.slug, p.price, p.comparePrice,
+          p.stockStatus, p.stockQty, p.images,
+          b.name AS brandName, b.slug AS brandSlug
+     FROM Product p
+     JOIN Brand b ON b.id = p.brandId
+    WHERE p.isFeatured = 1 AND p.isActive = 1
+    ORDER BY p.name ASC
+    LIMIT 8`
+).map((p) => ({
+  ...p,
+  // The column is a JSON array; the card only ever shows the first image.
+  image: (() => {
+    try {
+      const a = JSON.parse(p.images ?? "[]");
+      return Array.isArray(a) && typeof a[0] === "string" ? (a[0] as string) : null;
+    } catch {
+      return null;
+    }
+  })(),
+  images: undefined,
+}));
+
+const snapshot = {
+  generatedAt: new Date().toISOString(),
+  stats,
+  categories,
+  brandWall,
+  brandsListing,
+  featured,
+};
 
 writeFileSync(OUT_PATH, JSON.stringify(snapshot, null, 1));
 
@@ -110,3 +158,4 @@ console.log(
     `${brandsListing.length} listed brands`
 );
 console.log(`  stats: ${JSON.stringify(stats)}`);
+console.log(`  ${featured.length} featured product(s)`);

@@ -1,8 +1,6 @@
 import Link from "next/link";
 import LeadPopup from "@/components/home/LeadPopup";
 import { ArrowRight, Cpu, Zap, Shield, Truck, FileText, Upload } from "lucide-react";
-import { prisma } from "@/lib/prisma";
-import { cachedStat } from "@/lib/stats-cache";
 import snapshot from "@/content/catalog-snapshot.json";
 import ProductCard from "@/components/product/ProductCard";
 import HeroCollage, { HeroBrandStrip } from "@/components/home/HeroCollage";
@@ -11,22 +9,16 @@ import Testimonials from "@/components/home/Testimonials";
 import WhyEngineers from "@/components/home/WhyEngineers";
 import BrandWall from "@/components/home/BrandWall";
 import { categoryIcon } from "@/lib/category-icons";
-import { parseJsonArray } from "@/lib/utils";
 import { getT } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 
-/**
- * Declared outside the call so the empty fallback can be typed from the query
- * itself — `include: { brand: true }` widens the row, and a bare `[]` would not
- * match it.
- */
-const featuredQuery = () =>
-  prisma.product.findMany({
-    where: { isFeatured: true, isActive: true },
-    take: 8,
-    include: { brand: true },
-  });
+type FeaturedProduct = {
+  id: string; sku: string; name: string; slug: string;
+  price: number; comparePrice: number | null;
+  stockStatus: string; stockQty: number;
+  brandName: string; brandSlug: string; image: string | null;
+};
 
 export default async function HomePage() {
   const { t } = await getT();
@@ -45,9 +37,13 @@ export default async function HomePage() {
   // The one live read left on the page. `take: 8` on an indexed column is
   // cheap, and there are currently no featured products at all, so an empty
   // result costs nothing.
-  const featured = await cachedStat("home.featured", featuredQuery, {
-    fallback: [] as Awaited<ReturnType<typeof featuredQuery>>,
-  });
+  // Published, not queried. This was a D1 call on every cold isolate, which
+  // meant loading Prisma's WASM engine before the page could render — enough
+  // on its own to exceed the Worker CPU limit and serve Cloudflare error 1102.
+  // Re-run `npm run catalog:publish` after flagging a product as featured.
+  // Typed explicitly: nothing is flagged as featured today, so the published
+  // array is empty and TypeScript infers never[] from the JSON import.
+  const featured = snapshot.featured as FeaturedProduct[];
 
   return (
     <div>
@@ -166,7 +162,8 @@ export default async function HomePage() {
                 p={{
                   id: p.id, sku: p.sku, name: p.name, slug: p.slug,
                   price: Number(p.price), comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-                  stockStatus: p.stockStatus, stockQty: p.stockQty, brandName: p.brand.name, image: parseJsonArray(p.images)[0] ?? null,
+                  stockStatus: p.stockStatus, stockQty: p.stockQty,
+                  brandName: p.brandName, brandSlug: p.brandSlug, image: p.image,
                 }}
               />
             ))}
