@@ -3,8 +3,7 @@ import { notFound } from "next/navigation";
 import * as Icons from "lucide-react";
 import { CheckCircle2, ArrowRight, ClipboardList } from "lucide-react";
 import { systems, getSystem } from "@/content/systems";
-import { prisma } from "@/lib/prisma";
-import { mirrorCategoriesBySlugs, mirrorBrandsByNames } from "@/lib/catalog-mirror";
+import snapshot from "@/content/catalog-snapshot.json";
 import { getT, getLocale } from "@/i18n/server";
 import SystemDiagram from "@/components/systems/SystemDiagram";
 import InquiryForm from "@/components/systems/InquiryForm";
@@ -32,31 +31,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 /**
  * The category and brand chips shown under a system.
  *
- * Read from the published mirror, with D1 behind it only for entries added
- * since the last `npm run mirror`. If both are unavailable the page still
- * renders — these are supporting links, and losing them is not worth losing
- * the system description, diagram and inquiry form that visitors came for.
+ * Read from the bundled snapshot — 4 KB, already in the Worker, no I/O.
+ *
+ * These used to come from the catalogue mirror, which meant fetching and
+ * parsing listing.json on every request. That file was 45 KB when it was
+ * written and 447 KB after the catalogue grew to 1,492 parts, and parsing it
+ * pushed the request past the Worker CPU limit: these eight pages were failing
+ * roughly 44% of the time with Cloudflare error 1102 while lighter pages
+ * stayed up.
+ *
+ * Nothing here needs a product row. The chips show a category name, its
+ * product count and a brand name, all of which the snapshot already carries
+ * for the whole catalogue. The D1 fallback goes with it — a bundled import
+ * cannot fail, so there is nothing left to fall back from.
  */
-async function loadSystemRefs(categorySlugs: string[], brandNames: string[]) {
-  const [categories, brands] = await Promise.all([
-    mirrorCategoriesBySlugs(categorySlugs).catch(() => null),
-    mirrorBrandsByNames(brandNames).catch(() => null),
-  ]);
-  if (categories && brands) return { categories, brands };
-
-  try {
-    const [liveCategories, liveBrands] = await Promise.all([
-      prisma.category.findMany({
-        where: { slug: { in: categorySlugs } },
-        include: { _count: { select: { products: true } } },
-      }),
-      prisma.brand.findMany({ where: { name: { in: brandNames } } }),
-    ]);
-    return { categories: liveCategories, brands: liveBrands };
-  } catch (err) {
-    console.warn(`[systems] no mirror and D1 failed: ${String(err).slice(0, 200)}`);
-    return { categories: [], brands: [] };
-  }
+function loadSystemRefs(categorySlugs: string[], brandNames: string[]) {
+  const wanted = new Set(categorySlugs);
+  const wantedBrands = new Set(brandNames.map((b) => b.toLowerCase()));
+  return {
+    categories: snapshot.categories.filter((c) => wanted.has(c.slug)),
+    brands: snapshot.brandsListing.filter((b) => wantedBrands.has(b.name.toLowerCase())),
+  };
 }
 
 export default async function SystemPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -69,11 +64,7 @@ export default async function SystemPage({ params }: { params: Promise<{ slug: s
   const copy = locale === "ar" ? system.ar : system.en;
   const Icon = (Icons[system.icon as keyof typeof Icons] ?? Icons.Package) as Icons.LucideIcon;
 
-  // Mirror first, exactly as the catalogue pages do. These two queries were the
-  // only database reads on this page, and they are the reason four of the eight
-  // system pages returned 500 while the rest of the site was healthy: they were
-  // missed when the catalogue moved to the mirror.
-  const { categories, brands } = await loadSystemRefs(system.categorySlugs, system.brands);
+  const { categories, brands } = loadSystemRefs(system.categorySlugs, system.brands);
 
   const related = systems.filter((s) => s.slug !== system.slug).slice(0, 3);
 
