@@ -20,7 +20,9 @@ import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
  * land here, so the delay is the thing keeping this on the right side of that
  * line — shortening it further trades ranking for reach.
  *
- * Dismissal is remembered, so it asks once and then stops asking.
+ * It asks on every visit to the home page — the owner's call, made with the
+ * trade stated: more leads, and repeat buyers see it every time they come
+ * back. Closing it holds for that page view only.
  *
  * Submission goes to the existing /api/inquiries endpoint — the same
  * validation, honeypot, rate limiting, database record and email notification
@@ -29,28 +31,6 @@ import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
  */
 
 const DELAY_MS = 5_000;
-const DISMISS_KEY = "nx-lead-popup";
-/** Long enough not to nag, short enough that a returning buyer is asked again. */
-const DISMISS_DAYS = 30;
-
-function dismissedRecently(): boolean {
-  try {
-    const at = Number(localStorage.getItem(DISMISS_KEY));
-    return Number.isFinite(at) && at > 0 && Date.now() - at < DISMISS_DAYS * 86_400_000;
-  } catch {
-    // Private windows and blocked storage throw. Showing it is the safer
-    // failure: one extra prompt beats a prompt that never appears at all.
-    return false;
-  }
-}
-
-function remember() {
-  try {
-    localStorage.setItem(DISMISS_KEY, String(Date.now()));
-  } catch {
-    /* nothing to do */
-  }
-}
 
 export default function LeadPopup() {
   const { t, locale } = useT();
@@ -69,7 +49,6 @@ export default function LeadPopup() {
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (dismissedRecently()) return;
     const timer = setTimeout(() => setOpen(true), DELAY_MS);
     return () => clearTimeout(timer);
   }, []);
@@ -78,10 +57,7 @@ export default function LeadPopup() {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        remember();
-        setOpen(false);
-      }
+      if (e.key === "Escape") setOpen(false);
     };
     document.addEventListener("keydown", onKey);
     closeRef.current?.focus();
@@ -89,7 +65,6 @@ export default function LeadPopup() {
   }, [open]);
 
   function close() {
-    remember();
     setOpen(false);
   }
 
@@ -129,7 +104,6 @@ export default function LeadPopup() {
 
     if (res?.ok) {
       setSent(true);
-      remember();
       // Same conversion the inquiry page fires, and only on a confirmed 200.
       trackLead({ listed: false });
     } else {
