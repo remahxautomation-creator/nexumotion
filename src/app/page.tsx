@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LeadPopup from "@/components/home/LeadPopup";
 import { ArrowRight, Cpu, Zap, Shield, Truck, FileText, Upload } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { cachedStat } from "@/lib/stats-cache";
@@ -200,6 +201,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Home page only — see the component for why. */}
+      <LeadPopup />
     </div>
   );
 }

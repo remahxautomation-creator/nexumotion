@@ -459,6 +459,11 @@ export const dictionaries = {
     "inquiry.part.benefit1": "We source outside the catalogue, including obsolete lines.",
     "inquiry.part.benefit2": "Lead time and price confirmed before you commit.",
     "inquiry.part.benefit3": "Genuine parts, with equivalents offered where they fit.",
+    "popup.title": "Tell us what you need",
+    "popup.subtitle": "Send it once and we reply with price, availability and lead time — by email and on WhatsApp.",
+    "popup.messagePlaceholder": "Part numbers, brands or the application. Quantities and target date if you have them.",
+    "popup.alsoWhatsApp": "Send on WhatsApp too",
+    "popup.close": "Close",
     "inquiry.failed": "Could not send. Please try again.",
     "inquiry.privacyNote": "We use your details to answer this enquiry only.",
 
@@ -971,6 +976,11 @@ export const dictionaries = {
     "inquiry.part.benefit1": "نوفّر القطع خارج الكتالوج، بما فيها الموديلات المتوقفة.",
     "inquiry.part.benefit2": "تأكيد السعر ومدة التوريد قبل الالتزام.",
     "inquiry.part.benefit3": "قطع أصلية، مع عرض البدائل المناسبة عند توفرها.",
+    "popup.title": "أخبرنا بما تحتاجه",
+    "popup.subtitle": "أرسل طلبك مرة واحدة ونرد عليك بالسعر والتوافر ومدة التوريد — عبر البريد الإلكتروني وواتساب.",
+    "popup.messagePlaceholder": "أرقام القطع أو الماركات أو طبيعة التطبيق، مع الكميات وتاريخ التسليم المطلوب إن وُجدت.",
+    "popup.alsoWhatsApp": "أرسله عبر واتساب أيضاً",
+    "popup.close": "إغلاق",
     "inquiry.failed": "تعذّر الإرسال. من فضلك حاول مرة أخرى.",
     "inquiry.privacyNote": "نستخدم بياناتك للرد على هذا الطلب فقط.",
 
