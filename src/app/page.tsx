@@ -1,6 +1,6 @@
 import Link from "next/link";
 import LeadPopup from "@/components/home/LeadPopup";
-import { ArrowRight, Cpu, Zap, Shield, Truck, FileText, Upload } from "lucide-react";
+import { ArrowRight, Cpu, Zap, Shield, Truck, FileText, Upload, Sparkles } from "lucide-react";
 import snapshot from "@/content/catalog-snapshot.json";
 import ProductCard from "@/components/product/ProductCard";
 import HeroCollage, { HeroBrandStrip } from "@/components/home/HeroCollage";
@@ -8,8 +8,10 @@ import Customers from "@/components/home/Customers";
 import Testimonials from "@/components/home/Testimonials";
 import WhyEngineers from "@/components/home/WhyEngineers";
 import BrandWall from "@/components/home/BrandWall";
+import NeedFinder from "@/components/home/NeedFinder";
 import { categoryIcon } from "@/lib/category-icons";
 import { getT } from "@/i18n/server";
+import { auth } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +24,9 @@ type FeaturedProduct = {
 
 export default async function HomePage() {
   const { t } = await getT();
+  // Only decides whether the assistant asks for contact details; a failed
+  // session read just treats the visitor as a guest.
+  const session = await auth().catch(() => null);
   // Every figure here comes from the published snapshot, never the database.
   //
   // These used to be cachedStat() calls with the snapshot as a fallback, which
@@ -105,6 +110,18 @@ export default async function HomePage() {
 
       {/* ── Brands we stock — first thing after the hero ──────────────── */}
       <BrandWall />
+
+      {/* ── Sourcing assistant: for parts we list and parts we don't ──── */}
+      <section id="assistant" className="bg-gradient-to-b from-[#0A6286]/5 to-transparent scroll-mt-24">
+        <div className="max-w-7xl mx-auto px-4 py-10">
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles className="w-5 h-5 text-[#07858F]" />
+            <h2 className="text-xl font-bold text-slate-900">{t("need.title")}</h2>
+          </div>
+          <p className="text-sm text-slate-600 mb-5 max-w-3xl">{t("need.lead")}</p>
+          <NeedFinder signedIn={!!session?.user} userName={session?.user?.name ?? session?.user?.email} />
+        </div>
+      </section>
 
       {/* ── Trust bar ────────────────────────────────────────────────── */}
       <section className="bg-white border-b border-slate-200">

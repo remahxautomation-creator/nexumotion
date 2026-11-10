@@ -1,6 +1,15 @@
 import Image from "next/image";
 import { Cpu, Gauge, Radio, ShieldCheck, Timer, Zap } from "lucide-react";
 import { featuredBrands } from "@/content/site-content";
+import snapshot from "@/content/catalog-snapshot.json";
+
+/**
+ * Brands with a logo file and live products, in the curated order. Stocked
+ * only, so the hero never shows a manufacturer a visitor cannot then buy from
+ * (Mitsubishi Electric and Rittal have logos but no live lines today).
+ */
+const STOCKED = new Set(snapshot.brandWall.map((b) => b.slug));
+const heroLogos = (n: number) => featuredBrands.filter((b) => b.logo && STOCKED.has(b.slug)).slice(0, n);
 
 /**
  * Hero artwork: a photographic bench of automation components, with the real
@@ -50,7 +59,7 @@ const SYSTEM_ICONS = [
  * traffic actually lands. Six logos in one row is the compromise.
  */
 export function HeroBrandStrip({ className = "" }: { className?: string }) {
-  const logos = featuredBrands.filter((b) => b.logo).slice(0, 6);
+  const logos = heroLogos(6);
 
   return (
     <div className={`rounded-xl bg-white/95 border border-white/25 p-3 ${className}`} aria-hidden>
@@ -75,7 +84,7 @@ export function HeroBrandStrip({ className = "" }: { className?: string }) {
 export default function HeroCollage({ className = "" }: { className?: string }) {
   // Only brands whose logo file actually exists. A missing file would render an
   // empty box in the most prominent position on the site.
-  const logos = featuredBrands.filter((b) => b.logo).slice(0, 12);
+  const logos = heroLogos(12);
 
   return (
     <div className={`relative ${className}`} aria-hidden>

@@ -253,20 +253,21 @@ export const featuredBrands: FeaturedBrand[] = [
   { slug: "pilz", logo: "/brands/pilz.svg" },
   { slug: "allen-bradley", logo: "/brands/allen-bradley.svg" },
   { slug: "danfoss", logo: "/brands/danfoss.svg" },
-  { slug: "delta-electronics" },
+  { slug: "delta-electronics", logo: "/brands/delta-electronics.svg" },
   { slug: "mitsubishi-electric", logo: "/brands/mitsubishi-electric.svg" },
   { slug: "autonics" },
-  // November 2026 expansion (docs/COMPETITOR-BRAND-PLAN.md). No logo on
-  // purpose: HeroCollage shows every entry with a logo whether or not it has
-  // stock, while BrandWall shows these only once they have active products.
-  { slug: "phoenix-contact" },
-  { slug: "turck" },
+  // November 2026 expansion (docs/COMPETITOR-BRAND-PLAN.md). Logos are the
+  // manufacturers' own files from Wikimedia Commons; Banner, SensoPart and
+  // Sanyo Denki have none there yet and render as wordmarks. Both BrandWall and
+  // HeroCollage show only brands with live products.
+  { slug: "phoenix-contact", logo: "/brands/phoenix-contact.svg" },
+  { slug: "turck", logo: "/brands/turck.webp" },
   { slug: "banner-engineering" },
-  { slug: "finder" },
-  { slug: "murrelektronik" },
-  { slug: "rittal" },
-  { slug: "pizzato" },
-  { slug: "werma" },
+  { slug: "finder", logo: "/brands/finder.webp" },
+  { slug: "murrelektronik", logo: "/brands/murrelektronik.svg" },
+  { slug: "rittal", logo: "/brands/rittal.svg" },
+  { slug: "pizzato", logo: "/brands/pizzato.webp" },
+  { slug: "werma", logo: "/brands/werma.webp" },
   { slug: "sensopart" },
   { slug: "sanyo-denki" },
 ];

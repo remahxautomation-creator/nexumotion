@@ -33,7 +33,9 @@ export default function RegisterPage() {
       return;
     }
     await signIn("credentials", { email: form.email, password: form.password, redirect: false });
-    router.push("/account");
+    // Back to where sign-up was asked for (the home page assistant), local paths only.
+    const back = new URLSearchParams(window.location.search).get("callbackUrl");
+    router.push(back && back.startsWith("/") && !back.startsWith("//") ? back : "/account");
     router.refresh();
   };
 
