@@ -64,3 +64,8 @@ d1-seed.sql
 import-images/*
 !import-images/README.md
 import-templates/.d1-sync.sql
+
+# Local database copies and production SQL from catalogue imports (may hold customer data)
+import-data/*.db
+import-data/d1-backup-*.sql
+import-data/d1-sync-*.sql
