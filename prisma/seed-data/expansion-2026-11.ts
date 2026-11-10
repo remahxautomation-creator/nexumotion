@@ -9,6 +9,12 @@
 // categories.ts and brand-intel.ts spread these in, so seed.ts and
 // seed-taxonomy.ts pick them up on a fresh database too.
 //
+// The 2026-09-15 pruning (commit c240ef4) soft-deleted 263 brands and 10
+// categories rather than removing them. Some of what this expansion wants is
+// among them, so the script reactivates by name instead of creating duplicates:
+// "Enclosures & Cooling" is reused rather than adding a second enclosure
+// category, and the brands listed in expansionReactivateBrands come back.
+//
 // Descriptions are our own wording. Only brand names, countries and
 // product-line names come from the research. Those are facts, not copy.
 import type { CategorySeed } from "./categories";
@@ -41,7 +47,7 @@ export const expansionBrandIntel: BrandIntel[] = [
   },
   {
     name: "Rittal", website: "https://www.rittal.com", tier: 1,
-    focus: ["Enclosures & Climate Control"],
+    focus: ["Enclosures & Cooling"],
     note: "Carried by Electech. Default panel enclosure on Egyptian projects; AE compact enclosures and TopTherm fans move fastest.",
   },
   {
@@ -98,7 +104,9 @@ export const expansionBrandIntel: BrandIntel[] = [
 
 export const expansionCategories: CategorySeed[] = [
   {
-    name: "Enclosures & Climate Control",
+    // Same name as the category the RS import created (slug enclosures-cooling),
+    // so production reuses that row and its shipping-weight estimate.
+    name: "Enclosures & Cooling",
     description: "Panel enclosures, junction boxes, filter fans, cooling units and heaters.",
     specs: [
       { name: "Product Type", key: "product_type", dataType: "ENUM", options: ["Enclosure", "Junction box", "Filter fan", "Cooling unit", "Heater", "Thermostat"] },
@@ -147,3 +155,11 @@ export const expansionCategories: CategorySeed[] = [
     ],
   },
 ];
+
+/**
+ * Already in brands.ts / categories.ts and possibly soft-deleted in production
+ * by the September pruning. Reactivated (or created if missing) so the
+ * DigiKey import and the expansion brands have somewhere to land.
+ */
+export const expansionReactivateBrands = ["Turck", "Banner Engineering", "Phoenix Contact", "Finder"];
+export const expansionReactivateCategories = ["Operator Devices"];

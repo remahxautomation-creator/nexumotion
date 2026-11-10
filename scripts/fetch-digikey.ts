@@ -49,7 +49,7 @@ const JOBS: Job[] = [
   { brand: "Finder", match: /^finder/i, category: "Relays & Timers", keywords: ["relay", "timer"], limit: 60 },
   { brand: "Murrelektronik", match: /^murr/i, category: "Cables & Connectors", keywords: ["cordset M12"], limit: 50 },
   { brand: "Murrelektronik", match: /^murr/i, category: "Power Supplies", keywords: ["power supply"], limit: 30 },
-  { brand: "Rittal", match: /^rittal/i, category: "Enclosures & Climate Control", keywords: ["enclosure", "fan filter"], limit: 60 },
+  { brand: "Rittal", match: /^rittal/i, category: "Enclosures & Cooling", keywords: ["enclosure", "fan filter"], limit: 60 },
   { brand: "Werma", match: /^werma/i, category: "Signalling Devices", keywords: ["signal tower", "beacon"], limit: 50 },
   { brand: "Sanyo Denki", match: /^sanyo denki/i, category: "Servo & Motion", keywords: ["servo motor", "stepper motor"], limit: 40 },
   { brand: "SensoPart", match: /^sensopart/i, category: "Sensors & Switches", keywords: ["sensor"], limit: 40 },

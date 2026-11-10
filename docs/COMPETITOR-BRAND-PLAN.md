@@ -85,7 +85,7 @@ The competitors also cover several **product areas that have no category** on ou
 
 | Missing category | Brands that need it |
 |---|---|
-| Enclosures & Climate Control | Rittal, TP Electric (enclosures) |
+| Enclosures & Cooling | Rittal, TP Electric (enclosures) |
 | Signalling Devices (signal towers, beacons, sounders) | Werma, Banner (tower lights) |
 | UPS & Power Quality | Salicru |
 | Industrial Plugs & Sockets | TP Electric |
@@ -111,7 +111,7 @@ stock the brand (a sign of Egyptian demand), and how easy it is to get a supplie
 | **Banner Engineering** | Sensors & Switches, Safety, Signalling | Q4X / QS18 photoelectric, EZ-SCREEN light curtains, K50 / TL50 tower lights |
 | **Finder** | Relays & Timers | Series 40 / 46 / 55 plug-in relays, 34 / 38 slim relays, 80 timers, sockets |
 | **Murrelektronik** | Cables & Connectors, Power Supplies, Industrial Networking | M12/M8 cordsets, Emparro power supplies, Xelity unmanaged switches, MVK / Cube I/O |
-| **Rittal** | _new:_ Enclosures & Climate Control | AE compact enclosures, KX small boxes, TopTherm fans & filters, SK coolers |
+| **Rittal** | _new:_ Enclosures & Cooling | AE compact enclosures, KX small boxes, TopTherm fans & filters, SK coolers |
 | **Pizzato** | Safety, Operator Devices | FR / FD position switches, NG / NS safety interlocks, E2 pushbuttons |
 
 ### Priority B: add after A (specialist, carried by one competitor, clear demand)
@@ -137,78 +137,76 @@ stock the brand (a sign of Egyptian demand), and how easy it is to get a supplie
 
 ---
 
-## 4. Execution plan
+## 4. Status and runbook
 
-### Step 1: Taxonomy ✅ code done, apply it with the commands below
-Data is in `prisma/seed-data/expansion-2026-11.ts` (12 brands, 4 categories, 25 spec
-templates). Apply it with:
-```bash
-npx tsx scripts/add-taxonomy-expansion.ts --commit        # local DB + writes the SQL
-npx wrangler d1 execute nexumotion --remote --file=prisma/taxonomy-expansion.sql
-npx tsx prisma/generate-import-templates.ts               # CSV templates for the new categories
-```
-Both steps are idempotent. New brands and categories stay hidden on the site until they
-have at least one product (`scripts/build-snapshot.ts` filters empty ones).
-
-Original task list:
-1. Add the **Priority A + B brands** that aren't in it yet to `prisma/seed-data/brands.ts`
-   (name, country, one-line description written by us), and to `brand-intel.ts` (tier,
-   focus categories, website, note).
-2. Add the **new categories**, each with spec templates in `prisma/seed-data/categories.ts`:
-   - `Enclosures & Climate Control`: material, dimensions_mm (H×W×D), ip_rating, mounting, cooling_capacity_w
-   - `Signalling Devices`: type (tower/beacon/sounder), diameter_mm, voltage, light_source, ip_rating, tiers
-   - `UPS & Power Quality`: power_kva, topology (online/line-interactive/offline), input_voltage, backup_min, phases
-   - `Energy Meters`: measurement, communication, mounting, accuracy_class
-3. Run `npx tsx scripts/seed-taxonomy.ts --commit` locally, then mirror to D1 and
-   `npm run catalog:import` templates (`prisma/generate-import-templates.ts`).
-4. Add logos to `public/brands/` via `scripts/fetch-brand-logos.ts` (nominative use only).
-5. Add Arabic names for the new categories to `src/i18n/dictionaries.ts` if category chrome is translated.
-
-### Step 2: Product data (business side, runs in parallel)
-For each Priority A brand, ask the Egyptian authorised distributor or the manufacturer rep for a
-**product master export (CSV/BMEcat) plus a price list**. Ask for the top movers first, not the
-full range. Target **50–150 SKUs per brand** at launch, about 700 SKUs for Priority A.
-- Phoenix Contact, Turck, Banner, Murrelektronik, Rittal and Finder all publish
-  ETIM/BMEcat data to partners, so `scripts/convert-distributor-export.ts` can map it.
-- Use the competitors' **visible SKUs as a demand signal only** (e.g. Turck `BI5U-M18-AP6X-H1141`,
-  Siemens `3RK2400-2CE00-2AA2`). They tell us which part numbers Egyptian buyers search
-  for. The data itself still comes from the manufacturer.
-
-### Step 3: Import (per brand, using the existing pipeline in `docs/ADDING-PRODUCTS.md`)
-```bash
-npm run catalog:import -- import-templates/<category>.csv            # dry run
-npm run catalog:import -- import-templates/<category>.csv --commit
-npm run catalog:images -- --commit
-npx wrangler d1 execute nexumotion --remote --file=import-templates/.d1-sync.sql
-npm run catalog:publish
-```
-
-### Step 4: Cross-references, our competitive edge
-Competitors list parts by brand only. We add `CrossReference` rows so search turns a part
-number into equivalents:
-- Turck ⇄ SICK ⇄ Autonics ⇄ Omron inductive sensors (same thread, range, output)
-- Finder ⇄ Omron (MY/G2R) ⇄ Schneider (RXM) plug-in relays
-- Banner ⇄ SICK photoelectric and light curtains
-- Murrelektronik ⇄ Phoenix Contact M12 cordsets and power supplies
-- CAHO ⇄ Autonics ⇄ Omron temperature controllers
-
-### Step 5: Merchandising
-- Homepage "Brands we carry" strip: add the new Priority A logos.
-- Brand pages: use the `brand-intel` note as an engineer-oriented summary ("volume lines").
-- SEO: brand + "Egypt" landing titles (e.g. "Turck sensors in Egypt"). Competitors rank
-  for these terms with thin pages, and our spec tables beat them.
-
----
-
-## 5. Suggested sequence
-
-| Phase | Scope | Output |
+### What is built (branch `docs/competitor-brand-plan`)
+| Piece | Where | Status |
 |---|---|---|
-| 1 | Taxonomy: 12 new brands + 4 categories (Step 1) | Brands and categories exist, import templates are ready |
-| 2 | Priority A data: Phoenix Contact, Turck, Banner, Finder | About 400 SKUs live |
-| 3 | Priority A data: Murrelektronik, Rittal, Pizzato | About 300 SKUs, Enclosures category live |
-| 4 | Cross-reference pass (Step 4) | Competitor-SKU search covers the new brands |
-| 5 | Priority B brands, as supplier data arrives | Werma, SensoPart, Sanyo Denki, RTA, Salicru, CAHO, AECO, Entes, Emas |
+| 12 new brands + brand intel | `prisma/seed-data/expansion-2026-11.ts` | ✅ |
+| 3 new categories (Signalling Devices, UPS & Power Quality, Energy Meters) with filters | same file | ✅ |
+| "Enclosures & Cooling" and "Operator Devices" **reactivated**, not duplicated; enclosure filters added | same file | ✅ |
+| Turck, Banner Engineering, Phoenix Contact, Finder **reactivated** (soft-deleted on 2026-09-15) | same file | ✅ |
+| One idempotent SQL file for local DB **and** D1 | `scripts/add-taxonomy-expansion.ts` → `prisma/taxonomy-expansion.sql` | ✅ tested against a pruned-production replica |
+| Empty categories hidden from homepage, menu and About count | `scripts/build-snapshot.ts` | ✅ |
+| Shipping-weight estimates for new categories (UPS 12 kg etc.) | `src/lib/pricing.ts` | ✅ |
+| New brands on the homepage brand wall once they have stock (no logo, so not in the hero) | `src/content/site-content.ts` | ✅ |
+| DigiKey Product Information V4 fetcher | `scripts/fetch-digikey.ts`, `scripts/digikey/map.ts` | ✅ unit-tested; first live run pending |
+
+Products that the September pruning deactivated stay deactivated. This only brings back
+the brand and category rows.
+
+### Runbook: on the Windows dev machine, in order
+```bash
+git fetch origin && git checkout docs/competitor-brand-plan && npm install
+
+# 1. Brands and categories: local DB, then production
+npm run catalog:taxonomy -- --commit
+npx wrangler d1 execute nexumotion --remote --file=prisma/taxonomy-expansion.sql
+
+# 2. DigiKey (keys in .env: DIGIKEY_CLIENT_ID / DIGIKEY_CLIENT_SECRET)
+npm run catalog:digikey -- --probe          # ~25 requests: which brands DigiKey carries
+npm run catalog:digikey                     # → import-data/digikey-<date>.csv
+#    optional: MARKUP=1.25 npm run catalog:digikey   |   --only=Turck,Rittal
+
+# 3. Import: dry run first, read the rejects, then commit
+npm run catalog:import -- import-data/digikey-<date>.csv
+npm run catalog:import -- import-data/digikey-<date>.csv --commit
+npx wrangler d1 execute nexumotion --remote --file=import-templates/.d1-sync.sql
+
+# 4. Photos (optional), then publish and deploy
+npm run catalog:images -- --commit
+npm run catalog:publish
+git add -A && git commit -m "catalogue: DigiKey import for expansion brands" && git push
+```
+
+### Decisions taken (and why)
+| Decision | Reason |
+|---|---|
+| Reactivate soft-deleted rows instead of inserting new ones | A second "Rittal" or a second enclosure category would split filters, URLs and SEO |
+| Leave September-deactivated **products** off | That was a deliberate owner decision. The expansion should bring new, priced, current parts, not revive old RS rows |
+| Hide empty categories automatically | Brands already worked this way. Categories can now be created ahead of their first import without showing "0 products" |
+| DigiKey via the official API, not scraping DigiKey or RS | Allowed under DigiKey's terms, stable, and returns structured parametric data. Scraping breaks on site changes and breaches terms |
+| Compose product names, drop DigiKey descriptions and photos | Same rule the RS converter follows: facts only, no copied copy |
+| Prices imported at DigiKey qty-1 × `MARKUP` | A starting list price. Review before going live, since DigiKey's US price is not your landed Egypt cost |
+
+### Still open
+1. **Rotate the DigiKey Client Secret.** It was shared in a chat transcript.
+2. **First live DigiKey run** (`--probe`). The API code follows DigiKey's V4 documentation but
+   could not be run from the cloud session, which has no route to `api.digikey.com`.
+3. **Brands DigiKey won't have:** Salicru, Entes, Emas, CAHO, AECO, RTA, likely Pizzato and
+   SensoPart. Ask the Egyptian agent or manufacturer for a CSV/BMEcat export. It imports
+   through the same `catalog:import` once the columns match `import-templates/<category>.csv`.
+4. **Al Sakr Online.** The September pruning commit was authored from `alsakronline@gmail.com`.
+   If that catalogue (SICK, Murrelektronik, RTA, Sanyo Denki, CAHO…) is your own, export it from
+   its WooCommerce admin (Products → Export → CSV). That is your data, and it is the fastest
+   source for the brands DigiKey lacks.
+5. **Cross-references** (Step 4 of the original plan) once products exist: Turck ⇄ SICK ⇄
+   Autonics inductive, Finder ⇄ Omron ⇄ Schneider relays, Banner ⇄ SICK photoelectric,
+   Murrelektronik ⇄ Phoenix Contact cordsets.
+6. **Logos** for the new brands (`scripts/fetch-brand-logos.ts`), then add `logo` in
+   `featuredBrands` for those that have stock.
+7. **Pricing review:** confirm markup and landed cost (freight + customs + VAT) per brand
+   before announcing.
 
 ## Sources
 - ALFA Tech: [home](https://alfatech-eg.net/), [our partners](https://alfatech-eg.net/our-partners/), [about](https://alfatech-eg.net/about-us/), [LinkedIn](https://www.linkedin.com/company/alfatechelectrical)

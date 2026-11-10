@@ -256,6 +256,16 @@ export const featuredBrands: FeaturedBrand[] = [
   { slug: "delta-electronics" },
   { slug: "mitsubishi-electric", logo: "/brands/mitsubishi-electric.svg" },
   { slug: "autonics" },
+  // November 2026 expansion (docs/COMPETITOR-BRAND-PLAN.md). No logo on
+  // purpose: HeroCollage shows every entry with a logo whether or not it has
+  // stock, while BrandWall shows these only once they have active products.
+  { slug: "phoenix-contact" },
+  { slug: "turck" },
+  { slug: "banner-engineering" },
+  { slug: "finder" },
+  { slug: "murrelektronik" },
+  { slug: "rittal" },
+  { slug: "pizzato" },
 ];
 
 // ── Social profiles ─────────────────────────────────────────────────────────

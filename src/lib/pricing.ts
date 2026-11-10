@@ -59,6 +59,11 @@ export const DEFAULT_CATEGORY_WEIGHT_KG: Record<string, number> = {
   "tools-workshop": 1.5,
   "electronic-components": 0.05,
   "enclosures-cooling": 3.0,
+  // November 2026 expansion. A UPS left on the 0.5 kg fallback would ship for
+  // a fraction of its real carriage cost.
+  "signalling-devices": 0.6,
+  "ups-power-quality": 12.0,
+  "energy-meters": 0.4,
 };
 
 export const FALLBACK_WEIGHT_KG = 0.5;

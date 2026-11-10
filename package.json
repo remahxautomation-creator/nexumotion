@@ -14,6 +14,8 @@
     "mirror": "tsx scripts/build-snapshot.ts && tsx scripts/build-mirror.ts",
     "catalog:publish": "tsx scripts/build-mirror.ts && tsx scripts/build-snapshot.ts",
     "catalog:import": "tsx scripts/import-products.ts",
+    "catalog:taxonomy": "tsx scripts/add-taxonomy-expansion.ts",
+    "catalog:digikey": "tsx scripts/fetch-digikey.ts",
     "catalog:images": "tsx scripts/ingest-product-images.ts",
     "catalog:check-datasheets": "tsx scripts/check-datasheet-liveness.ts",
     "seo:indexnow": "tsx scripts/indexnow.ts"
