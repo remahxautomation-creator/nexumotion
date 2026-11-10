@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Sparkles, Loader2, Send, CheckCircle2, UserPlus, ArrowRight } from "lucide-react";
 import { useT } from "@/i18n/client";
 import { formatPrice } from "@/lib/utils";
+import { contact } from "@/content/site-content";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 type Match = { sku: string; name: string; slug: string; brand: string; price: number };
 type Stage = "describe" | "questions" | "result" | "sent" | "limit";
@@ -90,6 +92,22 @@ export default function NeedFinder({ signedIn, userName }: { signedIn: boolean; 
     } else {
       setError(data.error && data.error !== "signup_required" ? data.error : t("need.error"));
     }
+  };
+
+  // The same request as a WhatsApp message to the business number. The site
+  // cannot send WhatsApp itself without the paid Business API, so the buyer
+  // sends it: one tap, and the chat opens directly with the person who asked.
+  const whatsAppRequest = () => {
+    const labels = ["Brand / part number", "Key ratings", "Quantity / timing"];
+    const text = [
+      "Part request from nexumotion.com",
+      "",
+      `Need: ${need}`,
+      ...answers.map((a, i) => `${labels[i]}: ${a || "not sure"}`),
+      "",
+      signedIn ? userName ?? "" : [form.name, form.company, form.email, form.phone].filter(Boolean).join(" · "),
+    ].join("\n");
+    return `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(text)}`;
   };
 
   const restart = () => {
@@ -210,6 +228,15 @@ export default function NeedFinder({ signedIn, userName }: { signedIn: boolean; 
           <div className="text-sm">
             <div className="font-semibold text-slate-900">{t("need.sent")}</div>
             <p className="text-slate-600 mt-0.5">{t("need.sentBody")}</p>
+            <a
+              href={whatsAppRequest()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1EBE5A] text-white font-semibold text-sm px-4 py-2 rounded-lg"
+            >
+              <WhatsAppIcon className="w-4 h-4" /> {t("need.whatsapp")}
+            </a>
+            <br />
             <button onClick={restart} className="text-[#0A6286] font-medium mt-2 inline-flex items-center gap-1">
               {t("need.restart")} <ArrowRight className="w-4 h-4 rtl:rotate-180" />
             </button>

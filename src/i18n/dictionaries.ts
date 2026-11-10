@@ -530,6 +530,7 @@ export const dictionaries = {
     "need.signup": "Create account",
     "need.login": "Sign in",
     "need.restart": "New request",
+    "need.whatsapp": "Also send on WhatsApp for a faster reply",
     "need.error": "Could not send. Please try again or contact us on WhatsApp.",
 
     "guide.launcher": "Help",
@@ -1079,6 +1080,7 @@ export const dictionaries = {
     "need.signup": "إنشاء حساب",
     "need.login": "تسجيل الدخول",
     "need.restart": "طلب جديد",
+    "need.whatsapp": "أرسله أيضًا على واتساب لرد أسرع",
     "need.error": "تعذّر الإرسال. حاول مرة أخرى أو تواصل معنا عبر واتساب.",
 
     "guide.launcher": "مساعدة",
