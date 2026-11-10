@@ -1,13 +1,13 @@
 {
- "generatedAt": "2026-10-14T17:58:43.026Z",
+ "generatedAt": "2026-11-10T11:10:20.598Z",
  "stats": {
-  "activeProductCount": 1492,
-  "specCount": 17332,
+  "activeProductCount": 1903,
+  "specCount": 22105,
   "crossRefCount": 0,
-  "datasheetCount": 1439,
-  "brandCountAll": 13,
-  "categoryCountAll": 14,
-  "activeBrandCount": 11
+  "datasheetCount": 1813,
+  "brandCountAll": 29,
+  "categoryCountAll": 15,
+  "activeBrandCount": 15
  },
  "categories": [
   {
@@ -63,7 +63,7 @@
    "name": "Sensors & Switches",
    "slug": "sensors-switches",
    "_count": {
-    "products": 146
+    "products": 206
    }
   },
   {
@@ -71,7 +71,7 @@
    "name": "Safety",
    "slug": "safety",
    "_count": {
-    "products": 100
+    "products": 130
    }
   },
   {
@@ -79,7 +79,7 @@
    "name": "Power Supplies",
    "slug": "power-supplies",
    "_count": {
-    "products": 105
+    "products": 185
    }
   },
   {
@@ -95,7 +95,7 @@
    "name": "Relays & Timers",
    "slug": "relays-timers",
    "_count": {
-    "products": 101
+    "products": 261
    }
   },
   {
@@ -103,7 +103,7 @@
    "name": "Cables & Connectors",
    "slug": "cables-connectors",
    "_count": {
-    "products": 157
+    "products": 208
    }
   },
   {
@@ -120,6 +120,14 @@
    "slug": "temperature-controllers",
    "_count": {
     "products": 135
+   }
+  },
+  {
+   "id": "cat-signalling-devices",
+   "name": "Signalling Devices",
+   "slug": "signalling-devices",
+   "_count": {
+    "products": 30
    }
   }
  ],
@@ -173,11 +181,27 @@
    }
   },
   {
+   "id": "cmtfoi6h6006fvb90eorpgcuk",
+   "slug": "banner-engineering",
+   "name": "Banner Engineering",
+   "_count": {
+    "products": 120
+   }
+  },
+  {
    "id": "cmtfoi6ha006gvb90f61gpdzg",
    "slug": "sick",
    "name": "SICK",
    "_count": {
     "products": 153
+   }
+  },
+  {
+   "id": "cmtfoi6hq006jvb90rqw6pjr9",
+   "slug": "phoenix-contact",
+   "name": "Phoenix Contact",
+   "_count": {
+    "products": 140
    }
   },
   {
@@ -197,6 +221,14 @@
    }
   },
   {
+   "id": "cmtfoi6jx006zvb90gef9u891",
+   "slug": "finder",
+   "name": "Finder",
+   "_count": {
+    "products": 120
+   }
+  },
+  {
    "id": "cmtfoi96x000bvbdsw3kjdq12",
    "slug": "eaton",
    "name": "Eaton",
@@ -210,6 +242,14 @@
    "name": "Delta Electronics",
    "_count": {
     "products": 55
+   }
+  },
+  {
+   "id": "brand-murrelektronik",
+   "slug": "murrelektronik",
+   "name": "Murrelektronik",
+   "_count": {
+    "products": 31
    }
   }
  ],
@@ -232,6 +272,16 @@
    "logo": null,
    "_count": {
     "products": 1
+   }
+  },
+  {
+   "id": "cmtfoi6h6006fvb90eorpgcuk",
+   "slug": "banner-engineering",
+   "name": "Banner Engineering",
+   "country": "USA",
+   "logo": null,
+   "_count": {
+    "products": 120
    }
   },
   {
@@ -275,6 +325,26 @@
    }
   },
   {
+   "id": "cmtfoi6jx006zvb90gef9u891",
+   "slug": "finder",
+   "name": "Finder",
+   "country": "Italy",
+   "logo": null,
+   "_count": {
+    "products": 120
+   }
+  },
+  {
+   "id": "brand-murrelektronik",
+   "slug": "murrelektronik",
+   "name": "Murrelektronik",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 31
+   }
+  },
+  {
    "id": "cmtfoi6ed005vvb9035hyo4x9",
    "slug": "omron",
    "name": "Omron",
@@ -282,6 +352,16 @@
    "logo": null,
    "_count": {
     "products": 287
+   }
+  },
+  {
+   "id": "cmtfoi6hq006jvb90rqw6pjr9",
+   "slug": "phoenix-contact",
+   "name": "Phoenix Contact",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 140
    }
   },
   {
