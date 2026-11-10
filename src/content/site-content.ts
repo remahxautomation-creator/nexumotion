@@ -201,20 +201,29 @@ export const contact = {
  * and both the map card and the schema will pick it up.
  */
 export const location = {
-  lat: 30.2984627,
-  lng: 31.7469096,
-  street: null as string | null,
+  // The Google Maps place the owner supplied on 2026-11-10: the mall's own
+  // listing, so the pin, the directions link and the schema point at a named
+  // building rather than a dropped pin.
+  lat: 30.2976953,
+  lng: 31.7472681,
+  street: { en: "Al Markaz Al Alamy Mall", ar: "مول المركز العالمي" } as { en: string; ar: string } | null,
   city: { en: "10th of Ramadan City", ar: "مدينة العاشر من رمضان" },
   governorate: { en: "Sharqia Governorate", ar: "محافظة الشرقية" },
   country: { en: "Egypt", ar: "مصر" },
   countryCode: "EG",
-  /** The pin the owner supplied, for the "open in Google Maps" link. */
-  mapsUrl: "https://www.google.com/maps/@30.2984627,31.7469096,16z",
+  /** One line on how to find us, for the location card and the catalogue. */
+  directions: {
+    en: "Inside Al Markaz Al Alamy Mall, 10th of Ramadan City, Egypt's largest industrial city, about 50 km east of Cairo on the Cairo–Ismailia road and minutes from its industrial zones.",
+    ar: "داخل مول المركز العالمي بمدينة العاشر من رمضان، أكبر مدينة صناعية في مصر، على بُعد نحو ٥٠ كم شرق القاهرة على طريق القاهرة – الإسماعيلية، وعلى دقائق من مناطقها الصناعية.",
+  },
+  /** The mall's Google Maps place, for the "open in Google Maps" link. */
+  mapsUrl:
+    "https://www.google.com/maps/place/%D9%85%D9%88%D9%84+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2+%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85%D9%89%E2%80%AD/@30.2977249,31.7470398,20z/data=!4m6!3m5!1s0x1457fd40aca943fb:0xab790972a9675adc!8m2!3d30.2976953!4d31.7472681!16s%2Fg%2F11rchn4y74",
 };
 
 /** "10th of Ramadan City, Sharqia Governorate, Egypt" in either language. */
 export function formatAddress(lang: "en" | "ar"): string {
-  return [location.street, location.city[lang], location.governorate[lang], location.country[lang]]
+  return [location.street?.[lang], location.city[lang], location.governorate[lang], location.country[lang]]
     .filter(Boolean)
     .join(lang === "ar" ? "، " : ", ");
 }

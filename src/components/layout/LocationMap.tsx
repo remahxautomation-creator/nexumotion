@@ -28,10 +28,18 @@ export default async function LocationMap() {
   const address = formatAddress(lang);
   const embedSrc =
     `https://maps.google.com/maps?q=${location.lat},${location.lng}` +
-    `&z=15&output=embed&hl=${lang}`;
+    `&z=17&output=embed&hl=${lang}`;
 
   const rows = [
-    { Icon: MapPin, content: <span>{address}</span> },
+    {
+      Icon: MapPin,
+      content: (
+        <>
+          <span className="font-medium text-slate-800">{address}</span>
+          <span className="block text-slate-500 mt-1">{location.directions[lang]}</span>
+        </>
+      ),
+    },
     {
       Icon: Phone,
       content: (

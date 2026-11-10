@@ -38,7 +38,7 @@ export default function LocalBusinessSchema({ siteUrl }: { siteUrl: string }) {
     email: contact.email,
     address: {
       "@type": "PostalAddress",
-      ...(location.street ? { streetAddress: location.street } : {}),
+      ...(location.street ? { streetAddress: location.street.en } : {}),
       addressLocality: location.city.en,
       addressRegion: location.governorate.en,
       addressCountry: location.countryCode,

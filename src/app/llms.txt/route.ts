@@ -37,6 +37,8 @@ export async function GET() {
 - Company: NexuMotion (نيكسو موشن)
 - Address: ${formatAddress("en")}
 - Coordinates: ${location.lat}, ${location.lng}
+- How to find us: ${location.directions.en}
+- Google Maps: ${location.mapsUrl}
 - Phone / WhatsApp: ${contact.phone}
 - Email: ${contact.email}
 - Hours: Sunday–Thursday, 09:00–17:00 (Africa/Cairo)
