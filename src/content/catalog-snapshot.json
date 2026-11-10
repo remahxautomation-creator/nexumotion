@@ -1,13 +1,13 @@
 {
- "generatedAt": "2026-11-10T11:18:19.652Z",
+ "generatedAt": "2026-11-10T12:26:47.966Z",
  "stats": {
-  "activeProductCount": 2118,
+  "activeProductCount": 2269,
   "specCount": 24051,
   "crossRefCount": 0,
   "datasheetCount": 2022,
   "brandCountAll": 29,
-  "categoryCountAll": 15,
-  "activeBrandCount": 18
+  "categoryCountAll": 16,
+  "activeBrandCount": 20
  },
  "categories": [
   {
@@ -63,7 +63,7 @@
    "name": "Sensors & Switches",
    "slug": "sensors-switches",
    "_count": {
-    "products": 246
+    "products": 321
    }
   },
   {
@@ -71,7 +71,7 @@
    "name": "Safety",
    "slug": "safety",
    "_count": {
-    "products": 130
+    "products": 151
    }
   },
   {
@@ -95,7 +95,7 @@
    "name": "Relays & Timers",
    "slug": "relays-timers",
    "_count": {
-    "products": 261
+    "products": 272
    }
   },
   {
@@ -103,7 +103,15 @@
    "name": "Cables & Connectors",
    "slug": "cables-connectors",
    "_count": {
-    "products": 208
+    "products": 248
+   }
+  },
+  {
+   "id": "cmtfoi6bi004xvb909bcn7g7t",
+   "name": "Operator Devices",
+   "slug": "operator-devices",
+   "_count": {
+    "products": 4
    }
   },
   {
@@ -197,6 +205,14 @@
    }
   },
   {
+   "id": "cmtfoi6hl006ivb90vq4az0do",
+   "slug": "turck",
+   "name": "Turck",
+   "_count": {
+    "products": 76
+   }
+  },
+  {
    "id": "cmtfoi6hq006jvb90rqw6pjr9",
    "slug": "phoenix-contact",
    "name": "Phoenix Contact",
@@ -250,6 +266,14 @@
    "name": "Murrelektronik",
    "_count": {
     "products": 31
+   }
+  },
+  {
+   "id": "brand-pizzato",
+   "slug": "pizzato",
+   "name": "Pizzato",
+   "_count": {
+    "products": 75
    }
   }
  ],
@@ -375,6 +399,16 @@
    }
   },
   {
+   "id": "brand-pizzato",
+   "slug": "pizzato",
+   "name": "Pizzato",
+   "country": "Italy",
+   "logo": null,
+   "_count": {
+    "products": 75
+   }
+  },
+  {
    "id": "cmtfoi6ha006gvb90f61gpdzg",
    "slug": "sick",
    "name": "SICK",
@@ -422,6 +456,16 @@
    "logo": null,
    "_count": {
     "products": 253
+   }
+  },
+  {
+   "id": "cmtfoi6hl006ivb90vq4az0do",
+   "slug": "turck",
+   "name": "Turck",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 76
    }
   },
   {
