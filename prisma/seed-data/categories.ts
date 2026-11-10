@@ -1,3 +1,5 @@
+import { expansionCategories } from "./expansion-2026-11";
+
 type Spec = {
   name: string;
   key: string;
@@ -226,4 +228,5 @@ export const categories: CategorySeed[] = [
       { name: "Alarms", key: "alarms", dataType: "NUMBER" },
     ],
   },
+  ...expansionCategories,
 ];

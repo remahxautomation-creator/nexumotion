@@ -48,7 +48,13 @@ const stats = {
     "SELECT COUNT(*) c FROM Product WHERE isActive=1 AND datasheetUrl IS NOT NULL"
   ).c,
   brandCountAll: one<{ c: number }>("SELECT COUNT(*) c FROM Brand WHERE isActive=1").c,
-  categoryCountAll: one<{ c: number }>("SELECT COUNT(*) c FROM Category WHERE isActive=1").c,
+  // Categories with at least one active product. An empty category is created
+  // ahead of its first import (scripts/add-taxonomy-expansion.ts) and should
+  // not be counted, or listed, until it has something in it.
+  categoryCountAll: one<{ c: number }>(
+    `SELECT COUNT(*) c FROM Category c WHERE c.isActive=1
+       AND EXISTS (SELECT 1 FROM Product p WHERE p.categoryId=c.id AND p.isActive=1)`
+  ).c,
   activeBrandCount: one<{ c: number }>(
     `SELECT COUNT(*) c FROM Brand b WHERE b.isActive=1
        AND EXISTS (SELECT 1 FROM Product p WHERE p.brandId=b.id AND p.isActive=1)`
@@ -61,7 +67,11 @@ const categories = all<{ id: string; name: string; slug: string; count: number }
      FROM Category c
     WHERE c.isActive=1
     ORDER BY c.sortOrder ASC`
-).map((c) => ({ id: c.id, name: c.name, slug: c.slug, _count: { products: c.count } }));
+)
+  // Homepage grid, header menu and systems pages all read this list. Hide
+  // categories with no products yet, the same rule brandsListing applies.
+  .filter((c) => c.count > 0)
+  .map((c) => ({ id: c.id, name: c.name, slug: c.slug, _count: { products: c.count } }));
 
 // Same shape and ordering rule as the live query in BrandWall: only brands that
 // actually have active stock, so the fallback cannot render a dead link either.

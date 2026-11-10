@@ -139,7 +139,18 @@ stock the brand (a sign of Egyptian demand), and how easy it is to get a supplie
 
 ## 4. Execution plan
 
-### Step 1: Taxonomy (code change, about half a day)
+### Step 1: Taxonomy ✅ code done, apply it with the commands below
+Data is in `prisma/seed-data/expansion-2026-11.ts` (12 brands, 4 categories, 25 spec
+templates). Apply it with:
+```bash
+npx tsx scripts/add-taxonomy-expansion.ts --commit        # local DB + writes the SQL
+npx wrangler d1 execute nexumotion --remote --file=prisma/taxonomy-expansion.sql
+npx tsx prisma/generate-import-templates.ts               # CSV templates for the new categories
+```
+Both steps are idempotent. New brands and categories stay hidden on the site until they
+have at least one product (`scripts/build-snapshot.ts` filters empty ones).
+
+Original task list:
 1. Add the **Priority A + B brands** that aren't in it yet to `prisma/seed-data/brands.ts`
    (name, country, one-line description written by us), and to `brand-intel.ts` (tier,
    focus categories, website, note).

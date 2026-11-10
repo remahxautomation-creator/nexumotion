@@ -15,9 +15,12 @@
 // for reference and supplier contact ONLY. See CATALOG_SOURCING.md — these sites are
 // not to be scraped; their terms of use prohibit it.
 
+import { expansionBrandIntel } from "./expansion-2026-11";
+
 export type BrandIntel = {
   name: string;
-  website: string;
+  /** Omitted when not yet confirmed. */
+  website?: string;
   tier: 1 | 2 | 3;
   focus: string[];
   note: string;
@@ -287,4 +290,7 @@ export const brandIntel: BrandIntel[] = [
     focus: ["HMI & Visualization"],
     note: "Low-volume HMI alternative.",
   },
+
+  // ── November 2026 expansion — see docs/COMPETITOR-BRAND-PLAN.md ─────────
+  ...expansionBrandIntel,
 ];

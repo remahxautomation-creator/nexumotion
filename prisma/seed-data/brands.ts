@@ -1,3 +1,5 @@
+import { expansionBrands } from "./expansion-2026-11";
+
 export const brands = [
   { name: "Siemens", country: "Germany", description: "Global leader in industrial automation — SIMATIC PLCs, SINAMICS drives, and factory digitalization." },
   { name: "Schneider Electric", country: "France", description: "Energy management and automation — Modicon PLCs, Altivar drives, TeSys motor control." },
@@ -49,4 +51,5 @@ export const brands = [
   { name: "Crouzet", country: "France", description: "Micro motors, control relays, and switches." },
   { name: "Crydom", country: "USA", description: "Solid state relays and contactors." },
   { name: "Panasonic Industry", country: "Japan", description: "Sensors, relays, PLCs, and servo systems." },
+  ...expansionBrands,
 ];
