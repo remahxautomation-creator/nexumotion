@@ -1,13 +1,13 @@
 {
- "generatedAt": "2026-11-10T11:10:20.598Z",
+ "generatedAt": "2026-11-10T11:18:19.652Z",
  "stats": {
-  "activeProductCount": 1903,
-  "specCount": 22105,
+  "activeProductCount": 2118,
+  "specCount": 24051,
   "crossRefCount": 0,
-  "datasheetCount": 1813,
+  "datasheetCount": 2022,
   "brandCountAll": 29,
   "categoryCountAll": 15,
-  "activeBrandCount": 15
+  "activeBrandCount": 18
  },
  "categories": [
   {
@@ -47,7 +47,7 @@
    "name": "Servo & Motion",
    "slug": "servo-motion",
    "_count": {
-    "products": 107
+    "products": 182
    }
   },
   {
@@ -63,7 +63,7 @@
    "name": "Sensors & Switches",
    "slug": "sensors-switches",
    "_count": {
-    "products": 206
+    "products": 246
    }
   },
   {
@@ -127,7 +127,7 @@
    "name": "Signalling Devices",
    "slug": "signalling-devices",
    "_count": {
-    "products": 30
+    "products": 130
    }
   }
  ],
@@ -385,6 +385,16 @@
    }
   },
   {
+   "id": "brand-sanyo-denki",
+   "slug": "sanyo-denki",
+   "name": "Sanyo Denki",
+   "country": "Japan",
+   "logo": null,
+   "_count": {
+    "products": 75
+   }
+  },
+  {
    "id": "cmtfoi6du005rvb901j5x7b22",
    "slug": "schneider-electric",
    "name": "Schneider Electric",
@@ -395,6 +405,16 @@
    }
   },
   {
+   "id": "brand-sensopart",
+   "slug": "sensopart",
+   "name": "SensoPart",
+   "country": "Germany",
+   "logo": null,
+   "_count": {
+    "products": 40
+   }
+  },
+  {
    "id": "cmtfoi6dj005qvb906tyrvtjs",
    "slug": "siemens",
    "name": "Siemens",
@@ -402,6 +422,16 @@
    "logo": null,
    "_count": {
     "products": 253
+   }
+  },
+  {
+   "id": "cmtfoi9ed001svbdsqi9qr0dp",
+   "slug": "werma",
+   "name": "Werma",
+   "country": "—",
+   "logo": null,
+   "_count": {
+    "products": 100
    }
   }
  ],
