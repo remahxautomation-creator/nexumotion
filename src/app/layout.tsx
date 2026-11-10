@@ -35,6 +35,20 @@ export async function generateMetadata(): Promise<Metadata> {
   const ar = locale === "ar";
 
   return {
+    // Resolves every relative canonical and Open Graph URL to the real host.
+    // Without it, canonicals rendered as bare paths ("/products/abb-cp100n").
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexumotion.com"),
+
+    // Ownership tokens for Google Search Console and Bing Webmaster Tools (Bing's
+    // index also feeds ChatGPT search and Copilot). Set the env vars in the
+    // Cloudflare dashboard; nothing renders until they exist.
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+      other: process.env.BING_SITE_VERIFICATION
+        ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+        : undefined,
+    },
+
     title: {
       default: ar
         ? "نيكسو موشن — قطع غيار الأتمتة الصناعية | مصر والشرق الأوسط وأفريقيا"

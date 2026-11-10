@@ -282,24 +282,47 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
       </div>
 
-      {/* Spec matrix */}
-      {product.specs.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-lg font-bold text-slate-900 mb-4">Technical Specifications</h2>
-          <div className="bg-white rounded-lg border border-slate-200 overflow-x-auto">
-            <table className="w-full text-sm">
-              <tbody>
-                {product.specs.map((s, i) => (
-                  <tr key={s.id} className={i % 2 ? "bg-slate-50" : ""}>
-                    <td className="px-4 py-2.5 font-medium text-slate-600 w-1/3">{s.specName}</td>
-                    <td className="px-4 py-2.5 text-slate-900">{s.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
+      {/* Spec matrix. The identification rows come first and are always
+          present, so a part imported without parametric data (Turck and
+          Pizzato listings) still answers "who makes it, what is it, is it
+          certified" — the first questions a buyer or an assistant asks. */}
+      <section className="mt-10">
+        <h2 className="text-lg font-bold text-slate-900 mb-4">Technical Specifications</h2>
+        <div className="bg-white rounded-lg border border-slate-200 overflow-x-auto">
+          <table className="w-full text-sm">
+            <tbody>
+              {[
+                ["Manufacturer", product.brand.name],
+                ["Manufacturer part number", product.sku],
+                ["Product category", product.category.name],
+                ...(product.brand.country ? [["Brand origin", product.brand.country]] : []),
+                ...(certs.length ? [["Approvals", certs.join(", ")]] : []),
+                ...(product.weightKg ? [["Weight", formatWeight(Number(product.weightKg))]] : []),
+              ].map(([k, v]) => (
+                <tr key={k} className="bg-slate-50/60">
+                  <td className="px-4 py-2.5 font-medium text-slate-600 w-1/3">{k}</td>
+                  <td className="px-4 py-2.5 text-slate-900">
+                    {k === "Manufacturer part number" ? <span className="sku">{v}</span> : v}
+                  </td>
+                </tr>
+              ))}
+              {product.specs.map((s, i) => (
+                <tr key={s.id} className={i % 2 ? "bg-slate-50" : ""}>
+                  <td className="px-4 py-2.5 font-medium text-slate-600 w-1/3">{s.specName}</td>
+                  <td className="px-4 py-2.5 text-slate-900">
+                    {s.value}{s.unit && !s.value?.endsWith(s.unit) ? ` ${s.unit}` : ""}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {product.specs.length === 0 && (
+          <p className="text-xs text-slate-500 mt-2">
+            Full electrical and mechanical data for this part is on the manufacturer&apos;s datasheet, sent with every quotation.
+          </p>
+        )}
+      </section>
 
       {/* Cross-references */}
       {product.crossReferences.length > 0 && (

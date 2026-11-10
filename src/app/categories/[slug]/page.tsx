@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/product/ProductCard";
@@ -15,6 +16,31 @@ type Props = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
+
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexumotion.com";
+
+/**
+ * Category pages rendered the home page's title and description, so every
+ * category competed with the home page for the same snippet. A brand filter
+ * (?brand=, linked from brand pages) gets its own title, but the canonical
+ * stays the plain category: the filtered view is a subset, not a new page.
+ */
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const sp = await searchParams;
+  const brandSlug = typeof sp.brand === "string" ? sp.brand : undefined;
+  const cat = await mirrorCategoryFiltered(slug, { brandSlug }).catch(() => null);
+  if (!cat) return {};
+  const brandName = brandSlug ? cat.brands.find((b) => b.slug === brandSlug)?.name : undefined;
+  const brandList = cat.brands.slice(0, 5).map((b) => b.name).join(", ");
+  const subject = brandName ? `${brandName} ${cat.category.name}` : cat.category.name;
+  const title = `${subject} in Egypt — Prices, Specs & Datasheets`;
+  const description = brandName
+    ? `${cat.products.length}+ ${brandName} ${cat.category.name.toLowerCase()} part numbers with prices, full specifications and datasheets. Supplied by NexuMotion across Egypt and the Middle East.`
+    : `Buy ${cat.category.name.toLowerCase()} from ${brandList} in Egypt. Filter by specification, compare part numbers, see prices and datasheets. Supplied by NexuMotion.`;
+  const url = `${SITE}/categories/${slug}`;
+  return { title, description, alternates: { canonical: url }, openGraph: { title, description, url, type: "website" } };
+}
 
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { slug } = await params;

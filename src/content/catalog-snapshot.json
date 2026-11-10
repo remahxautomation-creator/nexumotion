@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-10T12:26:47.966Z",
+ "generatedAt": "2026-11-10T14:02:22.298Z",
  "stats": {
   "activeProductCount": 2269,
   "specCount": 24051,
@@ -261,6 +261,14 @@
    }
   },
   {
+   "id": "cmtfoi9ed001svbdsqi9qr0dp",
+   "slug": "werma",
+   "name": "Werma",
+   "_count": {
+    "products": 100
+   }
+  },
+  {
    "id": "brand-murrelektronik",
    "slug": "murrelektronik",
    "name": "Murrelektronik",
@@ -272,6 +280,22 @@
    "id": "brand-pizzato",
    "slug": "pizzato",
    "name": "Pizzato",
+   "_count": {
+    "products": 75
+   }
+  },
+  {
+   "id": "brand-sensopart",
+   "slug": "sensopart",
+   "name": "SensoPart",
+   "_count": {
+    "products": 40
+   }
+  },
+  {
+   "id": "brand-sanyo-denki",
+   "slug": "sanyo-denki",
+   "name": "Sanyo Denki",
    "_count": {
     "products": 75
    }

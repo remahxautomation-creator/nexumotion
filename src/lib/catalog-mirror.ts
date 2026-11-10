@@ -269,6 +269,32 @@ export async function mirrorBrand(slug: string): Promise<{
   return { brand, products: products.slice(0, 60), productCount: products.length };
 }
 
+/**
+ * A brand's products grouped by category, largest category first, with up to
+ * `perCategory` products each. Feeds the brand page's category cards and
+ * sections; the full list for a category is the category page with ?brand=.
+ */
+export async function mirrorBrandByCategory(slug: string, perCategory = 8): Promise<Array<{
+  slug: string;
+  name: string;
+  count: number;
+  products: MirrorProduct[];
+}>> {
+  const idx = await getIndex();
+  const groups = new Map<string, MirrorProduct[]>();
+  for (const p of idx.byBrandSlug.get(slug) ?? []) {
+    if (!p.categoryId) continue;
+    const list = groups.get(p.categoryId);
+    if (list) list.push(p);
+    else groups.set(p.categoryId, [p]);
+  }
+  return [...groups.entries()]
+    .map(([id, list]) => ({ cat: idx.categoriesById.get(id), list }))
+    .filter((g): g is { cat: RawCategory; list: MirrorProduct[] } => g.cat !== undefined)
+    .sort((a, b) => b.list.length - a.list.length)
+    .map(({ cat, list }) => ({ slug: cat.slug, name: cat.name, count: list.length, products: list.slice(0, perCategory) }));
+}
+
 /** A category and the products under it. */
 export async function mirrorCategory(slug: string): Promise<{
   category: RawCategory;

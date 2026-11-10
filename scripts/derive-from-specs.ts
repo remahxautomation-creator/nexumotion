@@ -12,7 +12,16 @@
  *
  * Run: npx tsx scripts/derive-from-specs.ts [--commit]
  */
+import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { PrismaClient } from "@prisma/client";
+
+/** Json column holding an array, or a string of one, or nothing. */
+function parseJsonArrayLoose(v: unknown): unknown[] {
+  if (Array.isArray(v)) return v;
+  if (typeof v !== "string" || !v) return [];
+  try { const a = JSON.parse(v); return Array.isArray(a) ? a : []; } catch { return []; }
+}
 
 const prisma = new PrismaClient();
 const COMMIT = process.argv.includes("--commit");
@@ -43,15 +52,22 @@ function buildDescription(
   name: string,
   brand: string,
   categoryName: string,
-  specs: { key: string; name: string; value: string; unit: string | null }[]
+  specs: { key: string; name: string; value: string; unit: string | null }[],
+  sku?: string
 ): string {
   const get = (k: string) => specs.find((s) => s.key === k)?.value;
 
   const productType = get("product_type");
   const series = get("series");
 
+  // Without a product_type spec, the composed name ("Turck Interface Relay
+  // C7-A20X/120VAC", "Werma EvoSIGNAL Signal Towers 26070006") already says
+  // what the part is: drop the trailing part number and use that.
+  const fromName = (sku && name.endsWith(sku) ? name.slice(0, -sku.length) : name.replace(/\s+\S*\d\S*$/, "")).trim();
   const lead = productType
     ? `${brand} ${productType}${series ? ` from the ${series} series` : ""}.`
+    : fromName.length > brand.length + 3
+    ? `${fromName}${series && !fromName.includes(series) ? `, ${series} series` : ""}, ${categoryName.toLowerCase()}.`
     : `${brand} ${categoryName.toLowerCase()} part.`;
 
   // Pick the specs an engineer actually selects on, in a sensible order.
@@ -92,8 +108,16 @@ function buildDescription(
     .trim();
 }
 
+/** SQL string literal for the D1 sync file. */
+const q = (v: string) => `'${v.replace(/'/g, "''")}'`;
+
 async function main() {
+  // Default: fill gaps only, on active products, so a run after an import
+  // touches the new rows and leaves every existing description as it is.
+  // --all restores the original behaviour of rewriting every product.
+  const ALL = process.argv.includes("--all");
   const products = await prisma.product.findMany({
+    where: ALL ? {} : { isActive: true },
     include: {
       brand: { select: { name: true } },
       category: { select: { name: true } },
@@ -103,6 +127,7 @@ async function main() {
 
   let certsSet = 0, descSet = 0, certMarksTotal = 0;
   const sample: string[] = [];
+  const sql: string[] = [];
 
   for (const p of products) {
     const approvalValues = p.specs
@@ -115,12 +140,14 @@ async function main() {
       p.name,
       p.brand.name,
       p.category.name,
-      p.specs.map((s) => ({ key: s.specKey, name: s.specName, value: s.value, unit: s.unit }))
+      p.specs.map((s) => ({ key: s.specKey, name: s.specName, value: s.value, unit: s.unit })),
+      p.sku
     );
 
+    const hasCerts = parseJsonArrayLoose(p.certifications).length > 0;
     const data: { certifications?: string; description?: string } = {};
-    if (certs.length) { data.certifications = JSON.stringify(certs); certsSet++; certMarksTotal += certs.length; }
-    if (description) { data.description = description; descSet++; }
+    if (certs.length && (ALL || !hasCerts)) { data.certifications = JSON.stringify(certs); certsSet++; certMarksTotal += certs.length; }
+    if (description && (ALL || !p.description)) { data.description = description; descSet++; }
 
     if (sample.length < 3 && certs.length) {
       sample.push(`${p.sku}\n    certs: ${certs.join(", ")}\n    desc : ${description.slice(0, 170)}…`);
@@ -128,7 +155,14 @@ async function main() {
 
     if (COMMIT && Object.keys(data).length) {
       await prisma.product.update({ where: { id: p.id }, data });
+      const sets = Object.entries(data).map(([k, v]) => `${k}=${q(v)}`).join(", ");
+      sql.push(`UPDATE Product SET ${sets}, updatedAt=CURRENT_TIMESTAMP WHERE id=${q(p.id)};`);
     }
+  }
+
+  if (COMMIT && sql.length) {
+    writeFileSync(resolve(process.cwd(), "import-templates/.d1-sync.sql"), sql.join("\n") + "\n");
+    console.log(`Production sync written to import-templates/.d1-sync.sql (${sql.length} updates)`);
   }
 
   console.log(`products                 : ${products.length}`);

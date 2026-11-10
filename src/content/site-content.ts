@@ -266,6 +266,9 @@ export const featuredBrands: FeaturedBrand[] = [
   { slug: "murrelektronik" },
   { slug: "rittal" },
   { slug: "pizzato" },
+  { slug: "werma" },
+  { slug: "sensopart" },
+  { slug: "sanyo-denki" },
 ];
 
 // ── Social profiles ─────────────────────────────────────────────────────────
