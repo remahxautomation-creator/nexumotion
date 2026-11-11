@@ -413,6 +413,7 @@ export const dictionaries = {
 
     // ── Systems ─────────────────────────────────────────────────────────
     "nav.systems": "Systems",
+    "nav.blog": "Blog",
     "systems.title": "System Solutions",
     "systems.lead":
       "The integration work most in demand across Egypt, the Gulf and Africa — what each system does, what it needs, and how a project actually runs.",
@@ -968,6 +969,7 @@ export const dictionaries = {
 
     // ── Systems ─────────────────────────────────────────────────────────
     "nav.systems": "الأنظمة",
+    "nav.blog": "المدونة",
     "systems.title": "حلول الأنظمة",
     "systems.lead":
       "أعمال التكامل الأكثر طلبًا في مصر والخليج وأفريقيا — ماذا يفعل كل نظام، وما الذي يحتاجه، وكيف يسير المشروع فعليًا.",

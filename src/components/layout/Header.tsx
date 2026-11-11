@@ -38,6 +38,9 @@ export default function Header({ categories }: { categories: Cat[] }) {
             <Link href="/systems" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0A6286]">
               {t("nav.systems")}
             </Link>
+            <Link href="/blog" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0A6286]">
+              {t("nav.blog")}
+            </Link>
             <Link href="/about" className="hidden lg:block px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0A6286]">
               {t("nav.about")}
             </Link>

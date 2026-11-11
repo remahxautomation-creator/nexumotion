@@ -59,6 +59,7 @@ ${categories.map((c) => `- [${c.name}](${BASE}/categories/${c.slug}) — ${parts
 
 - [Part search](${BASE}/search) — search by manufacturer part number, brand or specification
 - [All brands](${BASE}/brands)
+- [Blog](${BASE}/blog) — practical guides on part selection, replacements and fault-finding
 - [Cross-reference and specification assistant](${BASE}/assistant)
 - [Quick order pad](${BASE}/quick-order) — paste a list of part numbers
 - [About the company](${BASE}/about)

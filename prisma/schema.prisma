@@ -307,3 +307,27 @@ model Review {
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+// Blog articles, written by the n8n content workflow (NEXU-03) through
+// POST /api/blog and published only after the owner approves in Telegram.
+// Arabic is the primary language; English is optional. Bodies are a small
+// Markdown subset rendered by lib/markdown.ts — never raw HTML.
+// status: DRAFT | PUBLISHED
+model BlogPost {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  titleAr     String
+  titleEn     String?
+  excerptAr   String
+  excerptEn   String?
+  bodyAr      String
+  bodyEn      String?
+  keywords    String? // comma-separated, used for meta keywords and tags
+  coverImage  String? // absolute https URL
+  status      String    @default("DRAFT")
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status, publishedAt])
+}

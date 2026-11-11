@@ -36,6 +36,9 @@ async function catalogueUrls() {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { products, categories, brands } = await catalogueUrls();
+  const posts = await prisma.blogPost
+    .findMany({ where: { status: "PUBLISHED" }, select: { slug: true, updatedAt: true }, take: 2000 })
+    .catch(() => []);
 
   return [
     { url: BASE, changeFrequency: "daily", priority: 1 },
@@ -46,6 +49,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/terms`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE}/systems`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/assistant`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/blog`, changeFrequency: "daily", priority: 0.8 },
+    ...posts.map((p) => ({
+      url: `${BASE}/blog/${p.slug}`,
+      lastModified: p.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
     ...systems.map((s) => ({
       url: `${BASE}/systems/${s.slug}`,
       changeFrequency: "monthly" as const,
