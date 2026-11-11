@@ -1,3 +1,4 @@
+import { forwardLead } from "@/lib/lead-webhook";
 /**
  * Transactional email, over Cloudflare's own `send_email` Worker binding.
  *
@@ -346,9 +347,13 @@ export async function sendInquiryNotification(
   siteUrl = "https://nexumotion.com"
 ): Promise<boolean> {
   const part = inquiry.partNumber ?? inquiry.sku ?? "part";
-  return send({
-    subject: `New inquiry: ${part}${inquiry.quantity ? ` × ${inquiry.quantity}` : ""} — ${inquiry.name}`,
-    replyTo: inquiry.email,
-    html: buildHtml(inquiry, siteUrl),
-  });
+  const [sent] = await Promise.all([
+    send({
+      subject: `New inquiry: ${part}${inquiry.quantity ? ` × ${inquiry.quantity}` : ""} — ${inquiry.name}`,
+      replyTo: inquiry.email,
+      html: buildHtml(inquiry, siteUrl),
+    }),
+    forwardLead({ ...inquiry }),
+  ]);
+  return sent;
 }
