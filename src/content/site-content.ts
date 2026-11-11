@@ -182,6 +182,13 @@ export const contact = {
   whatsappGreeting: "Hello, I'd like to ask about a part.",
 };
 
+// Legal identifiers from the tax card and commercial register extract. Shown
+// only on the About page and in the footer.
+export const legal = {
+  taxNumber: "783-893-442",
+  commercialRegister: "268014",
+};
+
 /**
  * Where the business physically is.
  *

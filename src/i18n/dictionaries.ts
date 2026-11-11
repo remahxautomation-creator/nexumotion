@@ -107,6 +107,8 @@ export const dictionaries = {
       "Based in 10th of Ramadan — Egypt's industrial city, and the centre of the plants we supply.",
     "location.directions": "Open in Google Maps",
     "location.mapTitle": "Map showing NexuMotion in 10th of Ramadan City, Egypt",
+    "legal.tax": "Tax ID",
+    "legal.cr": "Commercial Reg. No.",
     "footer.hours": "Sun–Thu, 9:00–17:00 (Cairo)",
     "footer.rights":
       "NexuMotion — Authenticity guaranteed. CE · UL · ISO 9001 certified suppliers.",
@@ -660,6 +662,8 @@ export const dictionaries = {
       "مقرنا في العاشر من رمضان — المدينة الصناعية الأولى في مصر، وقلب المصانع التي نخدمها.",
     "location.directions": "افتح في خرائط جوجل",
     "location.mapTitle": "خريطة توضح موقع نيكسو موشن في مدينة العاشر من رمضان، مصر",
+    "legal.tax": "الرقم الضريبي",
+    "legal.cr": "رقم السجل التجاري",
     "footer.hours": "الأحد–الخميس، ٩:٠٠–١٧:٠٠ (القاهرة)",
     "footer.rights":
       "نيكسو موشن — ضمان الأصالة. موردون معتمدون CE · UL · ISO 9001.",

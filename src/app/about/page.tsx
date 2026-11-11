@@ -3,7 +3,7 @@ import {
   Cpu, ShieldCheck, Unlock, Globe2, Replace, FileSpreadsheet, Receipt, Headset,
 } from "lucide-react";
 import ControlPanelArt from "@/components/home/ControlPanelArt";
-import { companyFacts } from "@/content/site-content";
+import { companyFacts, legal } from "@/content/site-content";
 import LocationMap from "@/components/layout/LocationMap";
 import { getT } from "@/i18n/server";
 import snapshot from "@/content/catalog-snapshot.json";
@@ -136,6 +136,14 @@ export default async function AboutPage() {
 
       {/* Where we are */}
       <LocationMap />
+
+      {/* Legal identifiers */}
+      <section className="bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 py-6 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-slate-600">
+          <span>{t("legal.tax")}: <span className="ltr-nums font-semibold text-slate-800">{legal.taxNumber}</span></span>
+          <span>{t("legal.cr")}: <span className="ltr-nums font-semibold text-slate-800">{legal.commercialRegister}</span></span>
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="surface-inverse">

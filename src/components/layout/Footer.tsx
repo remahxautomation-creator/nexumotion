@@ -3,7 +3,7 @@ import { MapPin } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import SocialLinks from "@/components/layout/SocialLinks";
 import { CookieSettingsLink } from "@/components/layout/CookieBanner";
-import { contact } from "@/content/site-content";
+import { contact, legal } from "@/content/site-content";
 import { telHref, mailHref } from "@/lib/contact";
 import { getT } from "@/i18n/server";
 
@@ -79,6 +79,9 @@ export default async function Footer() {
       </div>
       <div className="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
         © {new Date().getFullYear()} {t("footer.rights")}
+        <span className="block mt-1" dir="ltr">
+          {t("legal.tax")}: {legal.taxNumber} · {t("legal.cr")}: {legal.commercialRegister}
+        </span>
       </div>
     </footer>
   );
